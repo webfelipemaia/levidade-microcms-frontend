@@ -2,7 +2,40 @@
   <Navigation />
   <div class="d-flex align-items-strech">
     <Sidebar />
-    <Home><p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Minus magnam at saepe quos ducimus. Perferendis deleniti ducimus, nemo voluptate maiores excepturi dolorem quaerat aliquid repudiandae. Unde eligendi fuga accusamus animi?</p></Home>
+    <Home>
+      <section>
+
+        <div class="heading">
+          <h2>Vestibulum</h2>
+          <p>Vestibulum lorem sed risus ultricies. Quisque id diam vel quam elementum. </p>
+        </div>
+
+        <div class="snippets">
+
+          <h3 class="snippets_heading">consectetur adipisicing elit</h3>
+          <div class="snippets_short-description">
+            <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Consectetur magni doloremque nostrum culpa tempora.</p>
+          </div>
+
+          <h4 class="snippets_heading">Accessibility</h4>
+          <div class="snippets_short-description">
+            <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Modi adipisci hic aspernatur numquam, labore quod dolorem neque temporibus recusandae qui iure suscipit inventore.</p>
+            <p> Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+          </div>
+
+          <div class="snippets_item">
+              <h3 class="snippets_item-title">Pellentesque dignissim</h3>
+            <div class="snippets_item-description">
+              <p>Ut placerat orci nulla pellentesque dignissim enim sit amet. Fringilla est ullamcorper eget nulla facilisi etiam dignissim. Mauris a diam maecenas sed enim ut sem viverra. Posuere sollicitudin aliquam ultrices sagittis orci a scelerisque.</p>
+            </div>
+
+            <div class="snippets_item-code">
+              &lt;p&gt;Lorem ipsum dolor sit amet consectetur adipisicing elit. Rem consequuntur sed tempora nesciunt facilis sit, quisquam veritatis unde itaque&lt;/p&gt;
+            </div>
+          </div>
+        </div>
+      </section>
+    </Home>
   </div>
  <Footer />
 </template>
@@ -32,18 +65,18 @@ export default {
   color: #3e464b;
 }
 
-#app a,
-#app .nav-link {
+#app .navbar a,
+#app .navbar .nav-link {
   color: #2d5972;
 }
 
-#app a:hover,
-#app .nav-link:hover {
+#app .navbar a:hover,
+#app .navbar .nav-link:hover {
   color: #1c3848;
   text-decoration: none;
 }
 
-#app a:after {
+#app .navbar a:after {
   content: '';
   display: block;
   transform: scaleX(0);
@@ -59,9 +92,10 @@ export default {
 }
 
 .navbar {
-  background-color: #6abec9;
+  /*background-color: #ecf7f8;*/
+  background-color: #ffffff;
   color: #222222;
-  border-bottom: 1px solid rgb(61,156,168);
+  border-bottom: 1px solid rgba(76,103,118,.15);
 }
 
 .navbar a {
@@ -98,9 +132,28 @@ purple: #4351ab
 .sidebar {
     transition: all .2s;
     background: #fff;
-    box-shadow: 0 0.5rem 1rem rgba(0,0,0,.15);
+    /*box-shadow: 0 0.5rem 1rem rgba(0,0,0,.15);*/
+    border-right: 1px solid rgba(76,103,118,.15);
     z-index: 2;
 }
+
+.sidebar a {
+  color: #4c6776;
+}
+
+.sidebar a:focus {
+  background-color: rgba(0,0,0,.10);
+  border-radius: 8px;
+  border: none;
+}
+
+.sidebar a:focus-visible {
+  box-shadow: none;
+}
+.sidebar a:hover {
+  color: #0e2326;
+}
+
 .maincontent {
   display: flex;
   overflow-x: hidden;
