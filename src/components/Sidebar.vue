@@ -11,6 +11,9 @@
                             <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
                         </div>
                     </div>
+                </li>
+                <li class="nav-item">                    
+                    <a class="nav-link" href="#">Primary Link</a>
                     <nav class="nav subnav flex-column">
                         <a class="nav-link" href="#">Sub Link</a>
                         <a class="nav-link" href="#">Sub Link</a>
@@ -18,8 +21,14 @@
                         <a class="nav-link" href="#">Sub Link</a>
                     </nav>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Link</a>
+                <li class="nav-item">                    
+                    <a class="nav-link" href="#">Primary Link</a>
+                    <nav class="nav subnav flex-column">
+                        <a class="nav-link" href="#">Sub Link</a>
+                        <a class="nav-link" href="#">Sub Link</a>
+                        <a class="nav-link" href="#">Sub Link</a>
+                        <a class="nav-link" href="#">Sub Link</a>
+                    </nav>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="#">Link</a>
@@ -44,9 +53,15 @@ export default {
     border-bottom: 1px solid rgba(76,103,118,.15);
     margin-bottom: 1rem;
 }
+
 .nav-header_title {
     font-size: 20px;
     font-weight: bold;
+}
+
+.nav-header_title a,
+.nav-header_title .nav-link {
+color: #524aac;
 }
 
 .nav-header_title span {
