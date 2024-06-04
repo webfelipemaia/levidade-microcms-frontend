@@ -1,6 +1,19 @@
 <template>
-    <div class="sidebar">
-        <div class="flex-shrink-0 p-3" style="width: 280px;">
+    <div 
+        class="sidebar offcanvas-md offcanvas-start" 
+        :class="[{ 'show': show }]" 
+        tabindex="-1" 
+        id="offcanvasExample" 
+        aria-labelledby="offcanvasExampleLabel"
+        :aria-modal="show"
+        :role="show ? 'dialog' : undefined" >
+        <div class="offcanvas-header">
+            
+    <h5 class="offcanvas-title" id="offcanvasExampleLabel">Offcanvas</h5>
+    <button type="button" @click="$emit('close')" class="btn-close" aria-label="Close"></button>
+  </div>
+        {{ show }}
+    <div class="offcanvas-body flex-shrink-0 p-3" style="width: 280px;">
             <ul class="nav flex-column">
                 <li class="nav-item nav-item_title">
                     <div class="nav-header">
@@ -12,7 +25,7 @@
                         </div>
                     </div>
                 </li>
-                <li class="nav-item">                    
+                <li class="nav-item">
                     <a class="nav-link" href="#">Primary Link</a>
                     <nav class="nav subnav flex-column">
                         <a class="nav-link" href="#">Sub Link</a>
@@ -44,7 +57,13 @@
 <script>
 export default {
     name: 'SidebarComponent',
-    props: {},
+    props: {
+    show: Boolean,
+  },
+  data() {
+    return {
+    }
+  },
 }
 
 </script>

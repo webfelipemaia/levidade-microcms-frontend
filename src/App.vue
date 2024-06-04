@@ -1,7 +1,7 @@
 0<template>
   <Navigation />
   <div class="d-flex align-items-strech">
-    <Sidebar />
+    <Sidebar   @close="showMenu = !showMenu" />
     <Home>
       <section>
 
@@ -65,6 +65,7 @@ export default {
   
   data() {
     return {
+      showMenu: false,
       levetipTheme:['primary','secondary','success','danger','warning','info','light','dark'],
       headingBadgeCode:`
 this.$fire({
@@ -193,7 +194,8 @@ color: #6A6878;
 
 .maincontent section .heading h2,
 .maincontent section .snippets .snippets_item .snippets_item-title{
-  color: hsl(244.9,39.8%,35%);
+  /*color: hsl(244.9,39.8%,35%);*/
+  color: #524aac;
 }
 
 .maincontent section .snippets {
