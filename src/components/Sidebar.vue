@@ -1,18 +1,15 @@
 <template>
     <div 
         class="sidebar offcanvas-md offcanvas-start" 
-        :class="[{ 'show': show }]" 
         tabindex="-1" 
         id="offcanvasExample" 
         aria-labelledby="offcanvasExampleLabel"
-        :aria-modal="show"
-        :role="show ? 'dialog' : undefined" >
+        >
         <div class="offcanvas-header">
             
     <h5 class="offcanvas-title" id="offcanvasExampleLabel">Offcanvas</h5>
-    <button type="button" @click="$emit('close')" class="btn-close" aria-label="Close"></button>
+    <button @click="removeClass" type="button" class="btn-close" aria-label="Close"></button>
   </div>
-        {{ show }}
     <div class="offcanvas-body flex-shrink-0 p-3" style="width: 280px;">
             <ul class="nav flex-column">
                 <li class="nav-item nav-item_title">
@@ -64,6 +61,21 @@ export default {
     return {
     }
   },
+  methods: {
+    removeClass() {
+        var offcanvas = document.getElementsByClassName("sidebar offcanvas-start")[0];
+        offcanvas.classList.toggle('show')
+        var bodyelm = document.getElementsByTagName('body')[0];
+        bodyelm.style = ""
+        var backdropelm = document.getElementsByClassName("offcanvas-backdrop fade show")[0];
+        if (backdropelm && backdropelm.classList.contains('offcanvas-backdrop')) {
+            backdropelm.classList.remove("offcanvas-backdrop","fade","show");
+            backdropelm.classList.add("offcanvas-backdrop-temp");
+        } else {
+            backdropelm.classList.add("offcanvas-backdrop-temp");
+        }
+    }
+  }
 }
 
 </script>

@@ -1,7 +1,7 @@
 0<template>
   <Navigation />
   <div class="d-flex align-items-strech">
-    <Sidebar   @close="showMenu = !showMenu" />
+    <Sidebar />
     <Home>
       <section>
 
@@ -65,7 +65,6 @@ export default {
   
   data() {
     return {
-      showMenu: false,
       levetipTheme:['primary','secondary','success','danger','warning','info','light','dark'],
       headingBadgeCode:`
 this.$fire({

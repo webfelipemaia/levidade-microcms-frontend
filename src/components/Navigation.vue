@@ -8,7 +8,7 @@
             <!-- <a class="btn btn-primary" data-bs-toggle="offcanvas" href="#offcanvasExample" role="button" aria-controls="offcanvasExample">
             Link with href
             </a> -->
-            <button  @click="showMenu = !showMenu" class="btn btn-primary d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasExample" aria-controls="#offcanvasExample">Toggle offcanvas</button>
+            <button @click="addClass" class="btn btn-primary d-md-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasExample" aria-controls="#offcanvasExample">Toggle offcanvas</button>
 
             <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
                 <ul class="navbar-nav ms-auto">
@@ -30,6 +30,19 @@
 <script>
 export default {
   name: 'NavigationComponent',
-  props: {}
+  methods: {
+
+    addClass() {
+        var backdropelm = document.getElementsByClassName("offcanvas-backdrop-temp")[0];
+        if (backdropelm && backdropelm.classList.contains('offcanvas-backdrop-temp')) {
+            backdropelm.classList.add("offcanvas-backdrop");
+            backdropelm.classList.add("fade");
+            backdropelm.classList.add("show");
+        } else {
+            //
+        }
+
+    }
+  },
 }
 </script>
