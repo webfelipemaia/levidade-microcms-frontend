@@ -1,14 +1,16 @@
 <template>
     <div 
-        class="sidebar offcanvas-md offcanvas-start" 
+        :class="{show: isActive}"
+        class="sidebar leve offcanvas-md offcanvas-start" 
         tabindex="-1" 
         id="offcanvasExample" 
         aria-labelledby="offcanvasExampleLabel"
+        ref="offcanvas"
         >
         <div class="offcanvas-header">
             
     <h5 class="offcanvas-title" id="offcanvasExampleLabel">Offcanvas</h5>
-    <button @click="removeClass" type="button" class="btn-close" aria-label="Close"></button>
+    <button  @click="updateValue" type="button" class="btn-close" aria-label="Close"></button>
   </div>
     <div class="offcanvas-body flex-shrink-0 p-3" style="width: 280px;">
             <ul class="nav flex-column">
@@ -20,6 +22,7 @@
                         <div class="nav-header_body">
                             <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
                         </div>
+                        <p>{{ isActive }}</p>
                     </div>
                 </li>
                 <li class="nav-item">
@@ -51,32 +54,33 @@
     </div>
 </template>
 
-<script>
-export default {
-    name: 'SidebarComponent',
-    props: {
-    show: Boolean,
-  },
-  data() {
-    return {
+<script setup>
+//import {ref} from 'vue'
+import {  ref, watch, defineProps, defineEmits } from 'vue';
+
+const props = defineProps({
+    isActive: {
+      type: Boolean,
+      default: false
     }
-  },
-  methods: {
-    removeClass() {
-        var offcanvas = document.getElementsByClassName("sidebar offcanvas-start")[0];
-        offcanvas.classList.toggle('show')
-        var bodyelm = document.getElementsByTagName('body')[0];
-        bodyelm.style = ""
-        var backdropelm = document.getElementsByClassName("offcanvas-backdrop fade show")[0];
-        if (backdropelm && backdropelm.classList.contains('offcanvas-backdrop')) {
-            backdropelm.classList.remove("offcanvas-backdrop","fade","show");
-            backdropelm.classList.add("offcanvas-backdrop-temp");
-        } else {
-            backdropelm.classList.add("offcanvas-backdrop-temp");
-        }
-    }
-  }
-}
+});
+
+const emit = defineEmits(['updateValue']);
+
+const activeValue = ref(props.isActive);
+
+watch(() => props.isActive, (newVal) => {
+  activeValue.value = newVal;
+});
+
+const updateValue = () => {
+    var bodyElem = document.getElementsByTagName("body")[0];
+    bodyElem.removeAttribute("style");
+    Array.from(document.getElementsByClassName("offcanvas-backdrop"))
+    .forEach(element => element.remove());
+    activeValue.value = false;
+  emit('updateValue', activeValue.value);
+};
 
 </script>
 <style>
@@ -102,4 +106,5 @@ color: #524aac;
 .nav-header_body {
     padding: 0.5rem 1rem;
 }
+
 </style>

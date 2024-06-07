@@ -5,13 +5,7 @@
   </div>
 </template>
 
-<script>
-export default {
-  name: 'HomeComponent',
-  props: {
-    msg: String
-  }
-}
+<script setup>
 </script>
 
 <style scoped>
