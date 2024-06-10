@@ -1,6 +1,6 @@
 <template>
     <div 
-        :class="{show: isActive}"
+        :class="{'show': isActive}"
         class="sidebar leve offcanvas-md offcanvas-start" 
         tabindex="-1" 
         id="offcanvasExample" 
@@ -26,9 +26,9 @@
                     </div>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Primary Link</a>
+                    <router-link to="/roles" class="nav-link">Roles</router-link>
                     <nav class="nav subnav flex-column">
-                        <a class="nav-link" href="#">Sub Link</a>
+                        <router-link to="/roles/create" class="nav-link">Create Role</router-link>
                         <a class="nav-link" href="#">Sub Link</a>
                         <a class="nav-link" href="#">Sub Link</a>
                         <a class="nav-link" href="#">Sub Link</a>
@@ -55,7 +55,6 @@
 </template>
 
 <script setup>
-//import {ref} from 'vue'
 import {  ref, watch, defineProps, defineEmits } from 'vue';
 
 const props = defineProps({
@@ -67,19 +66,21 @@ const props = defineProps({
 
 const emit = defineEmits(['updateValue']);
 
-const activeValue = ref(props.isActive);
-
+const activeValue = ref(Boolean(props.isActive));
 watch(() => props.isActive, (newVal) => {
   activeValue.value = newVal;
 });
 
 const updateValue = () => {
+    // remove Bootstrap styles from body tag
     var bodyElem = document.getElementsByTagName("body")[0];
     bodyElem.removeAttribute("style");
+    // delete element that activates overlay
     Array.from(document.getElementsByClassName("offcanvas-backdrop"))
     .forEach(element => element.remove());
     activeValue.value = false;
-  emit('updateValue', activeValue.value);
+    // updates the value of the variable that activates the menu
+    emit('updateValue', activeValue.value);
 };
 
 </script>
