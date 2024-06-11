@@ -9,8 +9,8 @@
                       <NavbarBrand linkClasses="justify-content-center" imgStyle="height: 90px;"></NavbarBrand>
                       <h1 class="mb-1">Welcome Back</h1>
                       <p class="mb-0">
-                         Don’t have an account yet?
-                         <a href="/register" class="text-primary">Register here</a>
+                        Already registered?
+                         <a href="/login" class="text-primary">Login</a>
                       </p>
                    </div>
                 </div>
@@ -24,7 +24,7 @@
                 <div class="col-md">
                    <div class="card shadow-sm mb-6">
                       <div class="card-body">
-                            <form @submit.prevent="login" class="needs-validation mb-6" novalidate="">
+                            <form @submit.prevent="register" class="needs-validation mb-6" novalidate="">
                                <div class="mb-3">
                                   <label for="signinEmailInput" class="form-label">
                                         Email
@@ -38,8 +38,21 @@
                                         <input type="password" v-model="form.password" class="form-control fakePassword" id="formSignUpPassword" required="">
                                         <span><i class="bi bi-eye-slash passwordToggler"></i></span>
                                      </div>
-                                  </div>
- 
+                              </div>
+                              <div class="mb-3">
+                                  <label for="signinNameInput" class="form-label">
+                                        Name
+                                        <span class="text-danger">*</span>
+                                  </label>
+                                  <input type="text" v-model="form.name" class="form-control" id="signinNameInput" required="">
+                               </div>
+                              <div class="mb-3">
+                                  <label for="signinLastNameInput" class="form-label">
+                                       Last Name
+                                        <span class="text-danger">*</span>
+                                  </label>
+                                  <input type="text" v-model="form.lastname" class="form-control" id="signinLastNameInput" required="">
+                               </div>
                                <div class="mb-4 d-flex align-items-center justify-content-between">
                                   <div class="form-check">
                                         <input class="form-check-input" type="checkbox" id="rememberMeCheckbox">
@@ -50,7 +63,7 @@
                                </div>
  
                                <div class="d-grid">
-                                  <button class="btn btn-primary" type="submit">Sign In</button>
+                                  <button class="btn btn-primary" type="submit">Create Account</button>
                                </div>
                             </form>
  
@@ -73,12 +86,17 @@
  
     const form = ref({
        email: null,
-       password: null
+       password: null,
+       name: null,
+       lastname: null
     })
   
-    async function login() {        
-         authStore.login(form.value.email, 
-                         form.value.password
+    async function register() {
+         authStore.register(
+            form.value.email, 
+            form.value.password, 
+            form.value.name, 
+            form.value.lastname
           );
      
     }

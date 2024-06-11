@@ -24,10 +24,24 @@ export const useAuthStore = defineStore({
             // redirect to previous url or default to home page
             router.push(this.returnUrl || '/');
         },
+
         logout() {
             this.user = null;
             localStorage.removeItem('user');
             router.push('/login');
-        }
+        },
+
+        async register(username, password, name, lastname) {
+            const response = await axios.post(`/users/authenticate`, { username, password, name, lastname });
+
+            // update pinia state
+            this.user = response.data;
+
+            // store user details and jwt in local storage to keep user logged in between page refreshes
+            localStorage.setItem('user', JSON.stringify(this.user));
+
+            // redirect to previous url or default to home page
+            router.push(this.returnUrl || '/index');
+        },
     }
 });

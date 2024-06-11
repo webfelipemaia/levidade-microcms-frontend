@@ -32,6 +32,11 @@ const routes =  [
       path: '/login',
       name: 'login', 
       component: () => import("./views/LoginView.vue")
+    },
+    { 
+      path: '/register',
+      name: 'register', 
+      component: () => import("./views/RegisterView.vue")
     }
   ];
   
@@ -43,7 +48,7 @@ const routes =  [
 
   router.beforeEach(async (to) => {
     // redirect to login page if not logged in and trying to access a restricted page
-    const publicPages = ['/login'];
+    const publicPages = ['/login','/register'];
     const authRequired = !publicPages.includes(to.path);
     const auth = useAuthStore();
 
