@@ -7,7 +7,6 @@ import router from '../router';
 export const useAuthStore = defineStore({
     id: 'auth',
     state: () => ({
-        // initialize state from local storage to enable user to stay logged in
         user: JSON.parse(localStorage.getItem('user')),
         returnUrl: null
     }),
@@ -15,13 +14,8 @@ export const useAuthStore = defineStore({
         async login(username, password) {
             const response = await axios.post(`/users/authenticate`, { username, password });
 
-            // update pinia state
             this.user = response.data;
-
-            // store user details and jwt in local storage to keep user logged in between page refreshes
             localStorage.setItem('user', JSON.stringify(this.user));
-
-            // redirect to previous url or default to home page
             router.push(this.returnUrl || '/');
         },
 
@@ -33,14 +27,8 @@ export const useAuthStore = defineStore({
 
         async register(username, password, name, lastname) {
             const response = await axios.post(`/users/authenticate`, { username, password, name, lastname });
-
-            // update pinia state
             this.user = response.data;
-
-            // store user details and jwt in local storage to keep user logged in between page refreshes
             localStorage.setItem('user', JSON.stringify(this.user));
-
-            // redirect to previous url or default to home page
             router.push(this.returnUrl || '/index');
         },
     }
