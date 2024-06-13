@@ -75,7 +75,9 @@
        email: null,
        password: null
     })
-  
+    console.log(form.value.email, 
+                         form.value.password
+          );
     async function login() {        
          authStore.login(form.value.email, 
                          form.value.password
