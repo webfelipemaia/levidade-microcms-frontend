@@ -53,7 +53,9 @@
                                   <button class="btn btn-primary" type="submit">Sign In</button>
                                </div>
                             </form>
- 
+                              <div v-if="authStore.error" class="alert alert-danger mt-3" role="alert">
+                                 {{ authStore.error.message }}
+                              </div>
                             </div>
                          </div>
                       </div>
@@ -75,10 +77,7 @@
        email: null,
        password: null
     })
-    console.log(form.value.email, 
-                         form.value.password
-          );
-    async function login() {        
+    async function login() {
          authStore.login(form.value.email, 
                          form.value.password
           );

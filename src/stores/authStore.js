@@ -8,15 +8,19 @@ export const useAuthStore = defineStore({
     id: 'auth',
     state: () => ({
         user: JSON.parse(localStorage.getItem('user')),
-        returnUrl: null
+        returnUrl: null,
+        error: null,
     }),
     actions: {
-        async login(username, password) {
-            const response = await axios.post(`/users/authenticate`, { username, password });
-
-            this.user = response.data;
-            localStorage.setItem('user', JSON.stringify(this.user));
-            router.push(this.returnUrl || '/');
+        async login(email, password) {
+            const response = await axios.post(`/users/authenticate`, { email: email, password: password });
+            if(response.data.status === 'error') {
+                this.error = response.data
+            } else {
+                this.user = response.data.data;
+                localStorage.setItem('user', JSON.stringify(this.user));
+                router.push(this.returnUrl || '/');
+            }
         },
 
         logout() {
