@@ -1,0 +1,282 @@
+// template variables
+@import 'variables';
+
+
+#app {
+    font-family: Avenir, Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    color: $body-default-color;
+
+    .navbar {
+        background-color: #ffffff;
+        color: #222222;
+        border-bottom: 1px solid rgba(76,103,118,.15);
+
+        a,
+        .nav-link {
+            color: $link-color;
+
+            &:hover {
+                color: $link-color;
+                text-decoration: none;
+            }
+        }
+
+        a {
+            &::after {
+                content: '';
+                display: block;
+                transform: scaleX(0);
+                border-bottom: 2px solid $link-color;
+                background: #2d5972;
+                transition: transform 0.5s ease;
+                transform-origin: left;
+            }
+
+            &:hover::after {
+                transform: scaleX(1);
+            }
+        }
+    }
+
+
+    .sidebar {
+        transition: all .2s;
+        background: #fff;
+        border-right: 1px solid rgba(76,103,118,.15);
+        z-index: 2;
+      
+        .nav {
+          .nav-item {
+
+            .nav-link {
+              color: $link-color;
+              font-weight: bold;
+      
+              &:hover {
+                color: $leve-secondary;
+              }
+            }
+      
+            .subnav {
+                .nav-link {
+                  color: create-light($leve-secondary,15%);
+                  font-weight: 400;
+      
+                  &:hover {
+                    color: create-shadow($leve-secondary,5%);
+                  }
+      
+                  &:active,
+                  &:focus {
+                    background-color: rgba(118,106,247,0.10);
+                    border-radius: 8px;
+                    border: none;
+                    color: $link-color;
+                  }
+                }
+                }
+            }
+        }
+      
+        a:focus-visible {
+          box-shadow: none;
+        }
+    }
+      
+    .maincontent {
+        display: flex;
+        overflow-x: hidden;
+        width: 100%;
+        min-height: calc(100vh - 72px);
+        padding-top: 1rem;
+        flex-wrap: wrap;
+      
+        section {
+            .heading {
+                padding: 1rem;
+                margin-bottom: 1.5rem;
+      
+                h2 {
+                    color: $link-color;
+                }
+            }
+      
+            .snippets {
+                padding: 1rem;
+      
+                .snippets_heading {
+                    margin-bottom: 1.5rem;
+                }
+        
+                .snippets_short-description {
+                    padding-top: 0.5rem;
+                    margin-bottom: 1.75rem;
+        
+                    p {
+                        line-height: 2rem;
+                    }
+                }
+      
+                .snippets_item {
+                    padding-top: 3rem;
+                    padding-bottom: 1.5rem;
+        
+                    .snippets_item-title {
+                        color: $link-color;
+                    }
+        
+                    .snippets_item-description {
+                        p {
+                            line-height: 2rem;
+                        }
+                    }
+        
+                    .snippets_item-code {
+                        border: 1px solid rgba(118,106,247,.05);
+                        background-color: rgba(118,106,247,.05);
+                        margin-bottom: 1.5rem;
+        
+                        pre {
+                            margin-bottom: 0;
+            
+                            code {
+                                background-color: transparent;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+     
+    // todo: create new colors for tips
+    .tip {
+        margin: 28px 0;
+        padding: 20px 24px 4px 42px;
+        overflow-x: auto;
+        transition: color .5s, background-color .5s;
+        position: relative;
+        font-size: 15px;
+        line-height: 1.6;
+        font-weight: 500;
+        color: hsl(247.5,7.1%,33.9%);
+        background-color: hsl(244.3,11.8%,90.3%);
+        border-bottom: 4px solid hsl(244.3,11.8%,73.3%);
+      
+        .tip_title {
+            font-weight: bold;
+        }
+      
+        &.tip-primary {
+            background-color: hsl(245.1,89.8%,95.2%);
+            border-bottom: 4px solid hsl(245.1,89.8%,83.2%);
+        }
+      
+        &.tip-secondary {
+            background-color: hsl(247.5,7.1%,95.9%);
+            border-bottom: 4px solid hsl(247.5,7.1%,83.9%);
+        }
+      
+        &.tip-success {
+            background-color: hsl(112,45.4%,95.1%);
+            border-bottom: 4px solid hsl(112,45.4%,83.1%);
+        }
+      
+        &.tip-danger {
+            background-color: hsl(2.1,89.8%,95.2%);
+            border-bottom: 4px solid hsl(2.1,89.8%,83.2%);
+        }
+      
+        &.tip-warning {
+            background-color: hsl(62.1,89.8%,93.2%);
+            border-bottom: 4px solid hsl(62.1,89.8%,83.2%);
+        }
+      
+        &.tip-info {
+            background-color: hsl(206.8,89.8%,93.2%);
+            border-bottom: 4px solid hsl(206.8,89.8%,83.2%);
+        }
+      
+        &.tip-light {
+            background-color: hsl(260,9.7%,98.9%);
+            border-bottom: 4px solid hsl(260,9.7%,92.9%);
+        }
+      
+        &.tip-dark {
+            background-color: hsl(260,9.7%,38.9%);
+            border-bottom: 4px solid hsl(260,9.7%,15.9%);
+            color: hsl(260,9.7%,95.9%);
+        }
+    }
+      
+    footer {
+        background-color: hsl(260,9.7%,98.9%);
+      
+        .nav {
+            .nav-item {
+                .nav-link {
+                    color: hsl(247.5,7.1%,43.9%);
+      
+                    &:hover {
+                        color: $link-color;
+                        text-decoration: underline;
+                    }
+                }
+            }
+        }
+    }
+}      
+    
+    
+// for mobile
+@media (max-width: 768px) {
+    
+    .leve {
+        &.offcanvas-md {
+            position: fixed;
+            bottom: 0;
+            z-index: var(--bs-offcanvas-zindex);
+            display: flex;
+            flex-direction: column;
+            max-width: 100%;
+            color: var(--bs-offcanvas-color);
+            visibility: hidden;
+            background-color: var(--bs-offcanvas-bg);
+            background-clip: padding-box;
+            outline: 0;
+            transition: var(--bs-offcanvas-transition);
+
+            &.offcanvas-start {
+                top: 0;
+                left: 0;
+                width: var(--bs-offcanvas-width);
+                border-right: var(--bs-offcanvas-border-width) solid var(--bs-offcanvas-border-color);
+                transform: translateX(-100%);
+            }
+
+            &.show {
+                &:not(.hiding) {
+                transform: none;
+                }
+            }
+
+            &.hiding {
+                visibility: visible;
+              }
+        
+        }
+
+        .offcanvas-md {
+            &.showing {
+              transform: none;
+            }
+
+            &.show, 
+            &.showing {
+              visibility: visible;
+            }
+        }      
+    }       
+}

@@ -1,1 +1,50 @@
+
+
+// Levidade functions
+@function create-shadow($color, $percentage) {
+    @return mix(black, $color, $percentage);
+}
+
+@function create-light($color, $percentage) {
+    @return mix(white, $color, $percentage);
+}
+
+// Levidade Doc Colors
 $body-default-color: #4e4d58;
+$link-color: #524aac;
+
+// theme colors
+$leve-primary: #766AF7;
+$leve-secondary: #4e4d58;
+$leve-info: #6AB8F7;
+$leve-success: #85CD7A;
+$leve-yellow: #F2F76A;
+$leve-orange: #F7C06A;
+$leve-red: #F76F6A;
+$leve-pink: #F76AE6;
+$leve-blue: #4975AB;
+$leve-purple: #bd6af7;
+
+// rgb colors
+$leve-primary-rgb: rgb(118,106,247);
+$leve-secondary-rgb: rgb(106,104,120);
+$leve-info-rgb: rgb(106,184,247);
+$leve-success-rgb: rgb(133,205,122);
+$leve-yellow-rgb: rgb(242,247,106);
+$leve-orange-rgb: rgb(247,192,106);
+$leve-red-rgb: rgb(247,111,106);
+$leve-pink-rgb: rgb(247,106,230);
+$leve-blue-rgb: rgb(73,117,171);
+$leve-purple-rgb: rgb(189,106,247);
+
+// hsl colors
+$levidade-primary-hsl: hsl(245.1,89.8%,69.2%);
+$levidade-secondary-hsl: hsl(247.5,7.1%,43.9%);
+$levidade-info-hsl: hsl(206.8,89.8%,69.2%);
+$levidade-success-hsl: hsl(112,45.4%,64.1%);
+$levidade-yellow-hsl: hsl(62.1,89.8%,69.2%);
+$levidade-orange-hsl: hsl(36.6,89.8%,69.2%);
+$levidade-red-hsl: hsl(2.1,89.8%,69.2%);
+$levidade-pink-hsl: hsl(307.2,89.8%,69.2%);
+$levidade-blue-hsl: hsl(213.1,40.2%,47.8%);
+$levidade-purple-hsl: hsl(275.3,89.8%,69.2%);
