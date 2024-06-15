@@ -17,6 +17,7 @@ export const useAuthStore = defineStore({
             if(response.data.status === 'error') {
                 this.error = response.data
             } else {
+                this.error = null;
                 this.user = response.data.data;
                 localStorage.setItem('user', JSON.stringify(this.user));
                 router.push(this.returnUrl || '/');
@@ -29,11 +30,14 @@ export const useAuthStore = defineStore({
             router.push('/login');
         },
 
-        async register(username, password, name, lastname) {
-            const response = await axios.post(`/users/authenticate`, { username, password, name, lastname });
-            this.user = response.data;
-            localStorage.setItem('user', JSON.stringify(this.user));
-            router.push(this.returnUrl || '/index');
+        async register(email,password,confirmPassword,name,lastname) {
+            try {
+                const response = await axios.post(`/users/register/`, { email: email, password: password, confirmPassword: confirmPassword, name: name, lastname:lastname });
+                this.user = response.data;
+                router.push(this.returnUrl || '/login');
+            } catch (error) {
+                this.error = error.response.data;
+            }
         },
     }
 });

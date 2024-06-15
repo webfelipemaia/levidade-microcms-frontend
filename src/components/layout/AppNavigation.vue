@@ -13,8 +13,8 @@
                     <li class="nav-item">
                         <a class="nav-link" href="">Pricing</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="">Download</a>
+                    <li v-if="authStore.user" class="nav-item">
+                        <a class="nav-link" href="/logout">Logout</a>
                     </li>
                 </ul>
             </div>
@@ -23,5 +23,7 @@
 </template>
 
 <script setup>
-
+    import { useAuthStore } from '../../stores/authStore';    
+    const authStore = useAuthStore();
+  
 </script>

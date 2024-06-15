@@ -1,9 +1,9 @@
 <template>
   <main>
-    <section class="py-5 py-lg-8">
+    <section class="">
       <div class="container">
         <div class="row">
-          <div class="col-xl-4 offset-xl-4 col-md-12 col-12">
+          <div class="col">
             <div class="text-center">
               <NavbarBrand
                 linkClasses="justify-content-center"
@@ -23,14 +23,10 @@
     <section>
       <div class="container">
         <div class="row">
-          <div class="col-md">
+          <div class="col">
             <div class="card shadow-sm mb-6">
               <div class="card-body">
-                <form
-                  @submit.prevent="register"
-                  class="needs-validation mb-6"
-                  novalidate=""
-                >
+                <form @submit.prevent="register"  class="needs-validation mb-6" novalidate="">
                   <div class="mb-3">
                     <label for="signinEmailInput" class="form-label">
                       Email
@@ -54,6 +50,23 @@
                         v-model="form.password"
                         class="form-control fakePassword"
                         id="formSignUpPassword"
+                        required=""
+                      />
+                      <span
+                        ><i class="bi bi-eye-slash passwordToggler"></i
+                      ></span>
+                    </div>
+                  </div>
+                  <div class="mb-3">
+                    <label for="formSignUpConfirmPassword" class="form-label"
+                      >Confirm Password</label
+                    >
+                    <div class="password-field position-relative">
+                      <input
+                        type="password"
+                        v-model="form.confirmPassword"
+                        class="form-control fakePassword"
+                        id="formSignUpConfirmPassword"
                         required=""
                       />
                       <span
@@ -112,6 +125,10 @@
                     </button>
                   </div>
                 </form>
+
+                <div v-if="authStore.error" class="alert alert-danger mt-3" role="alert">
+                  {{ authStore.error }}
+                </div>
               </div>
             </div>
           </div>
@@ -132,6 +149,7 @@ axios.defaults.withCredentials = true;
 const form = ref({
   email: null,
   password: null,
+  confirmPassword: null,
   name: null,
   lastname: null,
 });
@@ -140,6 +158,7 @@ async function register() {
   authStore.register(
     form.value.email,
     form.value.password,
+    form.value.confirmPassword,
     form.value.name,
     form.value.lastname
   );

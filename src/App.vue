@@ -1,77 +1,77 @@
 <template>
-    <AppNavigation @click="notifySidebar" />
-    <div class="d-flex align-items-strech">
-      <AppSidebar :is-active="sidebarActiveValue"  @updateValue="handleSidebarNotification"  />
-      
-      <div class="maincontent container">
-        <router-view />
-      </div>
-
+  <AppNavigation @click="notifySidebar" />
+  <div class="d-flex align-items-strech">
+    <AppSidebar :is-active="sidebarActiveValue"  @updateValue="handleSidebarNotification"  />
+    
+    <div class="maincontent container">
+      <router-view />
     </div>
-    <app-footer/>
+
+  </div>
+  <app-footer/>
 </template>
 
 <script setup>
 import { ref, defineEmits } from 'vue';
-import AppNavigation from './components/AppNavigation.vue'
-import AppFooter from './components/AppFooter.vue'
-import AppSidebar from './components/AppSidebar.vue'
+import AppNavigation from './components/layout/AppNavigation.vue'
+import AppFooter from './components/layout/AppFooter.vue'
+import AppSidebar from './components/layout/AppSidebar.vue'
 
 const emit = defineEmits(['update-value']);
 
 const notifySidebar = () => {  
-  var sidebarElem = document.querySelector(".sidebar");
-  sidebarElem.classList.add('show');
-  handleSidebarNotification(true);
-  emit('update-value', true);
+var sidebarElem = document.querySelector(".sidebar");
+sidebarElem.classList.add('show');
+handleSidebarNotification(true);
+emit('update-value', true);
 };
 
 const sidebarActiveValue = ref('false');
 
 const handleSidebarNotification = (value) => {
-  sidebarActiveValue.value = value;
+sidebarActiveValue.value = value;
 };
 
 </script>
 
-<style>
+<style lang="scss">
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  color: #4e4d58;
+font-family: Avenir, Helvetica, Arial, sans-serif;
+-webkit-font-smoothing: antialiased;
+-moz-osx-font-smoothing: grayscale;
+color: $body-default-color;
 }
 
 #app .navbar a,
 #app .navbar .nav-link {
-  color: #524aac;
+color: #524aac;
 }
 
 #app .navbar a:hover,
 #app .navbar .nav-link:hover {
-  color: #524aac;
-  text-decoration: none;
+color: #524aac;
+text-decoration: none;
 }
 
 #app .navbar a:after {
-  content: '';
-  display: block;
-  transform: scaleX(0);
-  border-bottom: 2px solid #524aac;
-  background: #2d5972;
-  transition: transform 0.5s ease;
-  transform-origin: left;
+content: '';
+display: block;
+transform: scaleX(0);
+border-bottom: 2px solid #524aac;
+background: #2d5972;
+transition: transform 0.5s ease;
+transform-origin: left;
 }
 
 
 #app a:hover::after {
-  transform: scaleX(1);
+transform: scaleX(1);
 }
 
 .navbar {
-  background-color: #ffffff;
-  color: #222222;
-  border-bottom: 1px solid rgba(76,103,118,.15);
+background-color: #ffffff;
+color: #222222;
+border-bottom: 1px solid rgba(76,103,118,.15);
 }
 
 /**
@@ -91,201 +91,201 @@ purple: #bd6af7 - rgb(189,106,247) hsl(275.3,89.8%,69.2%)
 
 @media (max-width: 768px) {
 
-  .leve.offcanvas-md {
-    position: fixed;
-    bottom: 0;
-    z-index: var(--bs-offcanvas-zindex);
-    display: flex;
-    flex-direction: column;
-    max-width: 100%;
-    color: var(--bs-offcanvas-color);
-    visibility: hidden;
-    background-color: var(--bs-offcanvas-bg);
-    background-clip: padding-box;
-    outline: 0;
-    transition: var(--bs-offcanvas-transition);
-  }
+.leve.offcanvas-md {
+  position: fixed;
+  bottom: 0;
+  z-index: var(--bs-offcanvas-zindex);
+  display: flex;
+  flex-direction: column;
+  max-width: 100%;
+  color: var(--bs-offcanvas-color);
+  visibility: hidden;
+  background-color: var(--bs-offcanvas-bg);
+  background-clip: padding-box;
+  outline: 0;
+  transition: var(--bs-offcanvas-transition);
+}
 
-  .leve.offcanvas-md.offcanvas-start {
-    top: 0;
-    left: 0;
-    width: var(--bs-offcanvas-width);
-    border-right: var(--bs-offcanvas-border-width) solid var(--bs-offcanvas-border-color);
-    transform: translateX(-100%);
-  }
+.leve.offcanvas-md.offcanvas-start {
+  top: 0;
+  left: 0;
+  width: var(--bs-offcanvas-width);
+  border-right: var(--bs-offcanvas-border-width) solid var(--bs-offcanvas-border-color);
+  transform: translateX(-100%);
+}
 
-  .leve.offcanvas-md.show:not(.hiding), .offcanvas-md.showing {
-    transform: none;
-  }
+.leve.offcanvas-md.show:not(.hiding), .offcanvas-md.showing {
+  transform: none;
+}
 
-  .leve.offcanvas-md.hiding, .offcanvas-md.show, .offcanvas-md.showing {
-    visibility: visible;
-  }
+.leve.offcanvas-md.hiding, .offcanvas-md.show, .offcanvas-md.showing {
+  visibility: visible;
+}
 }
 
 .sidebar {
-    transition: all .2s;
-    background: #fff;
-    /*box-shadow: 0 0.5rem 1rem rgba(0,0,0,.15);*/
-    border-right: 1px solid rgba(76,103,118,.15);
-    z-index: 2;
+  transition: all .2s;
+  background: #fff;
+  /*box-shadow: 0 0.5rem 1rem rgba(0,0,0,.15);*/
+  border-right: 1px solid rgba(76,103,118,.15);
+  z-index: 2;
 }
 
 .sidebar .nav .nav-item .nav-link {
-  color: #524aac;
-  font-weight: bold;
+color: #524aac;
+font-weight: bold;
 }
 
 .sidebar .nav .nav-item .subnav .nav-link {
 color: #6A6878;
-  font-weight: 400;
+font-weight: 400;
 }
 
 .sidebar .nav .nav-item .nav-link:hover,
 .sidebar .nav .nav-item .subnav .nav-link:hover {
-  color: #3b3b43;
+color: #3b3b43;
 }
 
 .sidebar .nav .nav-item .subnav .nav-link:active,
 .sidebar .nav .nav-item .subnav .nav-link:focus {
-  background-color: rgba(118,106,247,0.10);
-  border-radius: 8px;
-  border: none;
-  color: #524aac;
+background-color: rgba(118,106,247,0.10);
+border-radius: 8px;
+border: none;
+color: #524aac;
 }
 
 .sidebar a:focus-visible {
-  box-shadow: none;
+box-shadow: none;
 }
 
 .maincontent {
-  display: flex;
-  overflow-x: hidden;
-  width: 100%;
-  min-height: calc(100vh - 72px);
-  padding-top: 1rem;
-  flex-wrap: wrap;
+display: flex;
+overflow-x: hidden;
+width: 100%;
+min-height: calc(100vh - 72px);
+padding-top: 1rem;
+flex-wrap: wrap;
 }
 
 .maincontent section .heading {
-  padding: 1rem;
-  margin-bottom: 1.5rem;
+padding: 1rem;
+margin-bottom: 1.5rem;
 }
 
 
 .maincontent section .heading h2,
 .maincontent section .snippets .snippets_item .snippets_item-title{
-  /*color: hsl(244.9,39.8%,35%);*/
-  color: #524aac;
+/*color: hsl(244.9,39.8%,35%);*/
+color: #524aac;
 }
 
 .maincontent section .snippets {
-  padding: 1rem;
+padding: 1rem;
 }
 
 .maincontent section .snippets .snippets_heading {
-  margin-bottom: 1.5rem;
+margin-bottom: 1.5rem;
 }
 .maincontent section .snippets .snippets_short-description {
-  padding-top: 0.5rem;
-  margin-bottom: 1.75rem;
+padding-top: 0.5rem;
+margin-bottom: 1.75rem;
 }
 
 .maincontent section .snippets .snippets_item {
-  padding-top: 3rem;
-  padding-bottom: 1.5rem;
+padding-top: 3rem;
+padding-bottom: 1.5rem;
 
 }
 
 .maincontent section .snippets .snippets_short-description p,
 .maincontent section .snippets .snippets_item .snippets_item-description p {
-  line-height: 2rem;
+line-height: 2rem;
 }
 
 .maincontent section .snippets .snippets_item .snippets_item-code {
-  border: 1px solid rgba(118,106,247,.05);
-  background-color: rgba(118,106,247,.05);
-  margin-bottom: 1.5rem;
+border: 1px solid rgba(118,106,247,.05);
+background-color: rgba(118,106,247,.05);
+margin-bottom: 1.5rem;
 }
 
 .maincontent section .snippets .snippets_item .snippets_item-code pre code {
-  background-color: transparent;
+background-color: transparent;
 }
 
 .maincontent section .snippets .snippets_item .snippets_item-code pre {
-  margin-bottom: 0;
+margin-bottom: 0;
 }
 
 .tip {
-    margin: 28px 0;
-    padding: 20px 24px 4px 42px;
-    overflow-x: auto;
-    transition: color .5s, background-color .5s;
-    position: relative;
-    font-size: 15px;
-    line-height: 1.6;
-    font-weight: 500;
-    color: hsl(247.5,7.1%,33.9%);
-    background-color: hsl(244.3,11.8%,90.3%);
-    border-bottom: 4px solid hsl(244.3,11.8%,73.3%);
+  margin: 28px 0;
+  padding: 20px 24px 4px 42px;
+  overflow-x: auto;
+  transition: color .5s, background-color .5s;
+  position: relative;
+  font-size: 15px;
+  line-height: 1.6;
+  font-weight: 500;
+  color: hsl(247.5,7.1%,33.9%);
+  background-color: hsl(244.3,11.8%,90.3%);
+  border-bottom: 4px solid hsl(244.3,11.8%,73.3%);
 }
 
 .tip .tip_title {
-  font-weight: bold;
+font-weight: bold;
 }
 
 .tip.tip-primary {
-    background-color: hsl(245.1,89.8%,95.2%);
-    border-bottom: 4px solid hsl(245.1,89.8%,83.2%);
+  background-color: hsl(245.1,89.8%,95.2%);
+  border-bottom: 4px solid hsl(245.1,89.8%,83.2%);
 }
 
 .tip.tip-secondary {
-    background-color: hsl(247.5,7.1%,95.9%);
-    border-bottom: 4px solid hsl(247.5,7.1%,83.9%);
+  background-color: hsl(247.5,7.1%,95.9%);
+  border-bottom: 4px solid hsl(247.5,7.1%,83.9%);
 }
 
 .tip.tip-success {
-    background-color: hsl(112,45.4%,95.1%);
-    border-bottom: 4px solid hsl(112,45.4%,83.1%);
+  background-color: hsl(112,45.4%,95.1%);
+  border-bottom: 4px solid hsl(112,45.4%,83.1%);
 }
 
 .tip.tip-danger {
-    background-color: hsl(2.1,89.8%,95.2%);
-    border-bottom: 4px solid hsl(2.1,89.8%,83.2%);
+  background-color: hsl(2.1,89.8%,95.2%);
+  border-bottom: 4px solid hsl(2.1,89.8%,83.2%);
 }
 
 .tip.tip-warning {
-    background-color: hsl(62.1,89.8%,93.2%);
-    border-bottom: 4px solid hsl(62.1,89.8%,83.2%);
+  background-color: hsl(62.1,89.8%,93.2%);
+  border-bottom: 4px solid hsl(62.1,89.8%,83.2%);
 }
 
 .tip.tip-info {
-    background-color: hsl(206.8,89.8%,93.2%);
-    border-bottom: 4px solid hsl(206.8,89.8%,83.2%);
+  background-color: hsl(206.8,89.8%,93.2%);
+  border-bottom: 4px solid hsl(206.8,89.8%,83.2%);
 }
 
 .tip.tip-light {
-    background-color: hsl(260,9.7%,98.9%);
-    border-bottom: 4px solid hsl(260,9.7%,92.9%);
+  background-color: hsl(260,9.7%,98.9%);
+  border-bottom: 4px solid hsl(260,9.7%,92.9%);
 }
 
 .tip.tip-dark {
-    background-color: hsl(260,9.7%,38.9%);
-    border-bottom: 4px solid hsl(260,9.7%,15.9%);
-    color: hsl(260,9.7%,95.9%);
+  background-color: hsl(260,9.7%,38.9%);
+  border-bottom: 4px solid hsl(260,9.7%,15.9%);
+  color: hsl(260,9.7%,95.9%);
 }
 
 footer {
-  background-color: hsl(260,9.7%,98.9%);
+background-color: hsl(260,9.7%,98.9%);
 }
 
 footer .nav .nav-item .nav-link {
-  color: hsl(247.5,7.1%,43.9%);
+color: hsl(247.5,7.1%,43.9%);
 }
 
 footer .nav .nav-item .nav-link:hover {
-  color: #524aac;
-  text-decoration: underline;
+color: #524aac;
+text-decoration: underline;
 }
 
 
