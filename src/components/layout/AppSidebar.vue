@@ -10,7 +10,7 @@
         <div class="offcanvas-header">
             
     <h5 class="offcanvas-title" id="offcanvasExampleLabel">Offcanvas</h5>
-    <button  @click="updateValue" type="button" class="btn-close" aria-label="Close"></button>
+    <button @click="updateValue" type="button" class="btn-close" aria-label="Close"></button>
   </div>
     <div class="offcanvas-body flex-shrink-0 p-3" style="width: 280px;">
             <ul class="nav flex-column">

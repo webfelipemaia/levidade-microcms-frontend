@@ -42,6 +42,28 @@ const routes =  [
       path: '/register',
       name: 'register', 
       component: () => import("./views/RegisterView.vue")
+    },
+
+    // Users
+
+    { 
+      path: '/user',
+      name: 'user', 
+      component: () => import("./components/user/UserIndex.vue")
+    },
+
+    // Admins
+
+    { 
+      path: '/admin',
+      name: 'admin', 
+      component: () => import("./components/admin/AdminIndex.vue")
+    },
+
+    { 
+      path: '/admin/profile',
+      name: 'admin/profile', 
+      component: () => import("./components/admin/AdminProfile.vue")
     }
   ];
   
