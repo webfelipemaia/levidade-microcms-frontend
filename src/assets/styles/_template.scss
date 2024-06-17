@@ -227,6 +227,19 @@
             }
         }
     }
+
+    .card {
+        > .table-responsive {
+            .table {
+                width: 100%;
+                margin-bottom: 4px;
+
+                &:last-child {
+                    border-bottom: transparent;
+                }
+            }
+        }
+    }
 }      
     
     

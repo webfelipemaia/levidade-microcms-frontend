@@ -7,6 +7,7 @@ import VueHighlightJS from 'vue3-highlightjs'
 import 'highlight.js/styles/lightfair.css'
 import "bootstrap"
 import "bootstrap/dist/css/bootstrap.min.css"
+import "bootstrap-icons/font/bootstrap-icons.css"
 import "@/assets/styles/_template.scss"
 
 
