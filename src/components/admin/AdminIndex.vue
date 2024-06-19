@@ -23,8 +23,8 @@
                                     <td class="align-middle">{{ user.updated_at }}</td>
                                     <td>
                                         <div class="d-flex">
-                                            <div class="p-2 flex-fill"><button @click="openEditModal(user)" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal"><i class="bi bi-pencil"></i></button></div>
-                                            <div class="p-2 flex-fill"><button type="button" class="btn" data-bs-toggle="button"><i class="bi bi-trash3"></i></button></div>
+                                            <div class="p-2 flex-fill"><button @click="openEditModal(user)" type="button" class="btn"><i class="bi bi-pencil"></i></button></div>
+                                            <div class="p-2 flex-fill"><button type="button" class="btn"><i class="bi bi-trash3"></i></button></div>
                                         </div>
                                     </td>
                                     </tr>
@@ -33,7 +33,7 @@
                         </div>
                 </div>
                 
-                <div v-if="isEditModalOpen" @close="closeEditModal" class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div v-if="isEditModalOpen" @close="closeEditModal" class="modal fade">
                     <div class="modal-dialog">
                         <div class="modal-content">
                             <form @submit.prevent="saveEdit">
@@ -86,16 +86,50 @@ const fetchUsers = async () => {
 const openEditModal = (item) => {
   editedItem.value = { ...item }
   isEditModalOpen.value = true
+  addBackDrop()
 }
 
 const closeEditModal = () => {
   isEditModalOpen.value = false
+  removeBackDrop()
+}
+
+const addBackDrop = () => {
+    // add styles to body
+    const body = document.querySelector('body');
+    body.style.overflow = 'hidden';
+    body.style.paddingRight = '15px';
+
+    // add .show
+    const modal = document.querySelector('.modal.fade');
+    modal.classList.add('show');
+    modal.style.display = 'block';
+
+
+    // create a new div
+    const parentDiv = document.querySelector('.maincontent.container');
+    const newDiv = document.createElement('div');
+    newDiv.classList.add('modal-overlay', 'modal-content');
+    parentDiv.appendChild(newDiv);
+}
+
+const removeBackDrop = () => {
+    document.body.style = ''
+    const modal = document.querySelector('.modal.fade');
+    modal.style =  ''
+    modal.classList.remove('show')
+    
+    const parentDiv = document.querySelector('.maincontent.container');
+    const childDiv = parentDiv.querySelector('.modal-overlay.modal-content');
+    if (childDiv) {
+      parentDiv.removeChild(childDiv);
+    }
 }
 
 const saveEdit = () => {
-    // send data to store and save it
-    console.log(editedItem.value)
+    userStore.updateUser(editedItem.value.id,editedItem.value)
     closeEditModal()
+    fetchUsers()
 }
 
 onMounted(() => {
@@ -103,3 +137,24 @@ onMounted(() => {
     isEditModalOpen.value = true
 });
 </script>
+
+<style>
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.modal-content {
+  padding: 0;
+  border-radius: 8px;
+}
+.show {
+    transform: none;
+}
+</style>

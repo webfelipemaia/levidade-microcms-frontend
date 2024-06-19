@@ -20,5 +20,10 @@ export const useUserStore = defineStore({
                 this.users = response.data;
             }
         },
+
+        async updateUser(id,data) {
+            const response =  await axios.put(`/users/${id}`, data);
+            console.log(response.data);
+        }
     }
 })
