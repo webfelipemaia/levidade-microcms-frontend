@@ -29,17 +29,21 @@
                                     </td>
                                     </tr>
                                 </tbody>
+
+                                <tbody v-else>
+                                    <p>No data</p>
+                                </tbody>
                             </table>
                         </div>
                 </div>
                 
-                <div v-if="isEditModalOpen" @close="closeEditModal" class="modal fade">
+                <div @close="closeEditModal" class="modal fade" :class="{show: isEditModalOpen}">
                     <div class="modal-dialog">
                         <div class="modal-content">
                             <form @submit.prevent="saveEdit">
                         <div class="modal-header">
                             <h1 class="modal-title fs-5" id="exampleModalLabel">Edit item</h1>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            <button  type="button" @click="closeEditModal" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
                             <div class="mb-3">
@@ -56,7 +60,7 @@
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="button" @click="closeEditModal" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                             <button type="submit" class="btn btn-primary">Save</button>
                         </div>
                     </form>
@@ -67,21 +71,21 @@
 </template>
 
 <script setup>
-import { ref,onMounted } from 'vue';
-import { storeToRefs } from 'pinia';
-//import { useAuthStore } from '../../stores/authStore';
-import { useUserStore } from '../../stores/userStore';
+import { ref,onMounted, onUpdated } from 'vue'
+import { storeToRefs } from 'pinia'
+//import { useAuthStore } from '../../stores/authStore'
+import { useUserStore } from '../../stores/userStore'
 //const authStore = useAuthStore()
 const userStore = useUserStore()
 
-//const { user } = storeToRefs(authStore);
-const { users } =  storeToRefs(userStore);
-const isEditModalOpen = ref(false);
-const editedItem = ref({});
+//const { user } = storeToRefs(authStore)
+const { users } =  storeToRefs(userStore)
+const isEditModalOpen = ref(false)
+const editedItem = ref({})
 
 const fetchUsers = async () => {
-    await userStore.getUsers();
-};
+    await userStore.getUsers()
+}
 
 const openEditModal = (item) => {
   editedItem.value = { ...item }
@@ -96,33 +100,34 @@ const closeEditModal = () => {
 
 const addBackDrop = () => {
     // add styles to body
-    const body = document.querySelector('body');
-    body.style.overflow = 'hidden';
-    body.style.paddingRight = '15px';
+    const body = document.querySelector('body')
+    body.style.overflow = 'hidden'
+    body.style.paddingRight = '15px'
 
-    // add .show
-    const modal = document.querySelector('.modal.fade');
-    modal.classList.add('show');
-    modal.style.display = 'block';
-
+    // show modal
+    const modal = document.querySelector('.modal.fade')
+    if(modal) {
+        modal.classList.add('show')
+        modal.style.display = 'block'
+    }
 
     // create a new div
-    const parentDiv = document.querySelector('.maincontent.container');
-    const newDiv = document.createElement('div');
-    newDiv.classList.add('modal-overlay', 'modal-content');
-    parentDiv.appendChild(newDiv);
+    const parentDiv = document.querySelector('.maincontent.container')
+    const newDiv = document.createElement('div')
+    newDiv.classList.add('modal-overlay', 'modal-content')
+    parentDiv.appendChild(newDiv)
 }
 
 const removeBackDrop = () => {
     document.body.style = ''
-    const modal = document.querySelector('.modal.fade');
+    const modal = document.querySelector('.modal.fade')
     modal.style =  ''
     modal.classList.remove('show')
     
-    const parentDiv = document.querySelector('.maincontent.container');
-    const childDiv = parentDiv.querySelector('.modal-overlay.modal-content');
+    const parentDiv = document.querySelector('.maincontent.container')
+    const childDiv = parentDiv.querySelector('.modal-overlay.modal-content')
     if (childDiv) {
-      parentDiv.removeChild(childDiv);
+      parentDiv.removeChild(childDiv)
     }
 }
 
@@ -133,9 +138,13 @@ const saveEdit = () => {
 }
 
 onMounted(() => {
-    fetchUsers();
-    isEditModalOpen.value = true
-});
+    fetchUsers()
+    //isEditModalOpen.value = true
+})
+
+onUpdated(() => {
+    fetchUsers()
+})
 </script>
 
 <style>
