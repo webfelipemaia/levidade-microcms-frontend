@@ -71,20 +71,19 @@
 </template>
 
 <script setup>
-import { ref,onMounted, onUpdated } from 'vue'
+import { ref, onMounted } from 'vue'
 import { storeToRefs } from 'pinia'
 //import { useAuthStore } from '../../stores/authStore'
 import { useUserStore } from '../../stores/userStore'
+
 //const authStore = useAuthStore()
 const userStore = useUserStore()
-
-//const { user } = storeToRefs(authStore)
 const { users } =  storeToRefs(userStore)
 const isEditModalOpen = ref(false)
 const editedItem = ref({})
 
 const fetchUsers = async () => {
-    await userStore.getUsers()
+   await userStore.getUsers()
 }
 
 const openEditModal = (item) => {
@@ -133,18 +132,13 @@ const removeBackDrop = () => {
 
 const saveEdit = () => {
     userStore.updateUser(editedItem.value.id,editedItem.value)
-    closeEditModal()
-    fetchUsers()
+    closeEditModal()    
 }
 
 onMounted(() => {
     fetchUsers()
-    //isEditModalOpen.value = true
 })
 
-onUpdated(() => {
-    fetchUsers()
-})
 </script>
 
 <style>

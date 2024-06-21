@@ -12,7 +12,6 @@ export const useUserStore = defineStore({
     actions: {
         async getUsers() {
             const response = await axios.get(`/users`);
-            //this.users = response.data;
             if(response.data.status === 'error') {
                 this.error = response.data
             } else {
@@ -23,7 +22,13 @@ export const useUserStore = defineStore({
 
         async updateUser(id,data) {
             const response =  await axios.put(`/users/${id}`, data);
-            console.log(response.data);
+            if(response.data.status === 'success'){                
+                    const response = await axios.get(`/users`)
+
+                    if(response.data.status !== 'error') {
+                        this.users = response.data;
+                    }
+            }
         }
     }
 })
