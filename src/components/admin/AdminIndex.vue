@@ -23,7 +23,7 @@
                                     <td class="align-middle">{{ user.updated_at }}</td>
                                     <td>
                                         <div class="d-flex">
-                                            <div class="p-2 flex-fill"><button @click="openEditModal(user)" type="button" class="btn"><i class="bi bi-pencil"></i></button></div>
+                                            <div class="p-2 flex-fill"><button @click="[showModal=true,selectedUser=user]" type="button" class="btn"><i class="bi bi-pencil"></i></button></div>
                                             <div class="p-2 flex-fill"><button type="button" class="btn"><i class="bi bi-trash3"></i></button></div>
                                         </div>
                                     </td>
@@ -37,41 +37,43 @@
                         </div>
                 </div>
                 
-                <div @close="closeEditModal" class="modal fade" :class="{show: isEditModalOpen}">
+                <!-- <div @close="closeEditModal" class="modal fade" :class="{show: isEditModalOpen}">
                     <div class="modal-dialog">
                         <div class="modal-content">
                             <form @submit.prevent="saveEdit">
-                        <div class="modal-header">
-                            <h1 class="modal-title fs-5" id="exampleModalLabel">Edit item</h1>
-                            <button  type="button" @click="closeEditModal" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                            <div class="mb-3">
-                                <label for="name" class="col-form-label">Name:</label>
-                                <input v-model="editedItem.name" type="text" class="form-control" id="name">
-                            </div>
-                            <div class="mb-3">
-                                <label for="lastname" class="col-form-label">Last Name:</label>
-                                <input v-model="editedItem.lastname" type="text" class="form-control" id="lastname">
-                            </div>
-                            <div class="mb-3">
-                                <label for="email" class="col-form-label">E-mail:</label>
-                                <input v-model="editedItem.email" type="text" class="form-control" id="email">
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" @click="closeEditModal" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-primary">Save</button>
-                        </div>
-                    </form>
+                                <div class="modal-header">
+                                    <h1 class="modal-title fs-5" id="exampleModalLabel">Edit item</h1>
+                                    <button  type="button" @click="closeEditModal" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="mb-3">
+                                        <label for="name" class="col-form-label">Name:</label>
+                                        <input v-model="editedItem.name" type="text" class="form-control" id="name">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="lastname" class="col-form-label">Last Name:</label>
+                                        <input v-model="editedItem.lastname" type="text" class="form-control" id="lastname">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="email" class="col-form-label">E-mail:</label>
+                                        <input v-model="editedItem.email" type="text" class="form-control" id="email">
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" @click="closeEditModal" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                    <button type="submit" class="btn btn-primary">Save</button>
+                                </div>
+                            </form>
                         </div>
                     </div>
-                </div>
+                </div> -->
         </div>
+        <app-modal :data="selectedUser" :show="showModal" @close="showModal=false"></app-modal>
 </template>
 
 <script setup>
 import { ref, onMounted } from 'vue'
+import AppModal from '../layout/ui/AppModal'
 import { storeToRefs } from 'pinia'
 //import { useAuthStore } from '../../stores/authStore'
 import { useUserStore } from '../../stores/userStore'
@@ -79,60 +81,11 @@ import { useUserStore } from '../../stores/userStore'
 //const authStore = useAuthStore()
 const userStore = useUserStore()
 const { users } =  storeToRefs(userStore)
-const isEditModalOpen = ref(false)
-const editedItem = ref({})
+const showModal = ref(false)
+const selectedUser = ref([])
 
 const fetchUsers = async () => {
    await userStore.getUsers()
-}
-
-const openEditModal = (item) => {
-  editedItem.value = { ...item }
-  isEditModalOpen.value = true
-  addBackDrop()
-}
-
-const closeEditModal = () => {
-  isEditModalOpen.value = false
-  removeBackDrop()
-}
-
-const addBackDrop = () => {
-    // add styles to body
-    const body = document.querySelector('body')
-    body.style.overflow = 'hidden'
-    body.style.paddingRight = '15px'
-
-    // show modal
-    const modal = document.querySelector('.modal.fade')
-    if(modal) {
-        modal.classList.add('show')
-        modal.style.display = 'block'
-    }
-
-    // create a new div
-    const parentDiv = document.querySelector('.maincontent.container')
-    const newDiv = document.createElement('div')
-    newDiv.classList.add('modal-overlay', 'modal-content')
-    parentDiv.appendChild(newDiv)
-}
-
-const removeBackDrop = () => {
-    document.body.style = ''
-    const modal = document.querySelector('.modal.fade')
-    modal.style =  ''
-    modal.classList.remove('show')
-    
-    const parentDiv = document.querySelector('.maincontent.container')
-    const childDiv = parentDiv.querySelector('.modal-overlay.modal-content')
-    if (childDiv) {
-      parentDiv.removeChild(childDiv)
-    }
-}
-
-const saveEdit = () => {
-    userStore.updateUser(editedItem.value.id,editedItem.value)
-    closeEditModal()    
 }
 
 onMounted(() => {
