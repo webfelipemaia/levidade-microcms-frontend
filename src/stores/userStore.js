@@ -1,12 +1,12 @@
 import { defineStore } from 'pinia';
 import axios from 'axios';
-//import router from '../router';
 
 export const useUserStore = defineStore({
     id: 'user',
     state: () => ({
         users: [],
         error: null,
+        successMessage: null,
     }),
 
     actions: {
@@ -22,13 +22,18 @@ export const useUserStore = defineStore({
 
         async updateUser(id,data) {
             const response =  await axios.put(`/users/${id}`, data);
+            this.successMessage = response.data.message
             if(response.data.status === 'success'){                
                     const response = await axios.get(`/users`)
-
                     if(response.data.status !== 'error') {
-                        this.users = response.data;
-                    }
+                        this.users = response.data;                 }
+            } else {
+                this.successMessage = null
             }
+        },
+
+        clearSuccessMessage() {
+            this.successMessage = null
         }
     }
 })

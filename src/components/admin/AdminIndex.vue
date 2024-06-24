@@ -1,11 +1,14 @@
 <template>
-        <div class="container-fluid">
-                <div class="card card-fluid">
-                    <div class="card-header">
-                        Users
-                    </div>
-                        <div class="table-responsive">
-                            <table class="table table-striped">
+    <div class="container-fluid">
+        <p>teste</p>
+        <app-card>
+            <template #header>
+                <app-card-header>All users</app-card-header>
+            </template>
+            <template #body>
+                
+                <div class="table-responsive">
+                    <table class="table table-striped">
                                 <thead>
                                     <tr>
                                     <th scope="col">#</th>
@@ -33,52 +36,22 @@
                                 <tbody v-else>
                                     <p>No data</p>
                                 </tbody>
-                            </table>
-                        </div>
+                    </table>
                 </div>
-                
-                <!-- <div @close="closeEditModal" class="modal fade" :class="{show: isEditModalOpen}">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <form @submit.prevent="saveEdit">
-                                <div class="modal-header">
-                                    <h1 class="modal-title fs-5" id="exampleModalLabel">Edit item</h1>
-                                    <button  type="button" @click="closeEditModal" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                </div>
-                                <div class="modal-body">
-                                    <div class="mb-3">
-                                        <label for="name" class="col-form-label">Name:</label>
-                                        <input v-model="editedItem.name" type="text" class="form-control" id="name">
-                                    </div>
-                                    <div class="mb-3">
-                                        <label for="lastname" class="col-form-label">Last Name:</label>
-                                        <input v-model="editedItem.lastname" type="text" class="form-control" id="lastname">
-                                    </div>
-                                    <div class="mb-3">
-                                        <label for="email" class="col-form-label">E-mail:</label>
-                                        <input v-model="editedItem.email" type="text" class="form-control" id="email">
-                                    </div>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" @click="closeEditModal" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                    <button type="submit" class="btn btn-primary">Save</button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div> -->
-        </div>
-        <app-modal :data="selectedUser" :show="showModal" @close="showModal=false"></app-modal>
+            </template>
+        </app-card>           
+    </div>
+    <app-modal :data="selectedUser" :show="showModal" @close="showModal=false" @save-data="saveData($event)"></app-modal>
 </template>
 
 <script setup>
 import { ref, onMounted } from 'vue'
 import AppModal from '../layout/ui/AppModal'
+import AppCard from '../layout/ui/card/AppCard'
+import AppCardHeader from '../layout/ui/card/AppCardHeader'
 import { storeToRefs } from 'pinia'
-//import { useAuthStore } from '../../stores/authStore'
 import { useUserStore } from '../../stores/userStore'
 
-//const authStore = useAuthStore()
 const userStore = useUserStore()
 const { users } =  storeToRefs(userStore)
 const showModal = ref(false)
@@ -86,6 +59,12 @@ const selectedUser = ref([])
 
 const fetchUsers = async () => {
    await userStore.getUsers()
+}
+
+
+
+const saveData = (data) => {
+    userStore.updateUser(data.id,data)
 }
 
 onMounted(() => {

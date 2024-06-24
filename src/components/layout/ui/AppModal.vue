@@ -2,7 +2,7 @@
     <div class="modal fade" :class="{show: (show && isEditModalOpen)}">
         <div class="modal-dialog">
             <div class="modal-content">
-                <form @submit.prevent="saveEdit">
+                <form @submit.prevent="">
                     <div class="modal-header">
                         <h1 class="modal-title fs-5" id="exampleModalLabel">Edit item</h1>
                         <button  type="button" @click="$emit('close')" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -20,10 +20,22 @@
                             <label for="email" class="col-form-label">E-mail:</label>
                             <input v-model="editedItem.email" type="text" class="form-control" id="email">
                         </div>
+                        <!--    
+                        
+                        Next updates:
+                        1. Update this message with each new registration/update
+                        2. Change to create or edit modal
+                        
+                        <div v-if="userStore.successMessage">
+                            <div class="alert alert-success  alert-dismissible fade show" role="alert">
+                                <p><i class="bi bi-exclamation-circle me-2"></i> {{ userStore.successMessage }}</p>
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        </div> -->
                     </div>
                     <div class="modal-footer">
-                        <button type="button" @click="$emit('close')" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary" @click="$emit('close')">Save</button>
+                        <button type="button" @click="$emit('close')" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary" @click.prevent.stop="$emit('saveData',editedItem)">Save</button>
                     </div>
                 </form>
             </div>
@@ -32,14 +44,9 @@
 </template>
 
 <script setup>
-    import { ref, onMounted, defineProps, watch } from 'vue'
-    //import { storeToRefs } from 'pinia'
-    //import { useAuthStore } from '../../../stores/authStore'
-    import { useUserStore } from '../../../stores/userStore'
-    
-    //const authStore = useAuthStore()
-    const userStore = useUserStore()
-    //const { users } =  storeToRefs(userStore)
+import { useUserStore } from '@/stores/userStore';
+import { ref, defineProps, watch } from 'vue'
+const userStore = useUserStore()
     const isEditModalOpen = ref(false)
     const editedItem = ref({})
 
@@ -54,12 +61,9 @@
         if(!props.show){
             closeEditModal()
             removeBackDrop()
+            userStore.clearSuccessMessage()
         }
     })
-    
-    const fetchUsers = async () => {
-       await userStore.getUsers()
-    }
     
     const openEditModal = (item) => {
       editedItem.value = { ...item }
@@ -105,15 +109,6 @@
         }
     }
     
-    const saveEdit = () => {
-        userStore.updateUser(editedItem.value.id,editedItem.value)
-        isEditModalOpen.value = false
-        closeEditModal()    
-    }
-    
-    onMounted(() => {
-        fetchUsers()
-    })
     
 </script>
 

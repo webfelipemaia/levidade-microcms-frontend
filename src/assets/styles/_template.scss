@@ -229,6 +229,18 @@
     }
 
     .card {
+
+        .card-header {
+            background-color: transparent;
+            border-bottom-color: rgba(0,0,0,.09);
+        }
+
+
+        .card-footer {
+            background-color: transparent;
+            border-top-color: rgba(0,0,0,.09);
+        }
+
         > .table-responsive {
             .table {
                 width: 100%;
