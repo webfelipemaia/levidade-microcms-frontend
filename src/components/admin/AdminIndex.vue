@@ -3,7 +3,12 @@
         <p>teste</p>
         <app-card>
             <template #header>
-                <app-card-header>All users</app-card-header>
+                <app-card-header>
+                    <div class="d-flex justify-content-between">
+                        <span>All users</span>
+                        <button @click="[showModal=true,selectedUser={}]" type="button" class="btn btn-primary"><i class="bi bi-plus"></i> New</button>
+                    </div>
+                </app-card-header>
             </template>
             <template #body>
                 
@@ -61,9 +66,19 @@ const fetchUsers = async () => {
    await userStore.getUsers()
 }
 
-
-
 const saveData = (data) => {
+    if(data.id) {
+        updateData(data)
+    } else {
+        createData(data)  
+    }
+} 
+
+const createData = (data) => {
+    userStore.createUser(data)
+}
+
+const updateData = (data) => {
     userStore.updateUser(data.id,data)
 }
 

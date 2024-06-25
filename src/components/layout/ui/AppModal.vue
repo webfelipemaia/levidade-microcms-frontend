@@ -4,7 +4,7 @@
             <div class="modal-content">
                 <form @submit.prevent="">
                     <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="exampleModalLabel">Edit item</h1>
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">{{ editedItem.id ? 'Editar' : 'Adicionar' }} item</h1>
                         <button  type="button" @click="$emit('close')" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
@@ -19,6 +19,16 @@
                         <div class="mb-3">
                             <label for="email" class="col-form-label">E-mail:</label>
                             <input v-model="editedItem.email" type="text" class="form-control" id="email">
+                        </div>
+
+                        <div v-if="!editedItem.id" class="mb-3">
+                            <label for="password" class="col-form-label">Password:</label>
+                            <input v-model="editedItem.password" type="password" class="form-control" id="password">
+                        </div>
+
+                        <div v-if="!editedItem.id" class="mb-3">
+                            <label for="confirmPassword" class="col-form-label">Confirm Password:</label>
+                            <input v-model="editedItem.confirmPassword" type="password" class="form-control" id="confirmPassword">
                         </div>
                         <!--    
                         
@@ -35,7 +45,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" @click="$emit('close')" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn btn-primary" @click.prevent.stop="$emit('saveData',editedItem)">Save</button>
+                        <button type="submit" class="btn btn-primary" @click.prevent.stop="saveData(editedItem)">Save</button>
                     </div>
                 </form>
             </div>
@@ -45,7 +55,8 @@
 
 <script setup>
 import { useUserStore } from '@/stores/userStore';
-import { ref, defineProps, watch } from 'vue'
+import { ref, defineProps, defineEmits, watch } from 'vue'
+
 const userStore = useUserStore()
     const isEditModalOpen = ref(false)
     const editedItem = ref({})
@@ -54,6 +65,8 @@ const userStore = useUserStore()
         show: Boolean,
         data: [Object,Array]
     })
+
+    const emit = defineEmits(['close', 'saveData'])
 
     watch(() => props.show, () => {
         openEditModal()
@@ -107,6 +120,15 @@ const userStore = useUserStore()
         if (childDiv) {
           parentDiv.removeChild(childDiv)
         }
+
+    }
+
+    const saveData = (item) => {
+            if(item.id) {
+                emit('saveData', item)
+            } else{
+                emit('saveData', item)
+            }
     }
     
     
