@@ -5,37 +5,36 @@ export const useUserStore = defineStore({
     id: 'user',
     state: () => ({
         users: [],
-        error: null,
-        successMessage: null,
+        message: null,
     }),
 
     actions: {
         async getUsers() {
             const response = await axios.get(`/users`);
             if(response.data.status === 'error') {
-                this.error = response.data
+                this.message = response.data
             } else {
-                this.error = null;
+                this.message = null;
                 this.users = response.data;
             }
         },
 
         async updateUser(id,data) {
+            try {                
             const response =  await axios.put(`/users/${id}`, data);
-            this.successMessage = response.data.message
-            //this.doneSuccessfully(response)
-            if(response.data.status === 'success'){                
-                const response = await axios.get(`/users`)
-                if(response.data.status !== 'error') {
-                    this.users = response.data;                 }
-            } else {
-                this.successMessage = null
+            this.message = response.data
+            await axios.get(`/users`)
+            
+            } catch (error) {
+                let errorMessage = error.response.data.message
+                this.message = { status:'error', message: errorMessage.replaceAll('"', '')}
+                console.log(error.response)
             }
         },
 
 
         async createUser(data) {
-            console.log(data)
+            try {
             const response =  await axios.post('/users/register',
                 { 
                     email: data.email, 
@@ -45,14 +44,13 @@ export const useUserStore = defineStore({
                     lastname: data.lastname 
                 }
             );
-            this.successMessage = response.data.message
-            //this.doneSuccessfully(response)
-            if(response.data.status === 'success'){                
-                const response = await axios.get(`/users`)
-                if(response.data.status !== 'error') {
-                    this.users = response.data;                 }
-            } else {
-                this.successMessage = null
+            this.message = response.data
+            await axios.get(`/users`)
+            
+            } catch (error) {
+                let errorMessage = error.response.data.message
+                this.message = { status:'error', message: errorMessage.replaceAll('"', '')}
+                console.log(error.response)
             }
         },
         
@@ -61,8 +59,6 @@ export const useUserStore = defineStore({
                 const response = await axios.get(`/users`)
                 if(response.data.status !== 'error') {
                     this.users = response.data;                 }
-            } else {
-                this.successMessage = null
             }
         },
 

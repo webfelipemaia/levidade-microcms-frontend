@@ -1,6 +1,13 @@
 <template>
     <div class="container-fluid">
-        <p>teste</p>
+        <app-alert type="success">Success! Lorem ipsum dolor sit amet</app-alert>        
+        <app-alert type="danger">Danger! Lorem ipsum dolor sit amet</app-alert>
+        <app-alert type="warning">Warning! Lorem ipsum dolor sit amet</app-alert>
+        <app-alert type="info">Info! Lorem ipsum dolor sit amet</app-alert>
+        <app-alert type="light" no-icon>Light! Lorem ipsum dolor sit amet</app-alert>
+        <app-alert type="dark" no-icon>Dark! Lorem ipsum dolor sit amet</app-alert>
+        <app-alert type="primary">Primary! Lorem ipsum dolor sit amet</app-alert>
+        <app-alert type="secondary" :no-icon="true">Secondary! Lorem ipsum dolor sit amet</app-alert>
         <app-card>
             <template #header>
                 <app-card-header>
@@ -11,7 +18,6 @@
                 </app-card-header>
             </template>
             <template #body>
-                
                 <div class="table-responsive">
                     <table class="table table-striped">
                                 <thead>
@@ -42,9 +48,10 @@
                                     <p>No data</p>
                                 </tbody>
                     </table>
+                    {{ userStore.message }}
                 </div>
             </template>
-        </app-card>           
+        </app-card>
     </div>
     <app-modal :data="selectedUser" :show="showModal" @close="showModal=false" @save-data="saveData($event)"></app-modal>
 </template>
@@ -52,6 +59,7 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import AppModal from '../layout/ui/AppModal'
+import AppAlert from '../layout/ui/AppAlert'
 import AppCard from '../layout/ui/card/AppCard'
 import AppCardHeader from '../layout/ui/card/AppCardHeader'
 import { storeToRefs } from 'pinia'

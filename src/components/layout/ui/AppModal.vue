@@ -30,18 +30,13 @@
                             <label for="confirmPassword" class="col-form-label">Confirm Password:</label>
                             <input v-model="editedItem.confirmPassword" type="password" class="form-control" id="confirmPassword">
                         </div>
-                        <!--    
                         
-                        Next updates:
-                        1. Update this message with each new registration/update
-                        2. Change to create or edit modal
-                        
-                        <div v-if="userStore.successMessage">
-                            <div class="alert alert-success  alert-dismissible fade show" role="alert">
-                                <p><i class="bi bi-exclamation-circle me-2"></i> {{ userStore.successMessage }}</p>
+                        <div v-if="userStore.message">
+                            <div class="alert alert-light alert-dismissible fade show" role="alert">
+                                <p><i class="bi bi-exclamation-circle me-2"></i> {{ userStore.message }}</p>
                                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                             </div>
-                        </div> -->
+                        </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" @click="$emit('close')" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
