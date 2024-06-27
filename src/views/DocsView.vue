@@ -45,14 +45,20 @@
           <app-alert v-for="alert in alertTheme" :key="`${alert.type}`" :type="alert.type">{{ alert.message }}</app-alert>
 
           <h4 class="snippets_item-howto">Como utilizar</h4>
+          <p class="snippets_item-howto-description">Em poucos passos é possível configurar a exibição do 
+            componente <code>&lt;app-alert&gt;&lt;/app-alert&gt;</code>. A aplicação dos estilos e outros
+          elementos, tal como é no original, ainda não foi completamente testada.</p>
+
           <p class="snippets_item-explain">Importar componente:</p>
           <div class="snippets_item-code">
             <pre v-highlightjs><code class="javascript">{{ alertImport }}</code></pre>
           </div>
+          
           <p class="snippets_item-explain">Código HTML:</p>
           <div class="snippets_item-code">
             <pre v-highlightjs><code class="html">{{ alertCode }}</code></pre>
           </div>
+          
           <p class="snippets_item-explain">Props:</p>
           <app-table head="light" :columns="tableColumns" :data="tableRows"></app-table>
         </div>
