@@ -53,6 +53,8 @@
           <div class="snippets_item-code">
             <pre v-highlightjs><code class="html">{{ alertCode }}</code></pre>
           </div>
+          <p>Props:</p>
+          <app-table head="light" :columns="tableColumns" :data="tableRows"></app-table>
         </div>
       </div>
     </section>
@@ -61,7 +63,9 @@
 <script setup>
 import { ref } from 'vue';
 import AppAlert from '@/components/layout/ui/AppAlert.vue';
+import AppTable from '@/components/layout/ui/table/AppTable.vue';
 
+// Alerts
 const alertTheme = ref([
     {   type: 'primary', message: 'Mensagem com tema primário.' },
     {   type: 'secondary', message: 'Tema secundário para este alerta.' },
@@ -73,8 +77,18 @@ const alertTheme = ref([
     {   type: 'dark', message: 'Um exemplo de alerta.' },
 ]);
 const alertImport = ref(`import AppAlert from '@/components/layout/ui/AppAlert.vue';`);
-
 const alertCode = ref(`<app-alert type="success">Success! Lorem ipsum dolor sit amet</app-alert>`);
+
+// Alert API
+const tableColumns = ['Option','Type','Required','Default Value', 'Description']
+const tableRows = [
+  {
+    id: 1, option: 'type', type: 'String', required: 'false', default: 'success', description: 'Define o estilo adequado usando as classes habituais para templates de cores.'
+  },
+  {
+    id: 2, option: 'noIcon', type: 'Boolean', required: 'false', default: 'false', description: 'Utilize como no-icon ou :no-icon=false para esconder os ícones.'
+  },
+] 
 
 </script>
 
