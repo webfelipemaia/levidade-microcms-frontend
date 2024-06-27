@@ -45,15 +45,15 @@
           <app-alert v-for="alert in alertTheme" :key="`${alert.type}`" :type="alert.type">{{ alert.message }}</app-alert>
 
           <h4 class="snippets_item-howto">Como utilizar</h4>
-          <p>Importar componente:</p>
+          <p class="snippets_item-explain">Importar componente:</p>
           <div class="snippets_item-code">
             <pre v-highlightjs><code class="javascript">{{ alertImport }}</code></pre>
           </div>
-          <p>Código HTML:</p>
+          <p class="snippets_item-explain">Código HTML:</p>
           <div class="snippets_item-code">
             <pre v-highlightjs><code class="html">{{ alertCode }}</code></pre>
           </div>
-          <p>Props:</p>
+          <p class="snippets_item-explain">Props:</p>
           <app-table head="light" :columns="tableColumns" :data="tableRows"></app-table>
         </div>
       </div>
@@ -88,7 +88,7 @@ const tableRows = [
   {
     id: 2, option: 'noIcon', type: 'Boolean', required: 'false', default: 'false', description: 'Utilize como no-icon ou :no-icon=false para esconder os ícones.'
   },
-] 
+]
 
 </script>
 
