@@ -47,7 +47,7 @@
     <button @click="[activeModal=true,'ok']" type="button" class="btn btn-primary">
     demo modal
     </button>
-    <app-modal :id="'app-modal-01'" :data="selectedUser" :show="activeModal" confirmation :show-header="false" @close="activeModal=false" @proscess-data="proccessData($event)">
+    <app-modal :id="'app-modal-01'" :data="selectedUser" :show="activeModal" confirmation :show-header="false" @close="activeModal=false" @process-data="processData($event)">
         
     </app-modal>
     <user-form :id="'app-modal-02'" :data="selectedUser" :show="showModal" @close="showModal=false" @save-data="saveData($event)"></user-form>
@@ -82,7 +82,7 @@ const saveData = (data) => {
     }
 } 
 
-const proccessData = (data) => {
+const processData = (data) => {
     userStore.deleteUser(data)
 }
 

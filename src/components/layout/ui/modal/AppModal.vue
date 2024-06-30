@@ -20,6 +20,9 @@
                             </div>
                         </div>
                     </div>
+                    <div v-if="userStore.message" class="p-4 text-center">
+                        {{ userStore.message }}
+                    </div>
                 </div>
 
                 <div v-if="showFooter" 
@@ -34,7 +37,7 @@
                         : 'btn btn-secondary'" data-bs-dismiss="modal">{{ textCancel }}</button>
 
                     <button type="submit" 
-                        @click.prevent.stop="proccessData(itemToHandle)"
+                        @click.prevent.stop="processData(itemToHandle)"
                         :class="confirmation 
                         ? 'btn btn-lg btn-link fs-6 text-decoration-none col-6 py-3 m-0 rounded-0' 
                         : 'btn btn-primary'">{{ textSave }}</button>
@@ -47,6 +50,9 @@
 <script setup>
 import { ref, defineProps, defineEmits, watch, useSlots } from 'vue'
 import { useAddBackDrop, useRemoveBackDrop } from '../../composebles/HandleBackdrop';
+import { useUserStore } from '@/stores/userStore';
+
+    const userStore = useUserStore()
 
     const itemToHandle = ref({})
     const slots = useSlots();   
@@ -107,9 +113,9 @@ import { useAddBackDrop, useRemoveBackDrop } from '../../composebles/HandleBackd
       useRemoveBackDrop()
     }
 
-   const proccessData = (item) => {
+   const processData = (item) => {
         if(item) {
-            emit('saveData', item)
+            emit('processData', item)
         }
     }
 </script>
