@@ -19,6 +19,19 @@ export const useUserStore = defineStore({
             }
         },
 
+        async deleteUser(data) {
+            try {                
+            const response =  await axios.delete(`/users/${data.id}`);
+            this.message = response.data
+            await axios.get(`/users`)
+            
+            } catch (error) {
+                let errorMessage = error.response.data.message
+                this.message = { status:'error', message: errorMessage.replaceAll('"', '')}
+                console.log(error.response)
+            }
+        },        
+
         async updateUser(id,data) {
             try {                
             const response =  await axios.put(`/users/${id}`, data);
