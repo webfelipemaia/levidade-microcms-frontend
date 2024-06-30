@@ -1,10 +1,10 @@
 <template>
-    <div class="modal fade" :class="{show: (show && isEditModalOpen)}">
+    <div :id="id" class="modal fade" :class="{show: (show && isEditModalOpen)}" tabindex="-1" aria-labelledby="userFormLabel" :aria-hidden="show">
         <div class="modal-dialog">
             <div class="modal-content">
                 <form @submit.prevent="">
                     <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="exampleModalLabel">{{ editedItem.id ? 'Editar' : 'Adicionar' }} item</h1>
+                        <h1 class="modal-title fs-5" id="userFormLabel">{{ editedItem.id ? 'Editar' : 'Adicionar' }} item</h1>
                         <button  type="button" @click="$emit('close')" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
@@ -49,8 +49,9 @@
 </template>
 
 <script setup>
-import { useUserStore } from '@/stores/userStore';
 import { ref, defineProps, defineEmits, watch } from 'vue'
+import { useUserStore } from '@/stores/userStore';
+import { useAddBackDrop, useRemoveBackDrop } from '../composebles/HandleBackdrop';
 
 const userStore = useUserStore()
     const isEditModalOpen = ref(false)
@@ -58,7 +59,11 @@ const userStore = useUserStore()
 
     const props = defineProps({
         show: Boolean,
-        data: [Object,Array]
+        data: [Object,Array],
+        id: {
+            type: String,
+            required: true
+        },
     })
 
     const emit = defineEmits(['close', 'saveData'])
@@ -68,7 +73,7 @@ const userStore = useUserStore()
         editedItem.value = props.data
         if(!props.show){
             closeEditModal()
-            removeBackDrop()
+            useRemoveBackDrop()
             userStore.clearSuccessMessage()
         }
     })
@@ -76,46 +81,13 @@ const userStore = useUserStore()
     const openEditModal = (item) => {
       editedItem.value = { ...item }
       isEditModalOpen.value = true
-      addBackDrop()
+      useAddBackDrop(props.id)
     }
     
     const closeEditModal = () => {    
       isEditModalOpen.value = false
-      removeBackDrop()
-    }
-    
-    const addBackDrop = () => {
-        // add styles to body
-        const body = document.querySelector('body')
-        body.style.overflow = 'hidden'
-        body.style.paddingRight = '15px'
-    
-        // show modal
-        const modal = document.querySelector('.modal.fade')
-        if(modal) {
-            modal.classList.add('show')
-            modal.style.display = 'block'
-        }
-    
-        // create a new div
-        const parentDiv = document.querySelector('.maincontent.container')
-        const newDiv = document.createElement('div')
-        newDiv.classList.add('modal-overlay', 'modal-content')
-        parentDiv.appendChild(newDiv)
-    }
-    
-    const removeBackDrop = () => {
-        document.body.style = ''
-        const modal = document.querySelector('.modal.fade')
-        modal.style =  ''
-        modal.classList.remove('show')
-        
-        const parentDiv = document.querySelector('.maincontent.container')
-        const childDiv = parentDiv.querySelector('.modal-overlay.modal-content')
-        if (childDiv) {
-          parentDiv.removeChild(childDiv)
-        }
-
+      useRemoveBackDrop()
+      userStore.clearSuccessMessage()
     }
 
     const saveData = (item) => {

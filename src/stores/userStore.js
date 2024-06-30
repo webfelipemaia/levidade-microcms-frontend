@@ -63,7 +63,7 @@ export const useUserStore = defineStore({
         },
 
         clearSuccessMessage() {
-            this.successMessage = null
+            this.message = null
         }
     }
 })

@@ -1,13 +1,5 @@
 <template>
     <div class="container-fluid">
-        <app-alert type="success">Success! Lorem ipsum dolor sit amet</app-alert>        
-        <app-alert type="danger">Danger! Lorem ipsum dolor sit amet</app-alert>
-        <app-alert type="warning">Warning! Lorem ipsum dolor sit amet</app-alert>
-        <app-alert type="info">Info! Lorem ipsum dolor sit amet</app-alert>
-        <app-alert type="light" no-icon>Light! Lorem ipsum dolor sit amet</app-alert>
-        <app-alert type="dark" no-icon>Dark! Lorem ipsum dolor sit amet</app-alert>
-        <app-alert type="primary">Primary! Lorem ipsum dolor sit amet</app-alert>
-        <app-alert type="secondary" :no-icon="true">Secondary! Lorem ipsum dolor sit amet</app-alert>
         <app-card>
             <template #header>
                 <app-card-header>
@@ -38,7 +30,7 @@
                                     <td>
                                         <div class="d-flex">
                                             <div class="p-2 flex-fill"><button @click="[showModal=true,selectedUser=user]" type="button" class="btn"><i class="bi bi-pencil"></i></button></div>
-                                            <div class="p-2 flex-fill"><button type="button" class="btn"><i class="bi bi-trash3"></i></button></div>
+                                            <div class="p-2 flex-fill"><button @click="[activeModal=true,selectedUser=user]" type="button" class="btn"><i class="bi bi-trash3"></i></button></div>
                                         </div>
                                     </td>
                                     </tr>
@@ -48,19 +40,26 @@
                                     <p>No data</p>
                                 </tbody>
                     </table>
-                    {{ userStore.message }}
                 </div>
             </template>
         </app-card>
     </div>
-    <app-modal :data="selectedUser" :show="showModal" @close="showModal=false" @save-data="saveData($event)"></app-modal>
+    <button @click="[activeModal=true,'ok']" type="button" class="btn btn-primary">
+    demo modal
+    </button>
+    <app-modal :id="'app-modal-01'" :data="selectedUser" :show="activeModal" confirmation :show-header="false" @close="activeModal=false" @proscess-data="proccessData($event)">
+        
+    </app-modal>
+    <user-form :id="'app-modal-02'" :data="selectedUser" :show="showModal" @close="showModal=false" @save-data="saveData($event)"></user-form>
 </template>
 
 <script setup>
 import { ref, onMounted } from 'vue'
-import AppModal from '../layout/ui/AppModal'
-import AppAlert from '../layout/ui/AppAlert'
+import UserForm from '../layout/ui/UserForm'
 import AppCard from '../layout/ui/card/AppCard'
+import AppModal from '../layout/ui/modal/AppModal'
+//import AppModalHeader from '../layout/ui/modal/AppModalHeader'
+//import AppModalFooter from '../layout/ui/modal/AppModalFooter'
 import AppCardHeader from '../layout/ui/card/AppCardHeader'
 import { storeToRefs } from 'pinia'
 import { useUserStore } from '../../stores/userStore'
@@ -69,6 +68,7 @@ const userStore = useUserStore()
 const { users } =  storeToRefs(userStore)
 const showModal = ref(false)
 const selectedUser = ref([])
+const activeModal = ref(false)
 
 const fetchUsers = async () => {
    await userStore.getUsers()
@@ -81,6 +81,10 @@ const saveData = (data) => {
         createData(data)  
     }
 } 
+
+const proccessData = (data) => {
+    userStore.deleteUser(data)
+}
 
 const createData = (data) => {
     userStore.createUser(data)

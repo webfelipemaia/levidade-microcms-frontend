@@ -1,0 +1,137 @@
+<template>
+    <div :id="id" class="modal fade common-modal" :class="{show: show}" tabindex="-1" aria-labelledby="appModalLabel" :aria-hidden="show">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+
+                <div v-if="showHeader" class="modal-header">
+                    <h1 class="modal-title fs-5" id="appModalLabel">{{ title }}</h1>
+                    <button @click="$emit('close')" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <div class="modal-body">
+                    <div v-if="hasDefaultSlotContent">
+                        <slot></slot>
+                    </div>
+                    <div v-else>
+                        <div v-if="confirmation">
+                            <div class="p-4 text-center">
+                                <h5 class="mb-0">Do you want to continue with this action?</h5>
+                                <p class="mb-0">Once confirmed, the action cannot be undone.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div v-if="showFooter" 
+                    :class="confirmation 
+                        ? 'modal-footer flex-nowrap p-0' 
+                        : 'modal-footer'">
+
+                    <button type="button" 
+                        @click="$emit('close')" 
+                        :class="confirmation 
+                        ? 'btn btn-lg btn-link fs-6 text-decoration-none col-6 py-3 m-0 rounded-0 border-end' 
+                        : 'btn btn-secondary'" data-bs-dismiss="modal">{{ textCancel }}</button>
+
+                    <button type="submit" 
+                        @click.prevent.stop="proccessData(itemToHandle)"
+                        :class="confirmation 
+                        ? 'btn btn-lg btn-link fs-6 text-decoration-none col-6 py-3 m-0 rounded-0' 
+                        : 'btn btn-primary'">{{ textSave }}</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+
+<script setup>
+import { ref, defineProps, defineEmits, watch, useSlots } from 'vue'
+import { useAddBackDrop, useRemoveBackDrop } from '../../composebles/HandleBackdrop';
+
+    const itemToHandle = ref({})
+    const slots = useSlots();   
+     
+    const props = defineProps({
+        show: Boolean,
+        data: [Object,Array],
+        title: String,
+        id: {
+            type: String,
+            required: true
+        },
+        showHeader: { 
+            type: Boolean,
+            default: true,
+        },
+        showFooter: { 
+            type: Boolean,
+            default: true,
+        },
+        confirmation: { 
+            type: Boolean,
+            default: false,
+        },
+        textSave: { 
+            type: String,
+            default: 'Save',
+        },
+        textCancel: { 
+            type: String,
+            default: 'Cancel',
+        },
+    })
+
+    // Defines the events
+    const emit = defineEmits(['close', 'processData'])
+
+    // Checks if the default slot contains content
+    const hasDefaultSlotContent = !!slots.default;
+
+    // Waits for the modal to activate, 
+    // then assigns the data to be manipulated to the corresponding variable
+    watch(() => props.show, () => {
+        openModal()
+        itemToHandle.value = props.data
+        if(!props.show){
+            closeModal()
+            useRemoveBackDrop()
+        }
+    })
+    
+    const openModal = (item) => {
+      itemToHandle.value = { ...item }
+      useAddBackDrop(props.id)
+    }
+    
+    const closeModal = () => {
+      useRemoveBackDrop()
+    }
+
+   const proccessData = (item) => {
+        if(item) {
+            emit('saveData', item)
+        }
+    }
+</script>
+
+<style lang="scss">
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    padding: 0;
+    border-radius: 8px;
+}
+.show {
+    transform: none;
+}
+</style>
