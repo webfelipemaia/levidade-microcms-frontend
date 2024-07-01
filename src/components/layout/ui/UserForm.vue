@@ -32,8 +32,8 @@
                         </div>
                         
                         <div v-if="userStore.message">
-                            <div class="alert alert-light alert-dismissible fade show" role="alert">
-                                <p><i class="bi bi-exclamation-circle me-2"></i> {{ userStore.message }}</p>
+                            <div class="alert alert-dismissible fade show" :class="`alert-${userStore.message.status === 'error'?'danger':'success'}`" role="alert">
+                                <p><i class="bi bi-exclamation-circle me-2"></i> {{ userStore.message.message }}</p>
                                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                             </div>
                         </div>
@@ -91,11 +91,8 @@ const userStore = useUserStore()
     }
 
     const saveData = (item) => {
-            if(item.id) {
-                emit('saveData', item)
-            } else{
-                emit('saveData', item)
-            }
+        emit('saveData', item)
+        
     }
     
     

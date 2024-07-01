@@ -44,12 +44,8 @@
             </template>
         </app-card>
     </div>
-    <button @click="[activeModal=true,'ok']" type="button" class="btn btn-primary">
-    demo modal
-    </button>
-    <app-modal :id="'app-modal-01'" :data="selectedUser" :show="activeModal" confirmation :show-header="false" @close="activeModal=false" @process-data="processData($event)">
-        
-    </app-modal>
+
+    <app-modal :id="'app-modal-01'" :data="selectedUser" :show="activeModal" confirmation text-save="Delete" :show-header="false" @close="activeModal=false" @process-data="processData($event)"></app-modal>
     <user-form :id="'app-modal-02'" :data="selectedUser" :show="showModal" @close="showModal=false" @save-data="saveData($event)"></user-form>
 </template>
 
@@ -58,8 +54,6 @@ import { ref, onMounted } from 'vue'
 import UserForm from '../layout/ui/UserForm'
 import AppCard from '../layout/ui/card/AppCard'
 import AppModal from '../layout/ui/modal/AppModal'
-//import AppModalHeader from '../layout/ui/modal/AppModalHeader'
-//import AppModalFooter from '../layout/ui/modal/AppModalFooter'
 import AppCardHeader from '../layout/ui/card/AppCardHeader'
 import { storeToRefs } from 'pinia'
 import { useUserStore } from '../../stores/userStore'
