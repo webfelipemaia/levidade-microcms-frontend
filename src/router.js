@@ -18,11 +18,6 @@ const routes =  [
       name: "roles-details",
       component: () => import("./components/roles/RoleDetail")
     },
-    {
-      path: "/roles/create",
-      name: "roles-create",
-      component: () => import("./components/roles/RoleCreate")
-    },
     { 
       path: '/index',
       name: 'index', 
@@ -54,7 +49,7 @@ const routes =  [
     { 
       path: '/user',
       name: 'user', 
-      component: () => import("./components/user/UserIndex.vue")
+      component: () => import("./components/roles/RoleList.vue")
     },
 
     // Admins
@@ -62,7 +57,13 @@ const routes =  [
     { 
       path: '/admin',
       name: 'admin', 
-      component: () => import("./components/admin/AdminIndex.vue")
+      component: () => import("./components/admin/AdminIndex ")
+    },
+
+    { 
+      path: '/roles2',
+      name: 'roles2', 
+      component: () => import("./components/admin/RoleIndex.vue")
     },
 
     { 

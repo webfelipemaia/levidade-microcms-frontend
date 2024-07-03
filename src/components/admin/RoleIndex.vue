@@ -4,8 +4,8 @@
             <template #header>
                 <app-card-header>
                     <div class="d-flex justify-content-between">
-                        <span>All users</span>
-                        <button @click="[showModal=true,selectedUser={}]" type="button" class="btn btn-primary"><i class="bi bi-plus"></i> New</button>
+                        <span>All roles</span>
+                        <button @click="[showModal=true,selectedRole={}]" type="button" class="btn btn-primary"><i class="bi bi-plus"></i> New</button>
                     </div>
                 </app-card-header>
             </template>
@@ -15,22 +15,20 @@
                                 <thead>
                                     <tr>
                                     <th scope="col">#</th>
-                                    <th scope="col">E-mail</th>
                                     <th scope="col">Name</th>
                                     <th scope="col">Updated</th>
                                     <th scope="col">Actions</th>
                                     </tr>
                                 </thead>
-                                <tbody v-if="users">
-                                    <tr v-for="user in users" :key="user.id">                        
-                                    <th class="align-middle" scope="row">{{ user.id }}</th>
-                                    <td class="align-middle">{{ user.name }} {{ user.lastname }}</td>
-                                    <td class="align-middle">{{ user.email }}</td>
-                                    <td class="align-middle">{{ user.updated_at }}</td>
+                                <tbody v-if="roles">
+                                    <tr v-for="role in roles" :key="role.id">                        
+                                    <th class="align-middle" scope="row">{{ role.id }}</th>
+                                    <td class="align-middle">{{ role.name }}</td>
+                                    <td class="align-middle">{{ role.updated_at }}</td>
                                     <td>
                                         <div class="d-flex">
-                                            <div class="p-2 flex-fill"><button @click="[showModal=true,selectedUser=user]" type="button" class="btn"><i class="bi bi-pencil"></i></button></div>
-                                            <div class="p-2 flex-fill"><button @click="[activeModal=true,selectedUser=user]" type="button" class="btn"><i class="bi bi-trash3"></i></button></div>
+                                            <div class="p-2 flex-fill"><button @click="[showModal=true,selectedRole=role]" type="button" class="btn"><i class="bi bi-pencil"></i></button></div>
+                                            <div class="p-2 flex-fill"><button @click="[activeModal=true,selectedRole=role]" type="button" class="btn"><i class="bi bi-trash3"></i></button></div>
                                         </div>
                                     </td>
                                     </tr>
@@ -45,27 +43,27 @@
         </app-card>
     </div>
 
-    <app-modal :id="'app-modal-01'" :data="selectedUser" :show="activeModal" confirmation text-save="Delete" :show-header="false" @close="activeModal=false" @process-data="processData($event)"></app-modal>
-    <user-form :id="'app-modal-02'" :data="selectedUser" :show="showModal" @close="showModal=false" @save-data="saveData($event)"></user-form>
+    <app-modal :id="'app-modal-01'" :data="selectedRole" :show="activeModal" confirmation text-save="Delete" :show-header="false" @close="activeModal=false" @process-data="processData($event)"></app-modal>
+    <role-form :id="'app-modal-02'" :data="selectedRole" :show="showModal" @close="showModal=false" @save-data="saveData($event)"></role-form>
 </template>
 
 <script setup>
 import { ref, onMounted } from 'vue'
-import UserForm from '../user/UserForm'
+import RoleForm from '../../components/roles/RoleForm'
 import AppCard from '../layout/ui/card/AppCard'
 import AppModal from '../layout/ui/modal/AppModal'
 import AppCardHeader from '../layout/ui/card/AppCardHeader'
 import { storeToRefs } from 'pinia'
-import { useUserStore } from '../../stores/userStore'
+import { useRoleStore } from '../../stores/roleStore'
 
-const userStore = useUserStore()
-const { users } =  storeToRefs(userStore)
+const roleStore = useRoleStore()
+const { roles } =  storeToRefs(roleStore)
 const showModal = ref(false)
-const selectedUser = ref([])
+const selectedRole = ref([])
 const activeModal = ref(false)
 
-const fetchUsers = async () => {
-   await userStore.getUsers()
+const fetchRoles = async () => {
+   await roleStore.getRoles()
 }
 
 const saveData = (data) => {
@@ -77,19 +75,19 @@ const saveData = (data) => {
 } 
 
 const processData = (data) => {
-    userStore.deleteUser(data)
+    roleStore.deleterole(data)
 }
 
 const createData = (data) => {
-    userStore.createUser(data)
+    roleStore.createRole(data)
 }
 
 const updateData = (data) => {
-    userStore.updateUser(data.id,data)
+    roleStore.updateRole(data.id,data)
 }
 
 onMounted(() => {
-    fetchUsers()
+    fetchRoles()
 })
 
 </script>

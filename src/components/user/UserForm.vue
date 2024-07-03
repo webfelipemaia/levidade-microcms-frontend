@@ -51,7 +51,7 @@
 <script setup>
 import { ref, defineProps, defineEmits, watch } from 'vue'
 import { useUserStore } from '@/stores/userStore';
-import { useAddBackDrop, useRemoveBackDrop } from '../composebles/HandleBackdrop';
+import { useAddBackDrop, useRemoveBackDrop } from '../../components/layout/composebles/HandleBackdrop';
 
 const userStore = useUserStore()
     const isEditModalOpen = ref(false)
