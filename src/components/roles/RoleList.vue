@@ -20,11 +20,12 @@ const fetchUsers = async () => {
     console.error('Error fetching users:', error);
   }
 };
+
 onMounted(() => {
   fetchUsers();
 });
 </script>
   
-<style scoped>  
+<style scoped>
 </style>
   

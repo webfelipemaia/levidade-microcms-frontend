@@ -75,7 +75,7 @@ const saveData = (data) => {
 } 
 
 const processData = (data) => {
-    roleStore.deleterole(data)
+    roleStore.deleteRole(data)
 }
 
 const createData = (data) => {

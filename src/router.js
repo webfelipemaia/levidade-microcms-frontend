@@ -57,7 +57,7 @@ const routes =  [
     { 
       path: '/admin',
       name: 'admin', 
-      component: () => import("./components/admin/AdminIndex ")
+      component: () => import("./components/admin/AdminIndex")
     },
 
     { 
