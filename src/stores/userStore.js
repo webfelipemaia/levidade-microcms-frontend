@@ -2,7 +2,7 @@ import { defineStore } from 'pinia';
 import axios from 'axios';
 
 export const useUserStore = defineStore({
-    id: 'user',
+    id: 'user', 
     state: () => ({
         users: [],
         message: null,
@@ -10,7 +10,8 @@ export const useUserStore = defineStore({
 
     actions: {
         async getUsers() {
-            const response = await axios.get(`/users`);
+            //const response = await axios.get(`/users`);
+            const response = await axios.get(`/users/roles`);
             if(response.data.status === 'error') {
                 this.message = response.data
             } else {
@@ -18,6 +19,16 @@ export const useUserStore = defineStore({
                 this.users = response.data;
             }
         },
+
+/*         async getUsersRoles() {
+            const response = await axios.get(`/users/roles`);
+            if(response.data.status === 'error') {
+                this.message = response.data
+            } else {
+                this.message = null;
+                this.users = response.data;
+            }
+        }, */
 
         async deleteUser(data) {
             try {                
@@ -54,7 +65,8 @@ export const useUserStore = defineStore({
                     password: data.password, 
                     confirmPassword: data.confirmPassword, 
                     name: data.name, 
-                    lastname: data.lastname 
+                    lastname: data.lastname,
+                    role: data.role
                 }
             );
             this.message = response.data

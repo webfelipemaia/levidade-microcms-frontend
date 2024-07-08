@@ -2,6 +2,7 @@
     <div :id="id" class="modal fade" :class="{show: (show && isEditModalOpen)}" tabindex="-1" aria-labelledby="userFormLabel" :aria-hidden="show">
         <div class="modal-dialog">
             <div class="modal-content">
+                
                 <form @submit.prevent="">
                     <div class="modal-header">
                         <h1 class="modal-title fs-5" id="userFormLabel">{{ editedItem.id ? 'Editar' : 'Adicionar' }} item</h1>
@@ -30,6 +31,14 @@
                             <label for="confirmPassword" class="col-form-label">Confirm Password:</label>
                             <input v-model="editedItem.confirmPassword" type="password" class="form-control" id="confirmPassword">
                         </div>
+
+                        <div class="mb-3">
+                            <label for="selectRole" class="col-form-label">Roles:</label>
+                            <select v-model="selectedRole" class="form-select" aria-label="Select">
+                                <option selected>Select</option>
+                                <option v-for="role in roles" :value="role.name" :key="role.id">{{ role.name }}</option>
+                            </select>
+                        </div>
                         
                         <div v-if="userStore.message">
                             <div class="alert alert-dismissible fade show" :class="`alert-${userStore.message.status === 'error'?'danger':'success'}`" role="alert">
@@ -50,12 +59,19 @@
 
 <script setup>
 import { ref, defineProps, defineEmits, watch } from 'vue'
+import { storeToRefs } from 'pinia'
 import { useUserStore } from '@/stores/userStore';
+import { useRoleStore } from '@/stores/roleStore';
 import { useAddBackDrop, useRemoveBackDrop } from '../../components/layout/composebles/HandleBackdrop';
 
 const userStore = useUserStore()
-    const isEditModalOpen = ref(false)
-    const editedItem = ref({})
+const roleStore = useRoleStore()
+const { roles } =  storeToRefs(roleStore)
+//const { users } =  storeToRefs(userStore)
+
+const isEditModalOpen = ref(false)
+const editedItem = ref({})
+const selectedRole = ref([])
 
     const props = defineProps({
         show: Boolean,
@@ -91,6 +107,7 @@ const userStore = useUserStore()
     }
 
     const saveData = (item) => {
+        item.role = selectedRole.value
         emit('saveData', item)
         
     }

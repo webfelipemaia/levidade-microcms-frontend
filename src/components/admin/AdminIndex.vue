@@ -57,15 +57,22 @@ import AppModal from '../layout/ui/modal/AppModal'
 import AppCardHeader from '../layout/ui/card/AppCardHeader'
 import { storeToRefs } from 'pinia'
 import { useUserStore } from '../../stores/userStore'
+import { useRoleStore } from '../../stores/roleStore'
 
 const userStore = useUserStore()
 const { users } =  storeToRefs(userStore)
+const roleStore = useRoleStore()
+//const { roles } =  storeToRefs(roleStore)
 const showModal = ref(false)
 const selectedUser = ref([])
 const activeModal = ref(false)
 
 const fetchUsers = async () => {
    await userStore.getUsers()
+}
+
+const fetchRoles = async () => {
+   await roleStore.getRoles()
 }
 
 const saveData = (data) => {
@@ -90,6 +97,7 @@ const updateData = (data) => {
 
 onMounted(() => {
     fetchUsers()
+    fetchRoles()
 })
 
 </script>

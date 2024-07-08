@@ -2,7 +2,7 @@ import { defineStore } from 'pinia';
 import axios from 'axios';
 
 export const usePermissionStore = defineStore({
-    id: 'role',
+    id: 'permission',
     state: () => ({
         permissions: [],
         message: null,
@@ -14,8 +14,8 @@ export const usePermissionStore = defineStore({
             if(response.data.status === 'error') {
                 this.message = response.data
             } else {
-                this.message = null;
                 this.permissions = response.data;
+                this.message = null;
             }
         },
 
