@@ -12,6 +12,7 @@ export const useUserStore = defineStore({
         async getUsers() {
             //const response = await axios.get(`/users`);
             const response = await axios.get(`/users/roles`);
+            console.log(response)
             if(response.data.status === 'error') {
                 this.message = response.data
             } else {
