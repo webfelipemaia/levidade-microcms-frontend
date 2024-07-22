@@ -61,11 +61,28 @@ const routes =  [
     },
 
     { 
-      path: '/roles2',
-      name: 'roles2', 
+      path: '/role',
+      name: 'role', 
       component: () => import("./components/admin/RoleIndex.vue")
     },
 
+    { 
+      path: '/permission',
+      name: 'permission', 
+      component: () => import("./components/admin/PermissionIndex.vue")
+    },
+
+    { 
+      path: '/permission/role',
+      name: 'permission-role', 
+      component: () => import("./components/admin/PermissionIndex.vue")
+    },
+
+    { 
+      path: '/permission/user',
+      name: 'permission-user', 
+      component: () => import("./components/admin/PermissionIndex.vue")
+    },
     { 
       path: '/admin/profile',
       name: 'admin/profile', 

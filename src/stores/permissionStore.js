@@ -14,10 +14,20 @@ export const usePermissionStore = defineStore({
             if(response.data.status === 'error') {
                 this.message = response.data
             } else {
-                this.permissions = response.data;
                 this.message = null;
+                this.permissions = response.data;
             }
         },
+
+        async getRolesPermissions() {
+            const response = await axios.get(`/roles/permissions`);
+            if(response.data.status === 'error') {
+                this.message = response.data
+            } else {
+                this.message = null;
+                this.permissions = response.data;
+            }
+        },        
 
         async deletePermission(data) {
             try {                
