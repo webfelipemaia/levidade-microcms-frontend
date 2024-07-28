@@ -5,6 +5,7 @@ export const usePermissionStore = defineStore({
     id: 'permission',
     state: () => ({
         permissions: [],
+        rolesPermissions: [],
         message: null,
     }),
 
@@ -25,10 +26,10 @@ export const usePermissionStore = defineStore({
                 this.message = response.data
             } else {
                 this.message = null;
-                this.permissions = response.data;
+                this.rolesPermissions = response.data;
             }
-        },        
-
+        },
+        
         async deletePermission(data) {
             try {                
             const response =  await axios.delete(`/permissions/${data.id}`);

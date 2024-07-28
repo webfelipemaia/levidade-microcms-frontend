@@ -45,6 +45,7 @@ export const useUserStore = defineStore({
         },        
 
         async updateUser(id,data) {
+            console.log(data)
             try {                
             const response =  await axios.put(`/users/${id}`, data);
             this.message = response.data
@@ -66,8 +67,7 @@ export const useUserStore = defineStore({
                     password: data.password, 
                     confirmPassword: data.confirmPassword, 
                     name: data.name, 
-                    lastname: data.lastname,
-                    role: data.role
+                    lastname: data.lastname,                    
                 }
             );
             this.message = response.data

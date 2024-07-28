@@ -33,6 +33,7 @@ export const useRoleStore = defineStore({
         },        
 
         async updateRole(id,data) {
+            console.log(id,data)
             try {                
             const response =  await axios.put(`/roles/${id}`, data);
             this.message = response.data

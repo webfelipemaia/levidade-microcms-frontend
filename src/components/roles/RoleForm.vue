@@ -12,21 +12,24 @@
                             <label for="name" class="col-form-label">Name:</label>
                             <input v-model="editedItem.name" type="text" class="form-control" id="name">
                         </div>
-                        {{  hasPersmission(savedPermissions,5) }}
-                        <div class="mb-3" v-for="permission in permissions" :key="permission.id">
+                        
+                        <p>Permissions:</p>
+                        <div class="mb-3" v-for="p in permissions" :key="p.i">
                             <div class="form-check">
                                 <input
                                     class="form-check-input"
                                     type="checkbox"
-                                    :value="permission.id"
-                                    :checked="isPermissionSelected(permission.id)"
-                                    @change="togglePermission(permission.id)"
+                                    :value="p.id"
+                                    :checked="getPermissions(editedItem).some(permission => permission.name === p.name)"
+                                    @change="togglePermission(p.id)"
                                 />
-                                <label class="form-check-label" :for="'flexCheck' + permission.id">
-                                    {{ permission.name }}
+                                <label class="form-check-label" :for="'flexCheck' + p.id">
+                                    {{ p.name }}
                                 </label>
                             </div>
                         </div>
+                        <p>Selected permissions: {{ selectedPermissions }}</p>
+
                         
                         <div v-if="roleStore.message">
                             <div class="alert alert-dismissible fade show" :class="`alert-${roleStore.message.status === 'error'?'danger':'success'}`" role="alert">
@@ -54,11 +57,11 @@ import { useAddBackDrop, useRemoveBackDrop } from  '../../components/layout/comp
 
 const roleStore = useRoleStore()
 const permissionStore = usePermissionStore()
-const { permissions } = storeToRefs(permissionStore)
+const { permissions, rolesPermissions } = storeToRefs(permissionStore)
 const isEditModalOpen = ref(false)
 const editedItem = ref({})
 const selectedPermissions = ref([])
-const savedPermissions = ref([])
+//const savedPermissions = ref([])
 
     const props = defineProps({
         show: Boolean,
@@ -83,7 +86,6 @@ const savedPermissions = ref([])
     })
     
     const openEditModal = (item) => {
-        console.log(item)
       editedItem.value = { ...item }
       selectedPermissions.value = item.permissions || []
       isEditModalOpen.value = true
@@ -102,10 +104,21 @@ const savedPermissions = ref([])
         
     }
 
-    const isPermissionSelected = (id) => {
-        return selectedPermissions.value.includes(id)
+    //Given a list of permissions, checks if a role contains registered permissions and returns true.
+    const getPermissions = (data) => {
+        var checked = []
+        rolesPermissions.value.forEach(d => {
+            if(d.name === data.name) {
+                let permissions = d.Permissions
+                permissions.forEach(p => {
+                    checked.push(p)
+                })
+            }
+        })
+        return checked
     }
 
+    // Check or uncheck a permission to be saved
     const togglePermission = (id) => {
         if (selectedPermissions.value.includes(id)) {
             selectedPermissions.value = selectedPermissions.value.filter(permissionId => permissionId !== id)
@@ -114,16 +127,18 @@ const savedPermissions = ref([])
         }
     }
     
+    // Get the permissions
     const fetchPermissions = async () => {
        await permissionStore.getPermissions()
     }
 
+    // Gets the permissions associated with roles
     const fetchRolesPermissions = async () => {
        await permissionStore.getRolesPermissions()
     }
 
     // checks if role has associated permissions
-    const getSavePermissions = async (id) => {
+/*     const getSavePermissions = async (id) => {
         const permissionStore = usePermissionStore();
 
         if (permissionStore.permissions.length === 0) {
@@ -139,23 +154,11 @@ const savedPermissions = ref([])
         } else {
             console.log(`Role with id ${id} not found.`);
         }
-    };
-
-    // checks if a permission exists
-    const hasPersmission = (data,id) => {
-        let permission = null
-        data.forEach(p => {
-            if(p.id === id)
-                permission =  p
-        })
-        return permission
-    }
+    }; */
 
     onMounted(() => {
         fetchPermissions()
         fetchRolesPermissions()
-        // test by getting a permission
-        getSavePermissions(6)
     })
     
 </script>
