@@ -21,7 +21,7 @@
                                     type="checkbox"
                                     :value="p.id"
                                     :checked="getPermissions(editedItem).some(permission => permission.name === p.name)"
-                                    @change="togglePermission(p.id)"
+                                    @change="togglePermission(p)"
                                 />
                                 <label class="form-check-label" :for="'flexCheck' + p.id">
                                     {{ p.name }}
@@ -119,11 +119,11 @@ const selectedPermissions = ref([])
     }
 
     // Check or uncheck a permission to be saved
-    const togglePermission = (id) => {
-        if (selectedPermissions.value.includes(id)) {
-            selectedPermissions.value = selectedPermissions.value.filter(permissionId => permissionId !== id)
+    const togglePermission = (data) => {
+        if (selectedPermissions.value.includes(data.id)) {
+            selectedPermissions.value = selectedPermissions.value.filter(permissionId => permissionId !== data.id)
         } else {
-            selectedPermissions.value.push(id)
+            selectedPermissions.value.push(data)
         }
     }
     
