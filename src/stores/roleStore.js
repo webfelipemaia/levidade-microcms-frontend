@@ -5,6 +5,7 @@ export const useRoleStore = defineStore({
     id: 'role',
     state: () => ({
         roles: [],
+        usersRoles: [],
         message: null,
     }),
 
@@ -18,6 +19,17 @@ export const useRoleStore = defineStore({
                 this.roles = response.data;
             }
         },
+
+
+        async getUsersRoles() {
+            const response = await axios.get(`/users/roles/`);
+            if(response.data.status === 'error') {
+                this.message = response.data
+            } else {
+                this.message = null;
+                this.usersRoles = response.data;
+            }
+        },        
 
         async deleteRole(data) {
             try {                

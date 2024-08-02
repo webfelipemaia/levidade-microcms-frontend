@@ -30,15 +30,33 @@
                             <input v-model="editedItem.confirmPassword" type="password" class="form-control" id="confirmPassword">
                         </div>
                         <div class="mb-3" v-if="editedItem.Roles">
-                            <div class="card-header bg-transparent d-flex justify-content-between align-items-center px-0">
-                                <spam class="col-form-label">Roles:</spam>
-                                <a class="btn btn-outline-primary" role="button" href="/roles">Gerenciar Roles</a>
-                            </div>
                             <ul class="list-group list-group-flush" v-if="editedItem.Roles">
                                 <li class="list-group-item" v-for="role in editedItem.Roles" :key="role.id">
                                     {{role.name }}
                                 </li>
                             </ul>
+                        </div>
+
+                        <div v-if="editedItem.id">
+                            <p>Roles:</p>
+                            <div class="mb-3" v-for="r in roles" :key="r.i">
+                                <div class="form-check">
+                                    <input
+                                        class="form-check-input"
+                                        type="checkbox"
+                                        :value="r.id"
+                                        :checked="getRoles(editedItem)
+                                                    .some(role => role.name === r.name)"
+                                        @change="toggleRole(r,
+                                                                    getRoles(editedItem)
+                                                                        .some(role => role.name === r.name)
+                                                                        ? 'unchecked' : 'checked' )"
+                                    />
+                                    <label class="form-check-label" :for="'flexCheck' + r.id">
+                                        {{ r.name }}
+                                    </label>
+                                </div>
+                            </div>
                         </div>
                         
                         <div v-if="userStore.message">
@@ -59,21 +77,20 @@
 </template>
 
 <script setup>
-import { ref, defineProps, defineEmits, watch } from 'vue'
-//import { storeToRefs } from 'pinia'
+import { ref, defineProps, defineEmits, watch, onMounted } from 'vue'
+import { storeToRefs } from 'pinia'
 import { useUserStore } from '@/stores/userStore';
-//import { useRoleStore } from '@/stores/roleStore';
+import { useRoleStore } from '@/stores/roleStore';
 import { useAddBackDrop, useRemoveBackDrop } from '../../components/layout/composebles/HandleBackdrop';
 
 const userStore = useUserStore()
-//const roleStore = useRoleStore()
-//const { roles } =  storeToRefs(roleStore)
+const roleStore = useRoleStore()
+const { roles, usersRoles } =  storeToRefs(roleStore)
 //const { users } =  storeToRefs(userStore)
 
 const isEditModalOpen = ref(false)
 const editedItem = ref({})
-const selectedRole = ref([])
-const userRoles = ref([])
+const selectedRoles = ref([])
 
     const props = defineProps({
         show: Boolean,
@@ -89,7 +106,6 @@ const userRoles = ref([])
     watch(() => props.show, () => {
         openEditModal()
         editedItem.value = props.data
-        userRoles.value = props.data.Roles
         if(!props.show){
             closeEditModal()
             useRemoveBackDrop()
@@ -110,11 +126,53 @@ const userRoles = ref([])
     }
 
     const saveData = (item) => {
-        item.role = selectedRole.value
+        item.roles = selectedRoles.value
         emit('saveData', item)
         
     }
+
+    // Given a list of roles, checks if a role contains registered roles and returns true.
+    const getRoles = (data) => {
+        var checked = []
+        usersRoles.value.forEach(d => {
+            if(d.name === data.name) {
+                let roles = d.Roles
+                roles.forEach(p => {
+                    checked.push(p)
+                })
+            }
+        })
+        return checked
+    }
     
+    // Check or uncheck a role to be saved
+    // is checked, then enter the data
+    // is not checked, then delete the data
+    const toggleRole = (data,isChecked) => {
+        const index = selectedRoles.value.indexOf(data)
+        if (index !== -1 && selectedRoles.value.length === 1) {
+            selectedRoles.value.length = 0
+        } else if (index !== -1) {
+            selectedRoles.value.splice(index,1)
+        } else {
+            selectedRoles.value.push({data,isChecked})
+        }        
+    }
+    
+    // Get the roles
+    const fetchRoles = async () => {
+       await roleStore.getRoles()
+    }
+
+    // Gets the roles 
+    const fetchUsersRoles = async () => {
+       await roleStore.getUsersRoles()
+    }    
+
+    onMounted(() => {
+        fetchRoles()
+        fetchUsersRoles()
+    })    
     
 </script>
 

@@ -12,7 +12,6 @@ export const useUserStore = defineStore({
         async getUsers() {
             //const response = await axios.get(`/users`);
             const response = await axios.get(`/users/roles`);
-            console.log(response)
             if(response.data.status === 'error') {
                 this.message = response.data
             } else {
@@ -20,16 +19,6 @@ export const useUserStore = defineStore({
                 this.users = response.data;
             }
         },
-
-/*         async getUsersRoles() {
-            const response = await axios.get(`/users/roles`);
-            if(response.data.status === 'error') {
-                this.message = response.data
-            } else {
-                this.message = null;
-                this.users = response.data;
-            }
-        }, */
 
         async deleteUser(data) {
             try {                
@@ -45,7 +34,6 @@ export const useUserStore = defineStore({
         },        
 
         async updateUser(id,data) {
-            console.log(data)
             try {                
             const response =  await axios.put(`/users/${id}`, data);
             this.message = response.data
