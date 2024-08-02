@@ -83,7 +83,7 @@ const createData = (data) => {
 }
 
 const updateData = (data) => {
-    roleStore.updateRole(data.id,data)
+    roleStore.updateRole(data)
 }
 
 onMounted(() => {

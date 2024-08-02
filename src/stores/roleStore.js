@@ -32,10 +32,9 @@ export const useRoleStore = defineStore({
             }
         },        
 
-        async updateRole(id,data) {
-            console.log(id,data)
-            try {                
-            const response =  await axios.put(`/roles/${id}`, data);
+        async updateRole(data) {
+            try {
+            const response =  await axios.patch(`/roles/${data.id}`, data);
             this.message = response.data
             await axios.get(`/roles`)
             

@@ -13,23 +13,27 @@
                             <input v-model="editedItem.name" type="text" class="form-control" id="name">
                         </div>
                         
-                        <p>Permissions:</p>
-                        <div class="mb-3" v-for="p in permissions" :key="p.i">
-                            <div class="form-check">
-                                <input
-                                    class="form-check-input"
-                                    type="checkbox"
-                                    :value="p.id"
-                                    :checked="getPermissions(editedItem).some(permission => permission.name === p.name)"
-                                    @change="togglePermission(p)"
-                                />
-                                <label class="form-check-label" :for="'flexCheck' + p.id">
-                                    {{ p.name }}
-                                </label>
+                        <div v-if="editedItem.id">
+                            <p>Permissions:</p>
+                            <div class="mb-3" v-for="p in permissions" :key="p.i">
+                                <div class="form-check">
+                                    <input
+                                        class="form-check-input"
+                                        type="checkbox"
+                                        :value="p.id"
+                                        :checked="getPermissions(editedItem)
+                                                    .some(permission => permission.name === p.name)"
+                                        @change="togglePermission(p,
+                                                                    getPermissions(editedItem)
+                                                                        .some(permission => permission.name === p.name)
+                                                                        ? 'unchecked' : 'checked' )"
+                                    />
+                                    <label class="form-check-label" :for="'flexCheck' + p.id">
+                                        {{ p.name }}
+                                    </label>
+                                </div>
                             </div>
                         </div>
-                        <p>Selected permissions: {{ selectedPermissions }}</p>
-
                         
                         <div v-if="roleStore.message">
                             <div class="alert alert-dismissible fade show" :class="`alert-${roleStore.message.status === 'error'?'danger':'success'}`" role="alert">
@@ -61,7 +65,6 @@ const { permissions, rolesPermissions } = storeToRefs(permissionStore)
 const isEditModalOpen = ref(false)
 const editedItem = ref({})
 const selectedPermissions = ref([])
-//const savedPermissions = ref([])
 
     const props = defineProps({
         show: Boolean,
@@ -77,7 +80,6 @@ const selectedPermissions = ref([])
     watch(() => props.show, () => {
         openEditModal(props.data.id)
         editedItem.value = props.data
-        selectedPermissions.value = props.data.permissions || []
         if(!props.show){
             closeEditModal()
             useRemoveBackDrop()
@@ -87,7 +89,6 @@ const selectedPermissions = ref([])
     
     const openEditModal = (item) => {
       editedItem.value = { ...item }
-      selectedPermissions.value = item.permissions || []
       isEditModalOpen.value = true
       useAddBackDrop(props.id)
     }
@@ -104,7 +105,7 @@ const selectedPermissions = ref([])
         
     }
 
-    //Given a list of permissions, checks if a role contains registered permissions and returns true.
+    // Given a list of permissions, checks if a role contains registered permissions and returns true.
     const getPermissions = (data) => {
         var checked = []
         rolesPermissions.value.forEach(d => {
@@ -119,11 +120,16 @@ const selectedPermissions = ref([])
     }
 
     // Check or uncheck a permission to be saved
-    const togglePermission = (data) => {
-        if (selectedPermissions.value.includes(data.id)) {
-            selectedPermissions.value = selectedPermissions.value.filter(permissionId => permissionId !== data.id)
+    // is checked, then enter the data
+    // is not checked, then delete the data
+    const togglePermission = (data,isChecked) => {
+        const index = selectedPermissions.value.indexOf(data)
+        if (index !== -1 && selectedPermissions.value.length === 1) {
+            selectedPermissions.value.length = 0
+        } else if (index !== -1) {
+            selectedPermissions.value.splice(index,1)
         } else {
-            selectedPermissions.value.push(data)
+            selectedPermissions.value.push({data,isChecked})
         }
     }
     
@@ -136,25 +142,6 @@ const selectedPermissions = ref([])
     const fetchRolesPermissions = async () => {
        await permissionStore.getRolesPermissions()
     }
-
-    // checks if role has associated permissions
-/*     const getSavePermissions = async (id) => {
-        const permissionStore = usePermissionStore();
-
-        if (permissionStore.permissions.length === 0) {
-            await permissionStore.getRolesPermissions();
-        }
-
-        const permissions = permissionStore.permissions;
-
-        const permission = permissions.find(permission => permission.id === id);
-
-        if (permission) {
-            savedPermissions.value = permission.Permissions;
-        } else {
-            console.log(`Role with id ${id} not found.`);
-        }
-    }; */
 
     onMounted(() => {
         fetchPermissions()
