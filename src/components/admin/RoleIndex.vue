@@ -24,7 +24,7 @@
                                     <tr v-for="role in roles" :key="role.id">                        
                                     <th class="align-middle" scope="row">{{ role.id }}</th>
                                     <td class="align-middle">{{ role.name }}</td>
-                                    <td class="align-middle">{{ role.updated_at }}</td>
+                                    <td class="align-middle">{{ role.updatedAt }}</td>
                                     <td>
                                         <div class="d-flex">
                                             <div class="p-2 flex-fill"><button @click="[showModal=true,selectedRole=role]" type="button" class="btn"><i class="bi bi-pencil"></i></button></div>

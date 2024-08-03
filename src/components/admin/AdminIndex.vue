@@ -26,7 +26,7 @@
                                     <th class="align-middle" scope="row">{{ user.id }}</th>
                                     <td class="align-middle">{{ user.name }} {{ user.lastname }}</td>
                                     <td class="align-middle">{{ user.email }}</td>
-                                    <td class="align-middle">{{ user.updated_at }}</td>
+                                    <td class="align-middle">{{ user.updatedAt }}</td>
                                     <td>
                                         <div class="d-flex">
                                             <div class="p-2 flex-fill"><button @click="[showModal=true,selectedUser=user]" type="button" class="btn"><i class="bi bi-pencil"></i></button></div>

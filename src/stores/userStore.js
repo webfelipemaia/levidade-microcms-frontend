@@ -27,8 +27,8 @@ export const useUserStore = defineStore({
             await axios.get(`/users`)
             
             } catch (error) {
-                let errorMessage = error.response.data.message
-                this.message = { status:'error', message: errorMessage.replaceAll('"', '')}
+                let errorMessage = error.response
+                this.message = { status:'error', message: errorMessage}
                 console.log(error.response)
             }
         },        
@@ -40,8 +40,8 @@ export const useUserStore = defineStore({
             await axios.get(`/users`)
             
             } catch (error) {
-                let errorMessage = error.response.data.message
-                this.message = { status:'error', message: errorMessage.replaceAll('"', '')}
+                let errorMessage = error.response
+                this.message = { status:'error', message: errorMessage}
                 console.log(error.response)
             }
         },
@@ -62,8 +62,8 @@ export const useUserStore = defineStore({
             await axios.get(`/users`)
             
             } catch (error) {
-                let errorMessage = error.response.data.message
-                this.message = { status:'error', message: errorMessage.replaceAll('"', '')}
+                let errorMessage = error.response
+                this.message = { status:'error', message: errorMessage}
                 console.log(error.response)
             }
         },
