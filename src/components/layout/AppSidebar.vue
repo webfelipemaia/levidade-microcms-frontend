@@ -1,19 +1,20 @@
 <template>
     <div 
-        :class="{'show': isActive}"
-        class="sidebar leve offcanvas-md offcanvas-start" 
+        :class="[offCanvas,{'show': isActive}]"
+        class="sidebar leve offcanvas-start" 
         tabindex="-1" 
         id="offcanvasExample" 
-        aria-labelledby="offcanvasExampleLabel"
+        aria-labelledby="offcanvasSidebarMenu"
         ref="offcanvas"
         >
         <div class="offcanvas-header">
             
-    <h5 class="offcanvas-title" id="offcanvasExampleLabel">Offcanvas</h5>
+    <h5 class="offcanvas-title" id="offcanvasSidebarMenu">Navbar</h5>
     <button @click="updateValue" type="button" class="btn-close" aria-label="Close"></button>
   </div>
     <div class="offcanvas-body flex-shrink-0 p-3" style="width: 280px;">
             <ul class="nav flex-column">
+                
                 <li class="nav-item nav-item_title">
                     <div class="nav-header">
                         <div class="nav-header_title">
@@ -22,40 +23,41 @@
                         <div class="nav-header_body">
                             <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
                         </div>
-                        <p>{{ isActive }}</p>
                     </div>
                 </li>
+
                 <li class="nav-item">
-                    <router-link to="/roles" class="nav-link">Roles</router-link>
+                    <router-link to="/roles" class="nav-link">Users</router-link>
                     <nav class="nav subnav flex-column">
-                        <router-link to="/roles/create" class="nav-link">Create Role</router-link>
-                        <a class="nav-link" href="#">Sub Link</a>
-                        <a class="nav-link" href="#">Sub Link</a>
-                        <a class="nav-link" href="#">Sub Link</a>
+                        <router-link to="/admin/users" class="nav-link">Manage User</router-link>
                     </nav>
                 </li>
-                <li class="nav-item">                    
-                    <a class="nav-link" href="#">Primary Link</a>
+
+                <li class="nav-item">
+                    <router-link to="/admin/roles" class="nav-link">Roles</router-link>
                     <nav class="nav subnav flex-column">
-                        <a class="nav-link" href="#">Sub Link</a>
-                        <a class="nav-link" href="#">Sub Link</a>
-                        <a class="nav-link" href="#">Sub Link</a>
-                        <a class="nav-link" href="#">Sub Link</a>
+                        <router-link to="/admin/roles" class="nav-link">Manage Roles</router-link>
                     </nav>
                 </li>
+
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Link</a>
+                    <router-link to="/admin/permissions" class="nav-link">Permissions</router-link>
+                    <nav class="nav subnav flex-column">
+                        <router-link to="/admin/permissions" class="nav-link">Manage Permissions</router-link>
+                    </nav>
                 </li>
+
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Link</a>
+                    <router-link to="/admin/settings" class="nav-link">Settings</router-link>
                 </li>
+
             </ul>
         </div>
     </div>
 </template>
 
 <script setup>
-import {  ref, watch, defineProps, defineEmits } from 'vue';
+import {  ref, watch, defineProps, defineEmits, computed} from 'vue';
 
 const props = defineProps({
     isActive: {
@@ -64,14 +66,19 @@ const props = defineProps({
     }
 });
 
-const emit = defineEmits(['updateValue']);
+const emit = defineEmits(['closeSidebar']);
 
 const activeValue = ref(Boolean(props.isActive));
 watch(() => props.isActive, (newVal) => {
   activeValue.value = newVal;
 });
 
+const offCanvas = computed(() => {
+      return props.isActive ? 'offcanvas' : 'offcanvas-md'
+    })
+
 const updateValue = () => {
+    
     // remove Bootstrap styles from body tag
     var bodyElem = document.getElementsByTagName("body")[0];
     bodyElem.removeAttribute("style");
@@ -80,7 +87,7 @@ const updateValue = () => {
     .forEach(element => element.remove());
     activeValue.value = false;
     // updates the value of the variable that activates the menu
-    emit('updateValue', activeValue.value);
+    emit('closeSidebar', activeValue.value);
 };
 
 </script>

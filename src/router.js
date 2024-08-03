@@ -8,21 +8,13 @@ const routes =  [
       name: "home",
       component: () => import("./components/layout/AppHome")
     },
-    {
-      path: "/roles",
-      name: "role",
-      component: () => import("./components/roles/RoleList")
-    },
-    {
-      path: "/roles/:id",
-      name: "roles-details",
-      component: () => import("./components/roles/RoleDetail")
-    },
+
     { 
       path: '/index',
       name: 'index', 
       component: () => import("./views/IndexView.vue")
     },
+
     { 
       path: '/login',
       name: 'login', 
@@ -49,7 +41,7 @@ const routes =  [
     { 
       path: '/user',
       name: 'user', 
-      component: () => import("./components/roles/RoleList.vue")
+      component: () => import("./components/user/UserDetail.vue")
     },
 
     // Admins
@@ -61,33 +53,41 @@ const routes =  [
     },
 
     { 
-      path: '/role',
-      name: 'role', 
+      path: '/admin/settings',
+      name: 'admin-settings', 
+      component: () => import("./components/admin/AdminSettings.vue")
+    },
+
+    { 
+      path: '/admin/profile',
+      name: 'admin-profile', 
+      component: () => import("./components/admin/AdminProfile.vue")
+    },
+
+    { 
+      path: '/admin/roles',
+      name: 'admin-roles', 
       component: () => import("./components/admin/RoleIndex.vue")
     },
 
+    {
+      path: "/roles/:id",
+      name: "roles-details",
+      component: () => import("./components/roles/RoleDetail")
+    },
+
     { 
-      path: '/permission',
-      name: 'permission', 
+      path: '/admin/permissions',
+      name: 'admin-permissions', 
       component: () => import("./components/admin/PermissionIndex.vue")
     },
 
     { 
-      path: '/permission/role',
-      name: 'permission-role', 
-      component: () => import("./components/admin/PermissionIndex.vue")
+      path: '/admin/users',
+      name: 'admin-users', 
+      component: () => import("./components/admin/AdminIndex.vue")
     },
 
-    { 
-      path: '/permission/user',
-      name: 'permission-user', 
-      component: () => import("./components/admin/PermissionIndex.vue")
-    },
-    { 
-      path: '/admin/profile',
-      name: 'admin/profile', 
-      component: () => import("./components/admin/AdminProfile.vue")
-    }
   ];
   
   const router = createRouter({
