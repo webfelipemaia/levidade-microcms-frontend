@@ -27,7 +27,14 @@
                 </li>
 
                 <li class="nav-item">
-                    <router-link to="/roles" class="nav-link">Users</router-link>
+                    <router-link to="/admin/categories" class="nav-link">Categories</router-link>
+                    <nav class="nav subnav flex-column">
+                        <router-link to="/admin/categories" class="nav-link">Manage Category</router-link>
+                    </nav>
+                </li>
+
+                <li class="nav-item">
+                    <router-link to="/admin/roles" class="nav-link">Users</router-link>
                     <nav class="nav subnav flex-column">
                         <router-link to="/admin/users" class="nav-link">Manage User</router-link>
                     </nav>

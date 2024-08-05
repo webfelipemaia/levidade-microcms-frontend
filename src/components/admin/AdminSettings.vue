@@ -11,7 +11,23 @@
                 </app-card-header>
 
             </template>
-            
+
+            <template #body>
+                <form class="row g-3 mt-5">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label for="siteName" class="form-label">Site name</label>
+                            <input type="text" class="form-control" id="siteName">                        
+                        </div>
+                        <div class="col-md-6">
+                            <label for="siteContact" class="form-label">Contact e-mail</label>
+                            <input type="text" class="form-control" id="siteContact">                        
+                        </div>
+                    </div>
+                </form>
+
+            </template>
+
         </app-card>
     </div>
 

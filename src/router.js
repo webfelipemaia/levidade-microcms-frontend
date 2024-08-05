@@ -88,6 +88,12 @@ const routes =  [
       component: () => import("./components/admin/AdminIndex.vue")
     },
 
+    { 
+      path: '/admin/categories',
+      name: 'admin-categories', 
+      component: () => import("./components/admin/CategoryIndex.vue")
+    },
+
   ];
   
   const router = createRouter({
