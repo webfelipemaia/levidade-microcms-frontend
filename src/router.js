@@ -91,7 +91,13 @@ const routes =  [
     { 
       path: '/admin/categories',
       name: 'admin-categories', 
-      component: () => import("./components/admin/CategoryIndex.vue")
+      component: () => import("./components/admin/AdminCategory.vue")
+    },
+    
+    { 
+      path: '/admin/articles',
+      name: 'admin-articles', 
+      component: () => import("./components/admin/AdminArticle.vue")
     },
 
   ];

@@ -27,6 +27,13 @@
                 </li>
 
                 <li class="nav-item">
+                    <router-link to="/admin/articles" class="nav-link">Articles</router-link>
+                    <nav class="nav subnav flex-column">
+                        <router-link to="/admin/articles" class="nav-link">Manage Articles</router-link>
+                    </nav>
+                </li>
+
+                <li class="nav-item">
                     <router-link to="/admin/categories" class="nav-link">Categories</router-link>
                     <nav class="nav subnav flex-column">
                         <router-link to="/admin/categories" class="nav-link">Manage Category</router-link>
