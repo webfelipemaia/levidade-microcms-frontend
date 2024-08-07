@@ -38,20 +38,20 @@ export const usePermissionStore = defineStore({
             
             } catch (error) {
                 let errorMessage = error.response.data.message
-                this.message = { status:'error', message: errorMessage.replaceAll('"', '')}
+                this.message = { status:'error', message: errorMessage}
                 console.log(error.response)
             }
         },        
 
-        async updatePermission(id,data) {
+        async updatePermission(data) {
             try {                
-            const response =  await axios.put(`/permissions/${id}`, data);
+            const response =  await axios.patch(`/permissions/${data.id}`, data);
             this.message = response.data
             await axios.get(`/permissions`)
             
             } catch (error) {
                 let errorMessage = error.response.data.message
-                this.message = { status:'error', message: errorMessage.replaceAll('"', '')}
+                this.message = { status:'error', message: errorMessage}
                 console.log(error.response)
             }
         },
@@ -69,7 +69,7 @@ export const usePermissionStore = defineStore({
             
             } catch (error) {
                 let errorMessage = error.response.data.message
-                this.message = { status:'error', message: errorMessage.replaceAll('"', '')}
+                this.message = { status:'error', message: errorMessage}
                 console.log(error.response)
             }
         },
