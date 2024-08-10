@@ -30,6 +30,7 @@
                     <router-link to="/admin/articles" class="nav-link">Articles</router-link>
                     <nav class="nav subnav flex-column">
                         <router-link to="/admin/articles" class="nav-link">Manage Articles</router-link>
+                        <router-link :to="{name: 'admin.articles.new'}" class="nav-link">New Article</router-link>
                     </nav>
                 </li>
 

@@ -5,6 +5,7 @@ export const useArticleStore = defineStore({
     id: 'article',
     state: () => ({
         articles: [],
+        lastArticle: [],
         message: null,
     }),
 
@@ -16,6 +17,17 @@ export const useArticleStore = defineStore({
             } else {
                 this.message = null;
                 this.articles = response.data;
+            }
+        },
+
+        async getLastInsertedArticle() {
+            const response = await axios.get(`/articles/last`);
+            
+            if(response.data.status === 'error') {
+                this.message = response.data
+            } else {
+                this.message = null;
+                this.lastArticle = response.data;
             }
         },
 
@@ -59,14 +71,11 @@ export const useArticleStore = defineStore({
 
         async createArticle(data) {
             try {
-            const response =  await axios.post('/articles/',
-                { 
-                    name: data.name, 
-                }
-            );
+            const response =  await axios.post('/articles/', data);
             this.message = response.data
+            const last = await axios.get(`/articles/last`);
+            this.lastArticle = last.data
             await axios.get(`/articles`)
-            
             } catch (error) {
                 let errorMessage = error.response.data.message
                 this.message = { status:'error', message: errorMessage.replaceAll('"', '')}
