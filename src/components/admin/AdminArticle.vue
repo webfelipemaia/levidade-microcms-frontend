@@ -26,8 +26,8 @@
                                     <tr v-for="article in articles" :key="article.id">                        
                                     <th class="align-middle" scope="row">{{ article.id }}</th>
                                     <td class="align-middle">{{ article.title }}</td>
-                                    <td class="align-middle">{{ article.categoryId }}</td>
-                                    <td class="align-middle">{{ article.status }}</td>
+                                    <td class="align-middle">{{ getCategory(article.categoryId) }}</td>
+                                    <td class="align-middle">{{ getStatus(article.status) }}</td>
                                     <td class="align-middle">{{ article.updatedAt }}</td>
                                     <td>
                                         <div class="d-flex">
@@ -40,7 +40,6 @@
                                     </td>
                                     </tr>
                                 </tbody>
-
                                 <tbody v-else>
                                     <p>No data</p>
                                 </tbody>
@@ -61,9 +60,15 @@ import AppModal from '../layout/ui/modal/AppModal'
 import AppCardHeader from '../layout/ui/card/AppCardHeader'
 import { storeToRefs } from 'pinia'
 import { useArticleStore } from '../../stores/articleStore'
+import { useCategoryStore } from '../../stores/categoryStore'
+import { useStatusStore } from '../../stores/statusStore'
 
 const articleStore = useArticleStore()
 const { articles } =  storeToRefs(articleStore)
+const categoryStore = useCategoryStore()
+const { categories } = storeToRefs(categoryStore)
+const statusStore = useStatusStore()
+const { status } = storeToRefs(statusStore)
 const showModal = ref(false)
 const selectedArticle = ref([])
 const activeModal = ref(false)
@@ -72,12 +77,48 @@ const fetchArticles = async () => {
    await articleStore.getArticles()
 }
 
+
+const fetchCategories = async () => {
+   await categoryStore.getCategories()
+}
+
+const fetchStatus = async () => {
+    await statusStore.getStatus()
+}
+
+const getCategory = (id) => {
+    const cat = categories.value
+    
+    const categoryFound = cat.find(item => item.id === id);
+
+    if (categoryFound) {
+        return categoryFound.name;
+    } else {
+        return null;
+    }
+} 
+
+const getStatus = (id) => {
+
+    const stat = status.value
+    
+    const statusFound = stat.find(item => parseInt(item.value) === id);
+
+    if (statusFound) {
+        return statusFound.name;
+    } else {
+        return null;
+    }
+}
+
 const processData = (data) => {
     articleStore.deleteRole(data)
 }
 
 onMounted(() => {
     fetchArticles()
+    fetchCategories()
+    fetchStatus()
 })
 
 </script>
