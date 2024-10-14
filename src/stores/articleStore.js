@@ -70,7 +70,8 @@ export const useArticleStore = defineStore({
 
 
         async createArticle(data) {
-            try {
+            console.log(data)
+            /* try {
             const response =  await axios.post('/articles/', data);
             this.message = response.data
             const last = await axios.get(`/articles/last`);
@@ -80,7 +81,7 @@ export const useArticleStore = defineStore({
                 let errorMessage = error.response.data.message
                 this.message = { status:'error', message: errorMessage.replaceAll('"', '')}
                 console.log(error.response)
-            }
+            } */
         },
         
         async doneSuccessfully(response) {

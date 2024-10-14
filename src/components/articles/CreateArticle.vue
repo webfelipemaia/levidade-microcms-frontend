@@ -10,7 +10,7 @@
                 </app-card-header>
             </template>
             <template #body>
-                    <form @submit.prevent="">
+                    <form @submit.prevent="" enctype="multipart/form-data">
                                                 
                         <div class="card-body">
 
@@ -83,7 +83,7 @@
                                 <label for="subtitle" class="col-form-label">Subtitle:</label>
                                 <input v-model="article.subtitle" type="text" class="form-control" id="subtitle">
                             </div>
-
+                            <input class="file-input" type="file" @change="uploadFile" >
                             <div class="row">
 
                                 <div class="col">
@@ -110,7 +110,7 @@
 
 <script setup>
 import { ref, onMounted, computed } from 'vue'
-import { useRouter } from 'vue-router'
+//import { useRouter } from 'vue-router'
 import AppCard from '../layout/ui/card/AppCard'
 import AppCardHeader from '../layout/ui/card/AppCardHeader'
 import { useArticleStore } from '../../stores/articleStore'
@@ -126,23 +126,35 @@ const article = ref({
     status: '',
     featured: '',
     categoryId: '',
+    files: '',
 })
+const files = ref([])
 
 const articleStore = useArticleStore()
 const categoryStore = useCategoryStore()
 const statusStore = useStatusStore()
-const router = useRouter()
+//const router = useRouter()
     
     article.value.slug = computed(() => {
       return useSanitizeWords(article.value.title)
     })
 
+    const uploadFile = (event) => {
+        files.value = Array.from(event.target.files)
+    }
+
     const onSubmit = (data) => {
-        
-        articleStore.createArticle(data)
+    console.log(data)
+    console.log(files.value)
+
+    //gravar artigo
+    //recuperar id do artigo gravado
+    //gravar imagem associada ao id artigo
+
+/*         articleStore.createArticle(data)
         setTimeout(() => {
                 router.push({ name: 'admin.articles.view' });
-            }, 3000);
+            }, 3000); */
     }
 
     onMounted(() => {
