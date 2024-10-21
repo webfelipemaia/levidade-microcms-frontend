@@ -9,6 +9,7 @@ export const useStatusStore = defineStore({
     }),
 
     actions: {
+        
         async getStatus() {
             const response = await axios.get(`/status`);
             if(response.data.status === 'error') {
@@ -75,5 +76,6 @@ export const useStatusStore = defineStore({
         clearSuccessMessage() {
             this.message = null
         }
+        
     }
 })

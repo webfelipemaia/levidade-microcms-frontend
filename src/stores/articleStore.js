@@ -71,17 +71,17 @@ export const useArticleStore = defineStore({
 
         async createArticle(data) {
             console.log(data)
-            /* try {
+            try {
             const response =  await axios.post('/articles/', data);
             this.message = response.data
             const last = await axios.get(`/articles/last`);
             this.lastArticle = last.data
-            await axios.get(`/articles`)
+            //await axios.get(`/articles`)
             } catch (error) {
                 let errorMessage = error.response.data.message
                 this.message = { status:'error', message: errorMessage.replaceAll('"', '')}
                 console.log(error.response)
-            } */
+            }
         },
         
         async doneSuccessfully(response) {

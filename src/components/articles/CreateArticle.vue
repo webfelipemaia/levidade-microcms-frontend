@@ -83,7 +83,48 @@
                                 <label for="subtitle" class="col-form-label">Subtitle:</label>
                                 <input v-model="article.subtitle" type="text" class="form-control" id="subtitle">
                             </div>
-                            <input class="file-input" type="file" @change="uploadFile" >
+                            
+                            <!-- upload -->
+                            <div class="upload-wrapper">
+                              
+                              <div class="upload-input mb-3">
+                                <label for="inputSingleFile" class="form-label">Browse File to Upload</label>
+                                <input class="form-control" type="file" ref="fileInput" id="inputSingleFile" @change="uploadFile" :disabled="uploadStore.message ? true : false">
+                              </div>
+                              
+                                <div class="upload-content">
+                                    
+                                  <section class="loading-area" v-if="!uploadStore.error">
+                                    <li class="row" v-for="(file, index) in uploadStore.files" :key="index">
+                                        <div class="loading-area__content">
+                                        <!--
+                                            Caso seja implementado um gerenciador de arquivos, talvez seja útil
+                                          <div class="loading-area__details">
+                                            <p class="name">Nome do arquivo: {{ file.name }}</p>
+                                            <p class="percent">Tamanho do arquivo: {{ file.size }}</p>
+                                          </div>-->
+                                          <div class="loading-bar">
+                                            <p>Status do upload:</p>
+                                            <div class="progress" role="progressbar" aria-label="Upload progress status" :aria-valuenow="uploadStore.uploadProgress" aria-valuemin="0" aria-valuemax="100">
+                                              <div class="progress-bar bg-success" :style="{width: uploadStore.uploadProgress + '%'}">
+                                                {{ uploadStore.uploadProgress }}%
+                                              </div>
+                                            </div>
+                                          </div>
+                                        </div>
+                                    </li>
+
+                                  <section class="uploaded-area" v-if="uploadStore.message">
+                                      {{ uploadStore.message.uploaded }}
+                                  </section>
+                                </section>
+                                <section v-else>
+                                  <p>{{ uploadStore.error}}</p>
+                                </section>
+                            </div>
+
+                            <!-- fim upload-->
+                            </div>
                             <div class="row">
 
                                 <div class="col">
@@ -116,7 +157,8 @@ import AppCardHeader from '../layout/ui/card/AppCardHeader'
 import { useArticleStore } from '../../stores/articleStore'
 import { useCategoryStore } from '@/stores/categoryStore'
 import { useStatusStore } from '@/stores/statusStore'
-import { useSanitizeWords } from '../layout/composebles/HandleStrings';
+import { useSanitizeWords } from '../layout/composebles/HandleStrings'
+import { useUploadStore } from '@/stores/uploadStore'
 
 const article = ref({ 
     title : '', 
@@ -128,31 +170,30 @@ const article = ref({
     categoryId: '',
     files: '',
 })
-const files = ref([])
+const fileInput = ref(null)
 
 const articleStore = useArticleStore()
 const categoryStore = useCategoryStore()
 const statusStore = useStatusStore()
+const uploadStore = useUploadStore()
 //const router = useRouter()
     
     article.value.slug = computed(() => {
       return useSanitizeWords(article.value.title)
     })
-
+   
     const uploadFile = (event) => {
-        files.value = Array.from(event.target.files)
+        uploadStore.files = Array.from(event.target.files)
+        uploadStore.upload()       
+      
     }
 
     const onSubmit = (data) => {
-    console.log(data)
-    console.log(files.value)
-
-    //gravar artigo
-    //recuperar id do artigo gravado
-    //gravar imagem associada ao id artigo
-
-/*         articleStore.createArticle(data)
-        setTimeout(() => {
+    
+    articleStore.createArticle(data)
+    
+    // redirecionar para página do item criado após x segundos
+    /*setTimeout(() => {
                 router.push({ name: 'admin.articles.view' });
             }, 3000); */
     }
@@ -167,5 +208,25 @@ const statusStore = useStatusStore()
 <style>
 .card__form-group {
     margin-bottom: 2rem;
+}
+</style>
+<style scoped>
+.loading-area__content {
+    padding: 0.5rem;
+}
+
+.loading-area__details {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 0.125rem;
+}
+
+.loading-area__details span:first-child {
+    margin-top: 0;
+}
+
+.loading-area__details span{
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
 }
 </style>
