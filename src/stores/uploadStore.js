@@ -10,11 +10,13 @@ export const useUploadStore = defineStore('upload', {
     uploadProgress: 0,
     error: null,
     message: null,
+    contentType: '',
   }),
 
   actions: {
-    async upload() {
+    async upload({ contentType }) {
     
+        this.contentType = contentType;
         let formData = new FormData();      
         const file = this.files[0];
         const maxFileSize = 2 * 1024 * 1024;
@@ -29,7 +31,8 @@ export const useUploadStore = defineStore('upload', {
                             file.name.substring(0,13) + '... .' + file.name.split('.')[1] : 
                             file.name;
 
-          formData.append('files',file);
+          formData.append('contentType',contentType);
+          formData.append('file',file);
       
           this.uploadProgress = 0;
           this.uploadedFiles.push({ name: fileName, loading: 0 });

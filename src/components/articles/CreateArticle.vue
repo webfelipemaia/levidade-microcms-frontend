@@ -168,7 +168,7 @@ const article = ref({
     status: '',
     featured: '',
     categoryId: '',
-    files: '',
+    contentType: 'article',
 })
 const fileInput = ref(null)
 
@@ -184,12 +184,20 @@ const uploadStore = useUploadStore()
    
     const uploadFile = (event) => {
         uploadStore.files = Array.from(event.target.files)
-        uploadStore.upload()       
+        uploadStore.upload({
+            contentType: article.value.contentType,
+        });     
       
     }
 
     const onSubmit = (data) => {
     
+    // Adiciona o createdFileId ao objeto data
+    const createdFileId = uploadStore.message?.created?.id;
+    if (createdFileId) {
+        data.fileId = createdFileId;
+    }
+
     articleStore.createArticle(data)
     
     // redirecionar para página do item criado após x segundos
