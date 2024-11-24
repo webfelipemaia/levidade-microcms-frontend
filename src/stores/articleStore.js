@@ -10,7 +10,9 @@ export const useArticleStore = defineStore({
     }),
 
     actions: {
-        async getArticles() {
+        
+        // Simple query
+        /* async getArticles() {
             const response = await axios.get(`/articles`);
             if(response.data.status === 'error') {
                 this.message = response.data
@@ -18,8 +20,33 @@ export const useArticleStore = defineStore({
                 this.message = null;
                 this.articles = response.data;
             }
-        },
+        }, */
 
+        // Paginated data
+        async getArticles({ page, pageSize, search, order }) {
+            try {
+                const response = await axios.get(`/articles/paginated`, {
+                    params: {
+                        page,
+                        pageSize,
+                        search,
+                        order,
+                    },
+                });
+          
+                return {
+                    data: response.data.data,
+                    total: response.data.total,
+                };
+            } catch (error) {
+                console.error('Failed to fetch articles:', error);
+                return { 
+                    data: [], 
+                    total: 0 
+                };
+            }
+          },
+          
         async getLastInsertedArticle() {
             const response = await axios.get(`/articles/last`);
             
@@ -34,6 +61,7 @@ export const useArticleStore = defineStore({
 
         async getUsersArticles() {
             const response = await axios.get(`/users/articles/`);
+            
             if(response.data.status === 'error') {
                 this.message = response.data
             } else {
@@ -44,11 +72,12 @@ export const useArticleStore = defineStore({
 
         async deleteArticle(data) {
             try {                
-            const response =  await axios.delete(`/articles/${data.id}`);
-            this.message = response.data
-            await axios.get(`/articles`)
             
+                const response =  await axios.delete(`/articles/${data.id}`);
+                this.message = response.data
+                await axios.get(`/articles`)            
             } catch (error) {
+
                 let errorMessage = error.response.data.message
                 this.message = { status:'error', message: errorMessage.replaceAll('"', '')}
                 console.log(error.response)
@@ -57,11 +86,12 @@ export const useArticleStore = defineStore({
 
         async updateArticle(data) {
             try {
-            const response =  await axios.patch(`/articles/${data.id}`, data);
-            this.message = response.data
-            await axios.get(`/articles`)
-            
+                
+                const response =  await axios.patch(`/articles/${data.id}`, data);
+                this.message = response.data
+                await axios.get(`/articles`)            
             } catch (error) {
+
                 let errorMessage = error.response.data.message
                 this.message = { status:'error', message: errorMessage.replaceAll('"', '')}
                 console.log(error.response)
@@ -72,12 +102,13 @@ export const useArticleStore = defineStore({
         async createArticle(data) {
             console.log(data)
             try {
-            const response =  await axios.post('/articles/', data);
-            this.message = response.data
-            const last = await axios.get(`/articles/last`);
-            this.lastArticle = last.data
-            //await axios.get(`/articles`)
+                const response =  await axios.post('/articles/', data);
+                this.message = response.data
+                const last = await axios.get(`/articles/last`);
+                this.lastArticle = last.data
+                //await axios.get(`/articles`)
             } catch (error) {
+                
                 let errorMessage = error.response.data.message
                 this.message = { status:'error', message: errorMessage.replaceAll('"', '')}
                 console.log(error.response)

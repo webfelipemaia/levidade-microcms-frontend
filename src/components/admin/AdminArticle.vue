@@ -22,8 +22,8 @@
                                     <th scope="col">Actions</th>
                                     </tr>
                                 </thead>
-                                <tbody v-if="articles">
-                                    <tr v-for="article in articles" :key="article.id">                        
+                                <tbody v-if="_articles">
+                                    <tr v-for="article in _articles" :key="article.id">                        
                                     <th class="align-middle" scope="row">{{ article.id }}</th>
                                     <td class="align-middle">{{ article.title }}</td>
                                     <td class="align-middle">{{ getCategory(article.categoryId) }}</td>
@@ -47,6 +47,13 @@
                 </div>
             </template>
         </app-card>
+        <app-pagination
+        :total-pages="totalPages"
+        :total="totalArticles"
+        :per-page="perPage"
+        :current-page="currentPage"
+        @pagechanged="onPageChange"
+        />
     </div>
 
     <app-modal :id="'app-modal-01'" :data="selectedArticle" :show="activeModal" confirmation text-save="Delete" :show-header="false" @close="activeModal=false" @process-data="processData($event)"></app-modal>
@@ -54,29 +61,56 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import AppCard from '../layout/ui/card/AppCard'
 import AppModal from '../layout/ui/modal/AppModal'
 import AppCardHeader from '../layout/ui/card/AppCardHeader'
-import { storeToRefs } from 'pinia'
+import AppPagination from '../layout/ui/AppPagination.vue'
+//import { storeToRefs } from 'pinia'
 import { useArticleStore } from '../../stores/articleStore'
 import { useCategoryStore } from '../../stores/categoryStore'
 import { useStatusStore } from '../../stores/statusStore'
 
 const articleStore = useArticleStore()
-const { articles } =  storeToRefs(articleStore)
+//const { articles } =  storeToRefs(articleStore)
 const categoryStore = useCategoryStore()
-const { categories } = storeToRefs(categoryStore)
+//const { categories } = storeToRefs(categoryStore)
 const statusStore = useStatusStore()
-const { status } = storeToRefs(statusStore)
+//const { status } = storeToRefs(statusStore)
 const showModal = ref(false)
 const selectedArticle = ref([])
 const activeModal = ref(false)
 
+const _articles = ref([])
+const currentPage = ref(1)
+const perPage = 10
+const totalArticles = ref(0)
+
+const totalPages = computed(() => Math.ceil(totalArticles.value / perPage))
+
 const fetchArticles = async () => {
-   await articleStore.getArticles()
+  const response = await articleStore.getArticles({
+    page: currentPage.value,
+    pageSize: perPage,
+    search: '',
+    order: JSON.stringify([['id', 'ASC']]),
+  });
+
+  _articles.value = response.data;
+  totalArticles.value = response.total;
+};
+
+const getCategory = (id) => categoryStore.categories.find(cat => cat.id === id)?.name || 'Unknown'
+const getStatus = (id) => statusStore.status.find(stat => stat.value === id)?.name || 'Unknown'
+
+const onPageChange = (page) => {
+  currentPage.value = page
+  fetchArticles()
 }
 
+/* const fetchArticles = async () => {
+   await articleStore.getArticles()
+} */
 
 const fetchCategories = async () => {
    await categoryStore.getCategories()
@@ -86,7 +120,7 @@ const fetchStatus = async () => {
     await statusStore.getStatus()
 }
 
-const getCategory = (id) => {
+/* const getCategory = (id) => {
     const cat = categories.value
     
     const categoryFound = cat.find(item => item.id === id);
@@ -109,7 +143,7 @@ const getStatus = (id) => {
     } else {
         return null;
     }
-}
+} */
 
 const processData = (data) => {
     articleStore.deleteRole(data)
