@@ -12,7 +12,7 @@ export const useArticleStore = defineStore({
     actions: {
         
         // Simple query
-        /* async getArticles() {
+        async getArticles() {
             const response = await axios.get(`/articles`);
             if(response.data.status === 'error') {
                 this.message = response.data
@@ -20,10 +20,10 @@ export const useArticleStore = defineStore({
                 this.message = null;
                 this.articles = response.data;
             }
-        }, */
+        },
 
         // Paginated data
-        async getArticles({ page, pageSize, search, order }) {
+        async getPaginatedArticles({ page, pageSize, search, order }) {
             try {
                 const response = await axios.get(`/articles/paginated`, {
                     params: {
@@ -45,8 +45,33 @@ export const useArticleStore = defineStore({
                     total: 0 
                 };
             }
-          },
-          
+        },
+        
+        async getArticleById(id) {
+            try {
+                // Faz a requisição para obter o artigo pelo ID
+                const response = await axios.get(`/articles/${id}`);
+                
+                // Armazena o artigo em uma propriedade da store
+                this.article = response.data;
+        
+                // Opcional: Define uma mensagem de sucesso
+                this.message = { status: 'success', message: 'Artigo carregado com sucesso.' };
+        
+                // Retorna o artigo para uso direto, se necessário
+                return response.data;
+            } catch (error) {
+                // Captura a mensagem de erro e armazena na store
+                let errorMessage = error.response?.data?.message || 'Erro desconhecido';
+                this.message = { status: 'error', message: errorMessage.replaceAll('"', '') };
+                console.error('Erro ao buscar artigo:', error); // Log para debugging
+        
+                // Lança o erro, caso precise tratar isso no componente
+                throw error;
+            }
+        },
+        
+
         async getLastInsertedArticle() {
             const response = await axios.get(`/articles/last`);
             

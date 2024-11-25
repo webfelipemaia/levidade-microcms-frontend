@@ -125,7 +125,7 @@
     display: inline-block;
   }
   
-  .active {
+  .pagination .active {
     background-color: #4AAE9B;
     color: #ffffff;
   }

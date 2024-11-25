@@ -32,9 +32,8 @@
                                     <td>
                                         <div class="d-flex">
                                             <div class="p-2 flex-fill">
-                                                <router-link :to="{ name: 'admin.articles.edit', params: { id: article.id } }" class="btn btn-primary"><i class="bi bi-plus"></i> Edit</router-link>
+                                                <router-link :to="{ name: 'admin.articles.edit', params: { id: article.id } }" class="btn"><i class="bi bi-pencil"></i></router-link>
                                             </div>
-                                            <div class="p-2 flex-fill"><button @click="[showModal=true,selectedArticle=article]" type="button" class="btn"><i class="bi bi-pencil"></i></button></div>
                                             <div class="p-2 flex-fill"><button @click="[activeModal=true,selectedArticle=article]" type="button" class="btn"><i class="bi bi-trash3"></i></button></div>
                                         </div>
                                     </td>
@@ -66,7 +65,7 @@ import AppCard from '../layout/ui/card/AppCard'
 import AppModal from '../layout/ui/modal/AppModal'
 import AppCardHeader from '../layout/ui/card/AppCardHeader'
 import AppPagination from '../layout/ui/AppPagination.vue'
-//import { storeToRefs } from 'pinia'
+import { storeToRefs } from 'pinia'
 import { useArticleStore } from '../../stores/articleStore'
 import { useCategoryStore } from '../../stores/categoryStore'
 import { useStatusStore } from '../../stores/statusStore'
@@ -74,10 +73,10 @@ import { useStatusStore } from '../../stores/statusStore'
 const articleStore = useArticleStore()
 //const { articles } =  storeToRefs(articleStore)
 const categoryStore = useCategoryStore()
-//const { categories } = storeToRefs(categoryStore)
+const { categories } = storeToRefs(categoryStore)
 const statusStore = useStatusStore()
-//const { status } = storeToRefs(statusStore)
-const showModal = ref(false)
+const { status } = storeToRefs(statusStore)
+//const showModal = ref(false)
 const selectedArticle = ref([])
 const activeModal = ref(false)
 
@@ -89,7 +88,7 @@ const totalArticles = ref(0)
 const totalPages = computed(() => Math.ceil(totalArticles.value / perPage))
 
 const fetchArticles = async () => {
-  const response = await articleStore.getArticles({
+  const response = await articleStore.getPaginatedArticles({
     page: currentPage.value,
     pageSize: perPage,
     search: '',
@@ -100,17 +99,10 @@ const fetchArticles = async () => {
   totalArticles.value = response.total;
 };
 
-const getCategory = (id) => categoryStore.categories.find(cat => cat.id === id)?.name || 'Unknown'
-const getStatus = (id) => statusStore.status.find(stat => stat.value === id)?.name || 'Unknown'
-
 const onPageChange = (page) => {
   currentPage.value = page
   fetchArticles()
 }
-
-/* const fetchArticles = async () => {
-   await articleStore.getArticles()
-} */
 
 const fetchCategories = async () => {
    await categoryStore.getCategories()
@@ -120,7 +112,7 @@ const fetchStatus = async () => {
     await statusStore.getStatus()
 }
 
-/* const getCategory = (id) => {
+const getCategory = (id) => {
     const cat = categories.value
     
     const categoryFound = cat.find(item => item.id === id);
@@ -143,7 +135,7 @@ const getStatus = (id) => {
     } else {
         return null;
     }
-} */
+}
 
 const processData = (data) => {
     articleStore.deleteRole(data)
