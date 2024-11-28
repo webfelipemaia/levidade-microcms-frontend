@@ -20,23 +20,35 @@
                                     <th scope="col">Actions</th>
                                     </tr>
                                 </thead>
-                                <tbody v-if="roles">
-                                    <tr v-for="role in roles" :key="role.id">                        
-                                    <th class="align-middle" scope="row">{{ role.id }}</th>
-                                    <td class="align-middle">{{ role.name }}</td>
-                                    <td class="align-middle">{{ role.updatedAt }}</td>
-                                    <td>
-                                        <div class="d-flex">
-                                            <div class="p-2 flex-fill"><button @click="[showModal=true,selectedRole=role]" type="button" class="btn"><i class="bi bi-pencil"></i></button></div>
-                                            <div class="p-2 flex-fill"><button @click="[activeModal=true,selectedRole=role]" type="button" class="btn"><i class="bi bi-trash3"></i></button></div>
-                                        </div>
-                                    </td>
-                                    </tr>
+                                <tbody>
+                                    <template v-if="roles && roles.length">
+                                        <tr v-for="role in roles" :key="role.id">                        
+                                            <th class="align-middle" scope="row">{{ role.id }}</th>
+                                            <td class="align-middle">{{ role.name }}</td>
+                                            <td class="align-middle">{{ role.updatedAt }}</td>
+                                            <td>
+                                                <div class="d-flex">
+                                                    <div class="p-2 flex-fill">
+                                                        <button @click="[showModal=true,selectedRole=role]" type="button" class="btn">
+                                                            <i class="bi bi-pencil"></i>
+                                                        </button>
+                                                    </div>
+                                                    <div class="p-2 flex-fill">
+                                                        <button @click="[activeModal=true,selectedRole=role]" type="button" class="btn">
+                                                            <i class="bi bi-trash3"></i>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </template>
+                                    <template v-else>
+                                        <tr>
+                                            <td colspan="4" class="text-center">No data</td>
+                                        </tr>
+                                    </template>
                                 </tbody>
 
-                                <tbody v-else>
-                                    <p>No data</p>
-                                </tbody>
                     </table>
                 </div>
             </template>

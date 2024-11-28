@@ -20,26 +20,38 @@
                                     <th scope="col">Actions</th>
                                     </tr>
                                 </thead>
-                                <tbody v-if="categories">
-                                    <tr v-for="category in categories" :key="category.id">            
-                                    <th class="align-middle" scope="row">{{ category.id }}</th>
-                                    <td class="align-middle"> 
-                                        <span v-if="category.parentId"><i class="bi bi-arrow-90deg-up"></i></span> 
-                                        {{ category.name }}
-                                    </td>
-                                    <td class="align-middle">{{ category.updatedAt }}</td>
-                                    <td>
-                                        <div class="d-flex">
-                                            <div class="p-2 flex-fill"><button @click="[showModal=true,selectedCategory=category]" type="button" class="btn"><i class="bi bi-pencil"></i></button></div>
-                                            <div class="p-2 flex-fill"><button @click="[activeModal=true,selectedCategory=category]" type="button" class="btn"><i class="bi bi-trash3"></i></button></div>
-                                        </div>
-                                    </td>
-                                    </tr>
-                                </tbody>
+                                <tbody>
+                                        <template v-if="categories && categories.length">
+                                            <tr v-for="category in categories" :key="category.id">            
+                                                <th class="align-middle" scope="row">{{ category.id }}</th>
+                                                <td class="align-middle"> 
+                                                    <span v-if="category.parentId"><i class="bi bi-arrow-90deg-up"></i></span> 
+                                                    {{ category.name }}
+                                                </td>
+                                                <td class="align-middle">{{ category.updatedAt }}</td>
+                                                <td>
+                                                    <div class="d-flex">
+                                                        <div class="p-2 flex-fill">
+                                                            <button @click="[showModal=true,selectedCategory=category]" type="button" class="btn">
+                                                                <i class="bi bi-pencil"></i>
+                                                            </button>
+                                                        </div>
+                                                        <div class="p-2 flex-fill">
+                                                            <button @click="[activeModal=true,selectedCategory=category]" type="button" class="btn">
+                                                                <i class="bi bi-trash3"></i>
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </template>
+                                        <template v-else>
+                                            <tr>
+                                                <td colspan="4" class="text-center">No data</td>
+                                            </tr>
+                                        </template>
+                                    </tbody>
 
-                                <tbody v-else>
-                                    <p>No data</p>
-                                </tbody>
                     </table>
                 </div>
             </template>

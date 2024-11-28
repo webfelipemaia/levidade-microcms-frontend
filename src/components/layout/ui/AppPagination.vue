@@ -62,7 +62,7 @@
 </template>
   
 <script setup>
-  import { computed, defineProps, defineEmits } from 'vue';
+  import { computed } from 'vue';
   
   // Props
   const props = defineProps({

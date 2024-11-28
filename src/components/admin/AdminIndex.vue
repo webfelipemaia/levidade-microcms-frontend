@@ -21,24 +21,36 @@
                                     <th scope="col">Actions</th>
                                     </tr>
                                 </thead>
-                                <tbody v-if="users">
-                                    <tr v-for="user in users" :key="user.id">                        
-                                    <th class="align-middle" scope="row">{{ user.id }}</th>
-                                    <td class="align-middle">{{ user.name }} {{ user.lastname }}</td>
-                                    <td class="align-middle">{{ user.email }}</td>
-                                    <td class="align-middle">{{ user.updatedAt }}</td>
-                                    <td>
-                                        <div class="d-flex">
-                                            <div class="p-2 flex-fill"><button @click="[showModal=true,selectedUser=user]" type="button" class="btn"><i class="bi bi-pencil"></i></button></div>
-                                            <div class="p-2 flex-fill"><button @click="[activeModal=true,selectedUser=user]" type="button" class="btn"><i class="bi bi-trash3"></i></button></div>
-                                        </div>
-                                    </td>
-                                    </tr>
+                                <tbody>
+                                    <template v-if="users && users.length">
+                                        <tr v-for="user in users" :key="user.id">                        
+                                            <th class="align-middle" scope="row">{{ user.id }}</th>
+                                            <td class="align-middle">{{ user.name }} {{ user.lastname }}</td>
+                                            <td class="align-middle">{{ user.email }}</td>
+                                            <td class="align-middle">{{ user.updatedAt }}</td>
+                                            <td>
+                                                <div class="d-flex">
+                                                    <div class="p-2 flex-fill">
+                                                        <button @click="[showModal=true,selectedUser=user]" type="button" class="btn">
+                                                            <i class="bi bi-pencil"></i>
+                                                        </button>
+                                                    </div>
+                                                    <div class="p-2 flex-fill">
+                                                        <button @click="[activeModal=true,selectedUser=user]" type="button" class="btn">
+                                                            <i class="bi bi-trash3"></i>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </template>
+                                    <template v-else>
+                                        <tr>
+                                            <td colspan="5" class="text-center">No data</td>
+                                        </tr>
+                                    </template>
                                 </tbody>
 
-                                <tbody v-else>
-                                    <p>No data</p>
-                                </tbody>
                     </table>
                 </div>
             </template>

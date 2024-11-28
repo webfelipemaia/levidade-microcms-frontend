@@ -18,13 +18,15 @@
             <p>A construção das páginas obedece uma organização simples. Cria-se uma categoria que 
             será um item de menu. Cada subcategoria, obviamente, um subitem desse menu. Após 
             criadas as categorias e subcategorias, cria-se uma página e atribui-se a ela a 
-            categoria desejada. Assim, a estrutura do documento fica organizada deste modo:<br>
-                <ul>
-                    <li>Seção + título + descrição</li>
-                    <li>Categoria + título + descrição + exemplos</li>
-                    <li>Subcategoria + título + descrição + exemplos</li>
-                </ul>                    
-            </p>
+            categoria desejada. Assim, a estrutura do documento fica organizada deste modo:
+          </p>
+          
+          <ul>
+            <li>Seção + título + descrição</li>
+            <li>Categoria + título + descrição + exemplos</li>
+            <li>Subcategoria + título + descrição + exemplos</li>
+          </ul>                    
+            
         </div>
 
 

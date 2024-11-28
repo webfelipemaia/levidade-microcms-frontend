@@ -22,26 +22,37 @@
                                     <th scope="col">Actions</th>
                                     </tr>
                                 </thead>
-                                <tbody v-if="_articles">
-                                    <tr v-for="article in _articles" :key="article.id">                        
-                                    <th class="align-middle" scope="row">{{ article.id }}</th>
-                                    <td class="align-middle">{{ article.title }}</td>
-                                    <td class="align-middle">{{ getCategory(article.categoryId) }}</td>
-                                    <td class="align-middle">{{ getStatus(article.status) }}</td>
-                                    <td class="align-middle">{{ article.updatedAt }}</td>
-                                    <td>
-                                        <div class="d-flex">
-                                            <div class="p-2 flex-fill">
-                                                <router-link :to="{ name: 'admin.articles.edit', params: { id: article.id } }" class="btn"><i class="bi bi-pencil"></i></router-link>
-                                            </div>
-                                            <div class="p-2 flex-fill"><button @click="[activeModal=true,selectedArticle=article]" type="button" class="btn"><i class="bi bi-trash3"></i></button></div>
-                                        </div>
-                                    </td>
-                                    </tr>
+                                <tbody>
+                                    <template v-if="_articles && _articles.length">
+                                        <tr v-for="article in _articles" :key="article.id">                        
+                                            <th class="align-middle" scope="row">{{ article.id }}</th>
+                                            <td class="align-middle">{{ article.title }}</td>
+                                            <td class="align-middle">{{ getCategory(article.categoryId) }}</td>
+                                            <td class="align-middle">{{ getStatus(article.status) }}</td>
+                                            <td class="align-middle">{{ article.updatedAt }}</td>
+                                            <td>
+                                                <div class="d-flex">
+                                                    <div class="p-2 flex-fill">
+                                                        <router-link :to="{ name: 'admin.articles.edit', params: { id: article.id } }" class="btn">
+                                                            <i class="bi bi-pencil"></i>
+                                                        </router-link>
+                                                    </div>
+                                                    <div class="p-2 flex-fill">
+                                                        <button @click="[activeModal=true,selectedArticle=article]" type="button" class="btn">
+                                                            <i class="bi bi-trash3"></i>
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </template>
+                                    <template v-else>
+                                        <tr>
+                                            <td colspan="6" class="text-center">No data</td>
+                                        </tr>
+                                    </template>
                                 </tbody>
-                                <tbody v-else>
-                                    <p>No data</p>
-                                </tbody>
+
                     </table>
                 </div>
             </template>

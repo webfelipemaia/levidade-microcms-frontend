@@ -48,7 +48,7 @@
 </template>
 
 <script setup>
-import { ref, defineProps, defineEmits, watch, useSlots } from 'vue'
+import { ref, watch, useSlots } from 'vue'
 import { useAddBackDrop, useRemoveBackDrop } from '../../composebles/HandleBackdrop';
 import { useUserStore } from '@/stores/userStore';
 

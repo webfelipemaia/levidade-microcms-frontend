@@ -35,7 +35,7 @@
 </template>
 
 <script setup>
-import { ref, defineProps, defineEmits, watch, onMounted } from 'vue'
+import { ref, watch, onMounted } from 'vue'
 import { useCategoryStore } from '@/stores/categoryStore';
 import { useAddBackDrop, useRemoveBackDrop } from  '../../components/layout/composebles/HandleBackdrop';
 
