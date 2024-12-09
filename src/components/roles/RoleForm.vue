@@ -53,7 +53,7 @@
 </template>
 
 <script setup>
-import { ref, defineProps, defineEmits, watch, onMounted } from 'vue'
+import { ref, watch, onMounted } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useRoleStore } from '@/stores/roleStore';
 import { usePermissionStore } from '../../stores/permissionStore'
