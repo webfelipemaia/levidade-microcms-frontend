@@ -1,4 +1,11 @@
 
+// Função para transformar a primeira letra em maiúscula
+export function capitalizeFirstLetter(word) {
+  if (!word) return '';
+  return word.charAt(0).toUpperCase() + word.slice(1);
+}
+
+
 /*
 * Import the function and use it on a computed property.
 * Author: MrRudRud a https://codepen.io/mrrudrud/pen/QVyZze
