@@ -20,6 +20,8 @@ export const useAuthStore = defineStore({
                 this.error = null;
                 this.user = response.data.data;
                 localStorage.setItem('user', JSON.stringify(this.user));
+                localStorage.setItem('token', response.data.data.token);
+                axios.defaults.headers.common['Authorization'] = `Bearer ${response.data.data.token}`;
                 router.push(this.returnUrl || '/');
             }
         },
@@ -27,6 +29,7 @@ export const useAuthStore = defineStore({
         logout() {
             this.user = null;
             localStorage.removeItem('user');
+            delete axios.defaults.headers.common['Authorization'];
             router.push('/login');
         },
 
