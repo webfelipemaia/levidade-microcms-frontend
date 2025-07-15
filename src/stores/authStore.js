@@ -2,45 +2,86 @@ import { defineStore } from 'pinia';
 import axios from 'axios';
 import router from '../router';
 
-//const baseUrl = `${process.env.VUE_APP_BASE_URL}/users`;
-//const baseUrl = 'http://localhost:4000'
 export const useAuthStore = defineStore({
     id: 'auth',
     state: () => ({
-        user: JSON.parse(localStorage.getItem('user')),
+        user: null,
         returnUrl: null,
         error: null,
+        isAuthenticated: false,
     }),
     actions: {
+
         async login(email, password) {
-            const response = await axios.post(`/users/authenticate`, { email: email, password: password });
-            if(response.data.status === 'error') {
-                this.error = response.data
-            } else {
-                this.error = null;
-                this.user = response.data.data;
-                localStorage.setItem('user', JSON.stringify(this.user));
-                localStorage.setItem('token', response.data.data.token);
-                axios.defaults.headers.common['Authorization'] = `Bearer ${response.data.data.token}`;
-                router.push(this.returnUrl || '/');
+          try {
+              const response = await axios.post('/auth/login', {
+                  email,
+                  password
+              });
+      
+              this.error = null;
+              this.user = response.data.data;
+              this.isAuthenticated = true;
+              router.push(this.returnUrl || '/');
+      
+          } catch (error) {
+              this.error = error.response?.data || { message: "Login failed" };
+              this.isAuthenticated = false;
+          }
+      },
+      
+
+        async fetchUser() {
+            try {
+              const response = await axios.get('/auth/me');
+              this.user = response.data.user;
+              this.isAuthenticated = true;
+            } catch (error) {
+              this.logout();
             }
-        },
+          },
 
         logout() {
             this.user = null;
-            localStorage.removeItem('user');
-            delete axios.defaults.headers.common['Authorization'];
-            router.push('/login');
-        },
+            this.isAuthenticated = false;
+            router.push(this.returnUrl || '/login');
+        },          
 
-        async register(email,password,confirmPassword,name,lastname) {
-            try {
-                const response = await axios.post(`/users/register/`, { email: email, password: password, confirmPassword: confirmPassword, name: name, lastname:lastname });
-                this.user = response.data;
-                router.push(this.returnUrl || '/login');
-            } catch (error) {
-                this.error = error.response.data;
-            }
-        },
+        async register(email, password, confirmPassword, name, lastname) {
+          try {
+              const response = await axios.post('/auth/register', {
+                  email,
+                  password,
+                  confirmPassword,
+                  name,
+                  lastname
+              });
+      
+              this.user = response.data.data;
+              this.isAuthenticated = true;
+              router.push(this.returnUrl || '/');
+      
+          } catch (error) {
+              this.error = error.response?.data || { message: "Registration failed" };
+              this.isAuthenticated = false;
+          }
+      },
+      
+
+        async initialize() {
+          try {
+              const response = await axios.get('/auth/me');
+              this.user = response.data.user;
+              this.isAuthenticated = true;
+          } catch (error) {
+              this.clearAuthData();
+          }
+      },      
+
+      clearAuthData() {
+        this.user = null;
+        this.isAuthenticated = false;
+      }
+    
     }
 });

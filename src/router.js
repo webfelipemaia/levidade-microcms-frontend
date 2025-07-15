@@ -6,7 +6,8 @@ const routes =  [
       path: "/",
       alias: "/home",
       name: "home",
-      component: () => import("./components/layout/AppHome")
+      component: () => import("./components/layout/AppHome"),
+      meta: { requiresAuth: true }
     },
 
     { 
@@ -18,7 +19,8 @@ const routes =  [
     { 
       path: '/login',
       name: 'login', 
-      component: () => import("./views/LoginView.vue")
+      component: () => import("./views/LoginView.vue"),
+      meta: { requiresAuth: false }
     },
     { 
       path: '/logout',
@@ -127,15 +129,25 @@ const routes =  [
   });
 
   router.beforeEach(async (to) => {
-    // redirect to login page if not logged in and trying to access a restricted page
-    const publicPages = ['/login','/register'];
-    const authRequired = !publicPages.includes(to.path);
-    const auth = useAuthStore();
-
-    if (authRequired && !auth.user) {
-        auth.returnUrl = to.fullPath;
-        return '/login';
+    const authStore = useAuthStore();
+  
+    if (authStore.isAuthenticated === false) {
+      await authStore.initialize();
     }
-});
+  
+    const publicPages = ['/login', '/register'];
+    const authRequired = !publicPages.includes(to.path);
+  
+    if (to.meta.requiresAuth && authRequired && !authStore.isAuthenticated) {
+      authStore.returnUrl = to.fullPath;
+      return '/login';
+    }
+  
+    if (to.name === 'login' && authStore.isAuthenticated) {
+      return { name: 'home' };
+    }
+  
+    return true;
+  });
   
   export default router;
