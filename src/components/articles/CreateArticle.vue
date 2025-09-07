@@ -26,7 +26,7 @@
                                         <label for="status" class="col-form-label">Status:</label>
                                         <select v-model="article.status" selected="" class="form-select" aria-label="Default select example" id="status">
                                             <option disabled value="">Select</option>
-                                            <option v-for="status in statusStore.status" :key="status.id" :value="status.value">
+                                            <option v-for="status in statusStore.status.data" :key="status.id" :value="status.value">
                                                 {{status.name}}
                                             </option>
                                         </select>
@@ -177,7 +177,16 @@ const categoryStore = useCategoryStore()
 const statusStore = useStatusStore()
 const uploadStore = useUploadStore()
 //const router = useRouter()
-    
+
+    const resetUploadStore = () => {
+        uploadStore.files = null;
+        uploadStore.uploadedFiles = [];
+        uploadStore.uploadProgress = 0;
+        uploadStore.error = null;
+        uploadStore.message = null;
+        uploadStore.contentType = '';
+    }
+
     article.value.slug = computed(() => {
       return useSanitizeWords(article.value.title)
     })
@@ -207,6 +216,7 @@ const uploadStore = useUploadStore()
     }
 
     onMounted(() => {
+        resetUploadStore()
         categoryStore.getCategories()
         statusStore.getStatus()        
     })

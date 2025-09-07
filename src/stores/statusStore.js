@@ -11,7 +11,7 @@ export const useStatusStore = defineStore({
     actions: {
         
         async getStatus() {
-            const response = await axios.get(`/status`);
+            const response = await axios.get(`api/v1/private/status`);
             if(response.data.status === 'error') {
                 this.message = response.data
             } else {
@@ -23,9 +23,9 @@ export const useStatusStore = defineStore({
 
         async deleteStatus(data) {
             try {                
-            const response =  await axios.delete(`/status/${data.id}`);
+            const response =  await axios.delete(`api/v1/private/status/${data.id}`);
             this.message = response.data
-            await axios.get(`/status`)
+            await axios.get(`api/v1/private/status`)
             
             } catch (error) {
                 let errorMessage = error.response.data.message
@@ -36,9 +36,9 @@ export const useStatusStore = defineStore({
 
         async updateStatus(data) {
             try {
-            const response =  await axios.patch(`/status/${data.id}`, data);
+            const response =  await axios.patch(`api/v1/private/status/${data.id}`, data);
             this.message = response.data
-            await axios.get(`/status`)
+            await axios.get(`api/v1/private/status`)
             
             } catch (error) {
                 let errorMessage = error.response.data.message
@@ -50,13 +50,13 @@ export const useStatusStore = defineStore({
 
         async createStatus(data) {
             try {
-            const response =  await axios.post('/status/',
+            const response =  await axios.post('api/v1/private/status/',
                 { 
                     name: data.name, 
                 }
             );
             this.message = response.data
-            await axios.get(`/status`)
+            await axios.get(`api/v1/private/status`)
             
             } catch (error) {
                 let errorMessage = error.response.data.message
@@ -67,7 +67,7 @@ export const useStatusStore = defineStore({
         
         async doneSuccessfully(response) {
             if(response.data.status === 'success'){                
-                const response = await axios.get(`/status`)
+                const response = await axios.get(`api/v1/private/status`)
                 if(response.data.status !== 'error') {
                     this.status = response.data;                 }
             }

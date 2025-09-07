@@ -108,6 +108,7 @@ const fetchArticles = async () => {
 
   _articles.value = response.data;
   totalArticles.value = response.total;
+  articleStore.message = null
 };
 
 const onPageChange = (page) => {
@@ -137,10 +138,8 @@ const getCategory = (id) => {
 
 const getStatus = (id) => {
 
-    const stat = status.value
-    
+    const stat = status.value?.data || [];
     const statusFound = stat.find(item => parseInt(item.value) === id);
-
     if (statusFound) {
         return statusFound.name;
     } else {
@@ -149,7 +148,9 @@ const getStatus = (id) => {
 }
 
 const processData = (data) => {
-    articleStore.deleteRole(data)
+    articleStore.deleteArticle(data)
+    _articles.value = _articles.value.filter(a => a.id !== data.id);
+    activeModal.value=false
 }
 
 onMounted(() => {

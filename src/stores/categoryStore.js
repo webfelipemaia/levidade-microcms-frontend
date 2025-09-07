@@ -11,7 +11,7 @@ export const useCategoryStore = defineStore({
 
     actions: {
         async getCategories() {
-            const response = await axios.get(`/categories`);
+            const response = await axios.get(`api/v1/private/category`);
             if(response.data.status === 'error') {
                 this.message = response.data
             } else {
@@ -23,9 +23,9 @@ export const useCategoryStore = defineStore({
 
         async deleteCategory(data) {
             try {                
-            const response =  await axios.delete(`/categories/${data.id}`);
+            const response =  await axios.delete(`api/v1/private/category/${data.id}`);
             this.message = response.data
-            await axios.get(`/categories`)
+            await axios.get(`api/v1/private/category`)
             
             } catch (error) {
                 let errorMessage = error.response.data.message
@@ -36,9 +36,9 @@ export const useCategoryStore = defineStore({
 
         async updateCategory(data) {
             try {
-            const response =  await axios.patch(`/categories/${data.id}`, data);
+            const response =  await axios.patch(`api/v1/private/category/${data.id}`, data);
             this.message = response.data
-            await axios.get(`/categories`)
+            await axios.get(`api/v1/private/category`)
             
             } catch (error) {
                 let errorMessage = error.response.data.message
@@ -50,13 +50,13 @@ export const useCategoryStore = defineStore({
 
         async createCategory(data) {
             try {
-            const response =  await axios.post('/categories/',
+            const response =  await axios.post('api/v1/private/category/',
                 { 
                     name: data.name, 
                 }
             );
             this.message = response.data
-            await axios.get(`/categories`)
+            await axios.get(`api/v1/private/category`)
             
             } catch (error) {
                 let errorMessage = error.response.data.message
@@ -67,7 +67,7 @@ export const useCategoryStore = defineStore({
         
         async doneSuccessfully(response) {
             if(response.data.status === 'success'){                
-                const response = await axios.get(`/categories`)
+                const response = await axios.get(`api/v1/private/category`)
                 if(response.data.status !== 'error') {
                     this.categories = response.data;                 }
             }

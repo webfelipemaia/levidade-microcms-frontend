@@ -12,7 +12,7 @@ export const useSettingStore = defineStore('setting',{
 
     actions: {
         async getSettings() {
-            const response = await axios.get(`/settings`);
+            const response = await axios.get(`api/v1/private/setting`);
             if(response.data.status === 'error') {
                 this.message = response.data
             } else {
@@ -22,7 +22,7 @@ export const useSettingStore = defineStore('setting',{
         },
 
         async getPaginationSettings() {
-            const response = await axios.get(`/settings/pagination`);
+            const response = await axios.get(`api/v1/private/setting/pagination`);
             
             if(response.data) {
                 this.pagination = response.data;
@@ -33,7 +33,7 @@ export const useSettingStore = defineStore('setting',{
         },
 
         async getUploadpathSettings() {
-            const response = await axios.get(`/settings/uploadpath`);     
+            const response = await axios.get(`api/v1/private/setting/uploadpath`);     
         
             if(response.data) {
                 this.uploadpath = response.data;
@@ -44,7 +44,7 @@ export const useSettingStore = defineStore('setting',{
         },
         
         async getFilesizeSettings() {
-            const response = await axios.get(`/settings/filesize`);        
+            const response = await axios.get(`api/v1/private/setting/filesize`);        
             
             if(response.data) {
                 this.filesize = response.data;
@@ -57,7 +57,7 @@ export const useSettingStore = defineStore('setting',{
         async updateSetting(data) {
             console.log(data)
             try {
-                const response = await axios.put(`/settings/update`, data);
+                const response = await axios.put(`api/v1/private/setting/update`, data);
                 const { status, message, successes, errors } = response.data;
         
                 if (status === 'partial') {
@@ -73,7 +73,7 @@ export const useSettingStore = defineStore('setting',{
                     this.message = { status: 'error', message };
                 }
         
-                await axios.get(`/settings`);
+                await axios.get(`api/v1/private/setting`);
                 
             } catch (error) {
                 const errorMessage = error.response?.data?.message || 'Erro inesperado.';
@@ -85,7 +85,7 @@ export const useSettingStore = defineStore('setting',{
         
         async doneSuccessfully(response) {
             if(response.data.status === 'success'){                
-                const response = await axios.get(`/settings`)
+                const response = await axios.get(`api/v1/private/setting`)
                 if(response.data.status !== 'error') {
                     this.settings = response.data;                 }
             }

@@ -11,7 +11,7 @@ export const useRoleStore = defineStore({
 
     actions: {
         async getRoles() {
-            const response = await axios.get(`/roles`);
+            const response = await axios.get(`api/v1/private/role`);
             if(response.data.status === 'error') {
                 this.message = response.data
             } else {
@@ -22,7 +22,7 @@ export const useRoleStore = defineStore({
 
 
         async getUsersRoles() {
-            const response = await axios.get(`/users/roles/`);
+            const response = await axios.get(`api/v1/private/user/roles/`);
             if(response.data.status === 'error') {
                 this.message = response.data
             } else {
@@ -33,9 +33,9 @@ export const useRoleStore = defineStore({
 
         async deleteRole(data) {
             try {                
-            const response =  await axios.delete(`/roles/${data.id}`);
+            const response =  await axios.delete(`api/v1/private/role/${data.id}`);
             this.message = response.data
-            await axios.get(`/roles`)
+            await axios.get(`api/v1/private/role`)
             
             } catch (error) {
                 let errorMessage = error.response.data.message
@@ -46,9 +46,9 @@ export const useRoleStore = defineStore({
 
         async updateRole(data) {
             try {
-            const response =  await axios.patch(`/roles/${data.id}`, data);
+            const response =  await axios.patch(`api/v1/private/role/${data.id}`, data);
             this.message = response.data
-            await axios.get(`/roles`)
+            await axios.get(`api/v1/private/role`)
             
             } catch (error) {
                 let errorMessage = error.response.data.message
@@ -60,13 +60,13 @@ export const useRoleStore = defineStore({
 
         async createRole(data) {
             try {
-            const response =  await axios.post('/roles/',
+            const response =  await axios.post('api/v1/private/role/',
                 { 
                     name: data.name, 
                 }
             );
             this.message = response.data
-            await axios.get(`/roles`)
+            await axios.get(`api/v1/private/role`)
             
             } catch (error) {
                 let errorMessage = error.response.data.message
@@ -77,7 +77,7 @@ export const useRoleStore = defineStore({
         
         async doneSuccessfully(response) {
             if(response.data.status === 'success'){                
-                const response = await axios.get(`/roles`)
+                const response = await axios.get(`api/v1/private/role`)
                 if(response.data.status !== 'error') {
                     this.roles = response.data;                 }
             }

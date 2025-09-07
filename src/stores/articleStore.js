@@ -13,7 +13,7 @@ export const useArticleStore = defineStore({
         
         // Simple query
         async getArticles() {
-            const response = await axios.get(`/articles`);
+            const response = await axios.get(`api/v1/private/article`);
             if(response.data.status === 'error') {
                 this.message = response.data
             } else {
@@ -25,7 +25,7 @@ export const useArticleStore = defineStore({
         // Paginated data
         async getPaginatedArticles({ page, pageSize, search, order }) {
             try {
-                const response = await axios.get(`/articles/paginated`, {
+                const response = await axios.get(`api/v1/private/article`, {
                     params: {
                         page,
                         pageSize,
@@ -35,7 +35,7 @@ export const useArticleStore = defineStore({
                 });
           
                 return {
-                    data: response.data.data,
+                    data: response.data,
                     total: response.data.total,
                 };
             } catch (error) {
@@ -50,7 +50,7 @@ export const useArticleStore = defineStore({
         async getArticleById(id) {
             try {
                 // Faz a requisição para obter o artigo pelo ID
-                const response = await axios.get(`/articles/${id}`);
+                const response = await axios.get(`api/v1/private/article/${id}`);
                 
                 // Armazena o artigo em uma propriedade da store
                 this.article = response.data;
@@ -73,7 +73,7 @@ export const useArticleStore = defineStore({
         
 
         async getLastInsertedArticle() {
-            const response = await axios.get(`/articles/last`);
+            const response = await axios.get(`api/v1/private/article/last`);
             
             if(response.data.status === 'error') {
                 this.message = response.data
@@ -85,7 +85,7 @@ export const useArticleStore = defineStore({
 
 
         async getUsersArticles() {
-            const response = await axios.get(`/users/articles/`);
+            const response = await axios.get(`api/v1/user/articles/`);
             
             if(response.data.status === 'error') {
                 this.message = response.data
@@ -98,9 +98,9 @@ export const useArticleStore = defineStore({
         async deleteArticle(data) {
             try {                
             
-                const response =  await axios.delete(`/articles/${data.id}`);
+                const response =  await axios.delete(`api/v1/private/article/${data.id}`);
                 this.message = response.data
-                await axios.get(`/articles`)            
+                await axios.get(`api/v1/private/article`)
             } catch (error) {
 
                 let errorMessage = error.response.data.message
@@ -112,9 +112,9 @@ export const useArticleStore = defineStore({
         async updateArticle(data) {
             try {
                 
-                const response =  await axios.patch(`/articles/${data.id}`, data);
+                const response =  await axios.patch(`api/v1/private/article/${data.id}`, data);
                 this.message = response.data
-                await axios.get(`/articles`)            
+                await axios.get(`api/v1/private/article`)
             } catch (error) {
 
                 let errorMessage = error.response.data.message
@@ -127,9 +127,9 @@ export const useArticleStore = defineStore({
         async createArticle(data) {
             console.log(data)
             try {
-                const response =  await axios.post('/articles/', data);
+                const response =  await axios.post('api/v1/private/article/', data);
                 this.message = response.data
-                const last = await axios.get(`/articles/last`);
+                const last = await axios.get(`api/v1/private/article/last`);
                 this.lastArticle = last.data
                 //await axios.get(`/articles`)
             } catch (error) {
@@ -142,7 +142,7 @@ export const useArticleStore = defineStore({
         
         async doneSuccessfully(response) {
             if(response.data.status === 'success'){                
-                const response = await axios.get(`/articles`)
+                const response = await axios.get(`api/v1/private/article`)
                 if(response.data.status !== 'error') {
                     this.articles = response.data;                 }
             }

@@ -26,7 +26,7 @@
                                       <label for="status" class="col-form-label">Status:</label>
                                       <select v-model="article.status" selected="" class="form-select" aria-label="Default select example" id="status">
                                           <option disabled value="">Select</option>
-                                          <option v-for="status in statusStore.status" :key="status.id" :value="status.value">
+                                          <option v-for="status in statusStore.status.data" :key="status.id" :value="status.value">
                                               {{status.name}}
                                           </option>
                                       </select>

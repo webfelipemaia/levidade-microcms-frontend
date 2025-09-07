@@ -10,8 +10,7 @@ export const useUserStore = defineStore({
 
     actions: {
         async getUsers() {
-            //const response = await axios.get(`/users`);
-            const response = await axios.get(`/users/roles`);
+            const response = await axios.get(`api/v1/private/user/roles`);
             if(response.data.status === 'error') {
                 this.message = response.data
             } else {
@@ -22,9 +21,9 @@ export const useUserStore = defineStore({
 
         async deleteUser(data) {
             try {                
-            const response =  await axios.delete(`/users/${data.id}`);
+            const response =  await axios.delete(`api/v1/private/user/${data.id}`);
             this.message = response.data
-            await axios.get(`/users`)
+            await axios.get(`api/v1/private/user`)
             
             } catch (error) {
                 let errorMessage = error.response
@@ -35,9 +34,9 @@ export const useUserStore = defineStore({
 
         async updateUser(id,data) {
             try {                
-            const response =  await axios.put(`/users/${id}`, data);
+            const response =  await axios.put(`api/v1/private/user/${id}`, data);
             this.message = response.data
-            await axios.get(`/users`)
+            await axios.get(`api/v1/private/user`)
             
             } catch (error) {
                 let errorMessage = error.response
@@ -49,7 +48,7 @@ export const useUserStore = defineStore({
 
         async createUser(data) {
             try {
-            const response =  await axios.post('/users/register',
+            const response =  await axios.post('api/v1/private/user/register',
                 { 
                     email: data.email, 
                     password: data.password, 
@@ -59,7 +58,7 @@ export const useUserStore = defineStore({
                 }
             );
             this.message = response.data
-            await axios.get(`/users`)
+            await axios.get(`api/v1/private/user`)
             
             } catch (error) {
                 let errorMessage = error.response
@@ -70,7 +69,7 @@ export const useUserStore = defineStore({
         
         async doneSuccessfully(response) {
             if(response.data.status === 'success'){                
-                const response = await axios.get(`/users`)
+                const response = await axios.get(`api/v1/private/user`)
                 if(response.data.status !== 'error') {
                     this.users = response.data;                 }
             }

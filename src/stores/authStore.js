@@ -14,7 +14,7 @@ export const useAuthStore = defineStore({
 
         async login(email, password) {
           try {
-              const response = await axios.post('/auth/login', {
+              const response = await axios.post('api/v1/public/auth/login', {
                   email,
                   password
               });
@@ -33,7 +33,7 @@ export const useAuthStore = defineStore({
 
         async fetchUser() {
             try {
-              const response = await axios.get('/auth/me');
+              const response = await axios.get('api/v1/private/auth/me');
               this.user = response.data.user;
               this.isAuthenticated = true;
             } catch (error) {
@@ -44,12 +44,12 @@ export const useAuthStore = defineStore({
         logout() {
             this.user = null;
             this.isAuthenticated = false;
-            router.push(this.returnUrl || '/login');
+            router.push(this.returnUrl || 'api/v1/public/auth/login');
         },          
 
         async register(email, password, confirmPassword, name, lastname) {
           try {
-              const response = await axios.post('/auth/register', {
+              const response = await axios.post('api/v1/public/auth/register', {
                   email,
                   password,
                   confirmPassword,
@@ -69,10 +69,10 @@ export const useAuthStore = defineStore({
       
 
         async initialize() {
-          try {
-              const response = await axios.get('/auth/me');
-              this.user = response.data.user;
-              this.isAuthenticated = true;
+          try {            
+            const response = await axios.get('api/v1/private/auth/me');
+            this.user = response.data.user;
+            this.isAuthenticated = true;
           } catch (error) {
               this.clearAuthData();
           }
