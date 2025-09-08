@@ -21,8 +21,12 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" @click="$emit('close')" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn btn-primary" @click.prevent.stop="saveData(editedItem)">Save</button>
+                        <button type="button" @click="$emit('close')" class="btn btn-secondary" data-bs-dismiss="modal">
+                            {{ isSaving ? 'Close' : 'Cancel' }}
+                        </button>
+                        <button type="submit" class="btn btn-primary" :disabled="isSaving" @click.prevent.stop="saveData(editedItem)">
+                            {{ isSaving ? 'Saving...' : 'Save' }}
+                        </button>
                     </div>
                 </form>
             </div>
@@ -38,6 +42,7 @@ import { useAddBackDrop, useRemoveBackDrop } from  '../../components/layout/comp
 const permissionStore = usePermissionStore()
 const isEditModalOpen = ref(false)
 const editedItem = ref({})
+const isSaving = ref(false)
 
     const props = defineProps({
         show: Boolean,
@@ -57,6 +62,7 @@ const editedItem = ref({})
             closeEditModal()
             useRemoveBackDrop()
             permissionStore.clearSuccessMessage()
+            isSaving.value = false
         }
     })
     
@@ -70,10 +76,17 @@ const editedItem = ref({})
       isEditModalOpen.value = false
       useRemoveBackDrop()
       permissionStore.clearSuccessMessage()
+      isSaving.value = false
     }
 
     const saveData = (item) => {
-        emit('saveData', item)
+        isSaving.value = true
+        try {
+           emit('saveData', item)
+        } finally {
+            // mantém `isSaving = true` após salvar para travar o botão
+            // só reseta ao fechar modal
+        }
         
     }
     

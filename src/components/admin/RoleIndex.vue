@@ -84,10 +84,13 @@ const saveData = (data) => {
     } else {
         createData(data)  
     }
+    fetchRoles()
 } 
 
 const processData = (data) => {
     roleStore.deleteRole(data)
+    roles.value = roles.value.filter(r => r.id !== data.id);
+    activeModal.value=false
 }
 
 const createData = (data) => {
@@ -96,6 +99,7 @@ const createData = (data) => {
 
 const updateData = (data) => {
     roleStore.updateRole(data)
+    fetchRoles()
 }
 
 onMounted(() => {

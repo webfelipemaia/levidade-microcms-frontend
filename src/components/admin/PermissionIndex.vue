@@ -88,10 +88,13 @@ const saveData = (data) => {
     } else {
         createData(data)  
     }
+    fetchPermissions()
 } 
 
 const processData = (data) => {
     permissionStore.deletePermission(data)
+    permissions.value = permissions.value.filter(p => p.id !== data.id);
+    activeModal.value=false
 }
 
 const createData = (data) => {
@@ -100,6 +103,7 @@ const createData = (data) => {
 
 const updateData = (data) => {
     permissionStore.updatePermission(data)
+    fetchPermissions()
 }
 
 onMounted(() => {

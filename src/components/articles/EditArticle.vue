@@ -139,7 +139,7 @@
 
                       <div class="card-footer">
                           <div class="d-flex justify-content-between">
-                              <button type="button" @click="$emit('close')" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                              <router-link :to="{name: 'admin.articles'}" class="btn btn-secondary">Cancel</router-link>
                               <button type="submit" class="btn btn-primary" >Save</button>
                           </div>
                       </div>

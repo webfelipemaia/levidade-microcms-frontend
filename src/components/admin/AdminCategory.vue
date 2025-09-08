@@ -59,8 +59,22 @@
     </div>
 
 
-    <app-modal :id="'app-modal-01'" :data="selectedCategory" :show="activeModal" confirmation text-save="Delete" :show-header="false" @close="activeModal=false" @process-data="processData($event)"></app-modal>
-    <category-form :id="'app-modal-02'" :data="selectedCategory" :show="showModal" @close="showModal=false" @save-data="saveData($event)"></category-form>
+    <app-modal :id="'app-modal-01'" 
+        :data="selectedCategory" 
+        :show="activeModal" 
+        confirmation 
+        text-save="Delete" 
+        :show-header="false" 
+        @close="activeModal=false"
+         @process-data="processData($event)">
+    </app-modal>
+    <category-form 
+        :id="'app-modal-02'" 
+        :data="selectedCategory" 
+        :show="showModal" 
+        @close="showModal=false" 
+        @save-data="saveData($event)">
+    </category-form>
 
 </template>
 
@@ -87,12 +101,15 @@ const saveData = (data) => {
     if(data.id) {
         updateData(data)
     } else {
-        createData(data)  
+        createData(data)
     }
+    fetchCategories()
 } 
 
 const processData = (data) => {
     categoryStore.deleteCategory(data)
+    categories.value = categories.value.filter(c => c.id !== data.id);
+    activeModal.value=false
 }
 
 const createData = (data) => {
@@ -101,6 +118,7 @@ const createData = (data) => {
 
 const updateData = (data) => {
     categoryStore.updateCategory(data)
+    fetchCategories()
 }
 
 onMounted(() => {

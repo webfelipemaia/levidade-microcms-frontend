@@ -67,8 +67,12 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" @click="$emit('close')" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn btn-primary" @click.prevent.stop="saveData(editedItem)">Save</button>
+                        <button type="button" @click="$emit('close')" class="btn btn-secondary" data-bs-dismiss="modal">
+                            {{ isSaving ? 'Close' : 'Cancel' }}
+                        </button>
+                        <button type="submit" class="btn btn-primary" :disabled="isSaving" @click.prevent.stop="saveData(editedItem)">
+                            {{ isSaving ? 'Saving...' : 'Save' }}
+                        </button>
                     </div>
                 </form>
             </div>
@@ -91,6 +95,7 @@ const { roles, usersRoles } =  storeToRefs(roleStore)
 const isEditModalOpen = ref(false)
 const editedItem = ref({})
 const selectedRoles = ref([])
+const isSaving = ref(false)
 
     const props = defineProps({
         show: Boolean,
@@ -110,6 +115,7 @@ const selectedRoles = ref([])
             closeEditModal()
             useRemoveBackDrop()
             userStore.clearSuccessMessage()
+            isSaving.value = false
         }
     })
     
@@ -123,11 +129,18 @@ const selectedRoles = ref([])
       isEditModalOpen.value = false
       useRemoveBackDrop()
       userStore.clearSuccessMessage()
+      isSaving.value = false
     }
 
     const saveData = (item) => {
         item.roles = selectedRoles.value
-        emit('saveData', item)
+        isSaving.value = true
+        try {
+           emit('saveData', item)
+        } finally {
+            // mantém `isSaving = true` após salvar para travar o botão
+            // só reseta ao fechar modal
+        }
         
     }
 
