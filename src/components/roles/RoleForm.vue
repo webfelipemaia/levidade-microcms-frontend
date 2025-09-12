@@ -133,8 +133,6 @@ const isSaving = ref(false)
     }
 
     // Check or uncheck a permission to be saved
-    // is checked, then enter the data
-    // is not checked, then delete the data
     const togglePermission = (data,isChecked) => {
         const index = selectedPermissions.value.indexOf(data)
         if (index !== -1 && selectedPermissions.value.length === 1) {

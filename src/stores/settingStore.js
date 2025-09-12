@@ -14,18 +14,18 @@ export const useSettingStore = defineStore('setting',{
         async getSettings() {
             const response = await axios.get(`api/v1/private/setting`);
             if(response.data.status === 'error') {
-                this.message = response.data
+                this.message = response.data.data
             } else {
                 this.message = null;
-                this.settings = Object.values(response.data);
+                this.settings = Object.values(response.data.data);
             }
         },
 
         async getPaginationSettings() {
             const response = await axios.get(`api/v1/private/setting/pagination`);
             
-            if(response.data) {
-                this.pagination = response.data;
+            if(response.data.data) {
+                this.pagination = response.data.data;
             } else {
                 this.message = null;
                 this.pagination = [];
@@ -36,7 +36,7 @@ export const useSettingStore = defineStore('setting',{
             const response = await axios.get(`api/v1/private/setting/uploadpath`);     
         
             if(response.data) {
-                this.uploadpath = response.data;
+                this.uploadpath = response.data.data;
             } else {
                 this.message = null;
                 this.uploadpath = [];
@@ -44,21 +44,19 @@ export const useSettingStore = defineStore('setting',{
         },
         
         async getFilesizeSettings() {
-            const response = await axios.get(`api/v1/private/setting/filesize`);        
-            
-            if(response.data) {
-                this.filesize = response.data;
+            const response = await axios.get(`api/v1/private/setting/filesize`);       
+            if (response.data && response.data.status === 'success') {
+                this.filesize = response.data.data;
             } else {
                 this.message = null;
-                this.filesize = [];
+                this.filesize = {};
             }
         },
 
         async updateSetting(data) {
-            console.log(data)
             try {
                 const response = await axios.put(`api/v1/private/setting/update`, data);
-                const { status, message, successes, errors } = response.data;
+                const { status, message, successes, errors } = response.data.data;
         
                 if (status === 'partial') {
                     this.message = {
@@ -87,7 +85,8 @@ export const useSettingStore = defineStore('setting',{
             if(response.data.status === 'success'){                
                 const response = await axios.get(`api/v1/private/setting`)
                 if(response.data.status !== 'error') {
-                    this.settings = response.data;                 }
+                    this.settings = response.data.data;
+                }
             }
         },
 

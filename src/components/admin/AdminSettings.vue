@@ -140,24 +140,17 @@ const allowedFields = [
         await settingStore.getUploadpathSettings();
         await settingStore.getFilesizeSettings();
 
-        // Aplica o mapeamento
         Object.assign(settings, mapSettings(settingStore.settings));
-        
-        // Obtém as definições de tamanho de arquivo
         filesizeOptions.value = Object.entries(settingStore.filesize).map(([label, expression]) => ({
             label,
             value: eval(expression)
         }));
-
-        // Obtém as definições de caminhos para armazenar arquivos
         uploadPaths.value = Object.entries(settingStore.uploadpath).map(([label, expression]) => ({
             label,
             value: expression
-        }));
-        
+        }));        
     });
 
-    // Salva os dados
     const saveSettings = async () => {
         try {
             const payload = Object.values(settings).map(setting => ({
@@ -173,32 +166,24 @@ const allowedFields = [
     };
 
 
-    // Busca configuração pelo nome da configuração (settingName)
     const findSetting = (settingName, id = null) => {
         if (id) {
             return settings[`${settingName}_${id}`] || {};
         }
-
-        // Retorna o primeiro que corresponde ao settingName, caso nenhum ID seja especificado
         return Object.values(settings).find(setting => setting.settingName === settingName) || {};
     }
 
 
-    // Faz o mapeamento das configurações
     const mapSettings = (apiSettings) => {
         const mapped = {};
-
         apiSettings.forEach(item => {
             const { settingName, id } = item;
-
-            // Garante que cada item é tratado separadamente, criando uma chave única
             mapped[`${settingName}_${id}`] = item;
         });
 
         return mapped;
     }
 
-    // Transformar primeira letra do texto em maiúscula
     const capitalizeIt = (word) => {
         return capitalizeFirstLetter(word);
     }
