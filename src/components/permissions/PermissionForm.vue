@@ -92,7 +92,13 @@ const isSaving = ref(false)
     
     // Get the permissions
     const fetchPermissions = async () => {
-       await permissionStore.getPermissions()
+       
+       try {
+        const permission = await permissionStore.getPermissions();
+        console.log(permission)
+        } catch (error) {
+        console.error('Erro ao carregar o artigo:', error);
+        }
     }
 
     onMounted(() => {

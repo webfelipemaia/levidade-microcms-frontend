@@ -4,7 +4,7 @@
   
   <div class="d-flex align-items-strech">
     
-    <AppSidebar :is-active="sidebarOpen" @close-sidebar="sidebarIsActive"  />
+    <AppSidebar v-if="authStore.isAuthenticated" :is-active="sidebarOpen" @close-sidebar="sidebarIsActive"  />
     
     <div class="maincontent container">      
       <router-view />
@@ -20,8 +20,9 @@ import { ref } from 'vue';
 import AppNavigation from './components/layout/AppNavigation.vue'
 import AppFooter from './components/layout/AppFooter.vue'
 import AppSidebar from './components/layout/AppSidebar.vue'
-
-
+import { useAuthStore } from './stores/authStore'
+    
+const authStore = useAuthStore()
 const sidebarOpen = ref(false)
 
 function sidebarIsActive() {

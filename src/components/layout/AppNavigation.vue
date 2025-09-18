@@ -3,13 +3,16 @@
         <div class="container-fluid">
             <a class="navbar-brand" href="">Navbar</a>
             
-            <button @click="notifyParent" class="btn sidebar-offcanvas-btn  navbar-toggler" 
-                    type="button" data-bs-toggle="collapse" 
-                    data-bs-target="#offcanvasSidebarMenu" 
-                    aria-controls="#offcanvasSidebarMenu" 
-                    aria-expanded="false" 
-                    aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
+            <button                
+                v-if="isAuthenticated"  
+                @click="notifyParent" 
+                class="btn sidebar-offcanvas-btn  navbar-toggler" 
+                type="button" data-bs-toggle="collapse" 
+                data-bs-target="#offcanvasSidebarMenu" 
+                aria-controls="#offcanvasSidebarMenu" 
+                aria-expanded="false" 
+                aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
             </button>
 
             <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
@@ -27,10 +30,11 @@
 </template>
 
 <script setup>
-
+import { computed } from 'vue';
 import { useAuthStore } from '../../stores/authStore';    
 
 const authStore = useAuthStore();
+const isAuthenticated = computed(() => authStore.isAuthenticated);
 const emit = defineEmits(['openSidebar'])
 
 function notifyParent() {

@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import axios from 'axios';
+import api from '@/services/api';
 
 export const useSettingStore = defineStore('setting',{
     state: () => ({
@@ -12,7 +12,7 @@ export const useSettingStore = defineStore('setting',{
 
     actions: {
         async getSettings() {
-            const response = await axios.get(`api/v1/private/setting`);
+            const response = await api.get(`api/v1/private/setting`);
             if(response.data.status === 'error') {
                 this.message = response.data.data
             } else {
@@ -22,7 +22,7 @@ export const useSettingStore = defineStore('setting',{
         },
 
         async getPaginationSettings() {
-            const response = await axios.get(`api/v1/private/setting/pagination`);
+            const response = await api.get(`api/v1/private/setting/pagination`);
             
             if(response.data.data) {
                 this.pagination = response.data.data;
@@ -33,7 +33,7 @@ export const useSettingStore = defineStore('setting',{
         },
 
         async getUploadpathSettings() {
-            const response = await axios.get(`api/v1/private/setting/uploadpath`);     
+            const response = await api.get(`api/v1/private/setting/uploadpath`);     
         
             if(response.data) {
                 this.uploadpath = response.data.data;
@@ -44,7 +44,7 @@ export const useSettingStore = defineStore('setting',{
         },
         
         async getFilesizeSettings() {
-            const response = await axios.get(`api/v1/private/setting/filesize`);       
+            const response = await api.get(`api/v1/private/setting/filesize`);       
             if (response.data && response.data.status === 'success') {
                 this.filesize = response.data.data;
             } else {
@@ -55,7 +55,7 @@ export const useSettingStore = defineStore('setting',{
 
         async updateSetting(data) {
             try {
-                const response = await axios.put(`api/v1/private/setting/update`, data);
+                const response = await api.put(`api/v1/private/setting/update`, data);
                 const { status, message, successes, errors } = response.data.data;
         
                 if (status === 'partial') {
@@ -71,7 +71,7 @@ export const useSettingStore = defineStore('setting',{
                     this.message = { status: 'error', message };
                 }
         
-                await axios.get(`api/v1/private/setting`);
+                await api.get(`api/v1/private/setting`);
                 
             } catch (error) {
                 const errorMessage = error.response?.data?.message || 'Erro inesperado.';
@@ -83,7 +83,7 @@ export const useSettingStore = defineStore('setting',{
         
         async doneSuccessfully(response) {
             if(response.data.status === 'success'){                
-                const response = await axios.get(`api/v1/private/setting`)
+                const response = await api.get(`api/v1/private/setting`)
                 if(response.data.status !== 'error') {
                     this.settings = response.data.data;
                 }

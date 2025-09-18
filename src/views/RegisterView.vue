@@ -10,7 +10,7 @@
                 imgStyle="height: 90px;"
               ></NavbarBrand>
               <h1 class="mb-1">Welcome Back</h1>
-              <p class="mb-0">
+              <p class="mb-2">
                 Already registered?
                 <a href="/login" class="text-primary">Login</a>
               </p>
@@ -22,11 +22,11 @@
 
     <section>
       <div class="container">
-        <div class="row">
-          <div class="col">
-            <div class="card shadow-sm mb-6">
+        <div class="row justify-content-center">
+          <div class="col-xl-5 col-lg-6 col-md-8 col-12">
+            <div class="card shadow-sm mb-5">
               <div class="card-body">
-                <form @submit.prevent="register"  class="needs-validation mb-6" novalidate="">
+                <form @submit.prevent="register"  class="needs-validation mb-5" novalidate="">
                   <div class="mb-3">
                     <label for="signinEmailInput" class="form-label">
                       Email
@@ -139,12 +139,9 @@
 </template>
 <script setup>
 import { ref } from "vue";
-import axios from "axios";
 import { useAuthStore } from "../stores/authStore";
 
 const authStore = useAuthStore();
-
-axios.defaults.withCredentials = true;
 
 const form = ref({
   email: null,

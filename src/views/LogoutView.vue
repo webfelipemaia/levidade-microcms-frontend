@@ -1,5 +1,11 @@
 <template>
   <main>
+    <div v-if="isLoading" class="overlay">
+      <div class="spinner-container">
+        <div class="spinner-border text-primary" role="status"></div>
+        <span class="spinner-text">Logging out...</span>
+      </div>
+    </div>
     <section class="py-5 py-lg-8">
       <div class="container">
         <div class="row">
@@ -22,8 +28,8 @@
 
     <section>
       <div class="container">
-        <div class="row">
-          <div class="col-md">
+        <div class="row justify-content-center">
+                <div class="col-xl-5 col-lg-6 col-md-8 col-12">
             <div class="card shadow-sm mb-6">
               <div class="card-body">
                 <div class="d-grid">
@@ -40,12 +46,21 @@
   </main>
 </template>
 <script setup>
+import { ref } from 'vue';
 import { useAuthStore } from "../stores/authStore";
 
 const authStore = useAuthStore();
+const isLoading = ref(false);
 
 async function logout() {
-  authStore.logout();
+  isLoading.value = true;
+  try {
+    await authStore.logout();
+  } catch (error) {
+    console.error('Logout failed:', error);
+  } finally {
+    isLoading.value = false;
+  }
 }
 </script>
 <style scoped>

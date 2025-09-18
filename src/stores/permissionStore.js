@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import axios from 'axios';
+import api from '@/services/api';
 
 export const usePermissionStore = defineStore({
     id: 'permission',
@@ -11,7 +11,7 @@ export const usePermissionStore = defineStore({
 
     actions: {
         async getPermissions() {
-            const response = await axios.get(`api/v1/private/permission`);
+            const response = await api.get(`api/v1/private/permission`);
             if(response.data.status === 'error') {
                 this.message = response.data
             } else {
@@ -21,7 +21,7 @@ export const usePermissionStore = defineStore({
         },
 
         async getRolesPermissions() {
-            const response = await axios.get(`/api/v1/private/role/permissions`);
+            const response = await api.get(`/api/v1/private/role/permissions`);
             if(response.data.status === 'error') {
                 this.message = response.data
             } else {
@@ -32,9 +32,9 @@ export const usePermissionStore = defineStore({
         
         async deletePermission(data) {
             try {                
-            const response =  await axios.delete(`api/v1/private/permission/${data.id}`);
+            const response =  await api.delete(`api/v1/private/permission/${data.id}`);
             this.message = response.data
-            await axios.get(`api/v1/private/permission`)
+            await api.get(`api/v1/private/permission`)
             
             } catch (error) {
                 let errorMessage = error.response.data.message
@@ -45,9 +45,9 @@ export const usePermissionStore = defineStore({
 
         async updatePermission(data) {
             try {                
-            const response =  await axios.patch(`api/v1/private/permission/${data.id}`, data);
+            const response =  await api.patch(`api/v1/private/permission/${data.id}`, data);
             this.message = response.data
-            await axios.get(`api/v1/private/permission`)
+            await api.get(`api/v1/private/permission`)
             
             } catch (error) {
                 let errorMessage = error.response.data.message
@@ -59,13 +59,13 @@ export const usePermissionStore = defineStore({
 
         async createPermission(data) {
             try {
-            const response =  await axios.post('api/v1/private/permission/',
+            const response =  await api.post('api/v1/private/permission/',
                 { 
                     name: data.name, 
                 }
             );
             this.message = response.data
-            await axios.get(`api/v1/private/permission`)
+            await api.get(`api/v1/private/permission`)
             
             } catch (error) {
                 let errorMessage = error.response.data.message
@@ -76,7 +76,7 @@ export const usePermissionStore = defineStore({
         
         async doneSuccessfully(response) {
             if(response.data.status === 'success'){                
-                const response = await axios.get(`api/v1/private/permission`)
+                const response = await api.get(`api/v1/private/permission`)
                 if(response.data.status !== 'error') {
                     this.permissions = response.data;                 }
             }

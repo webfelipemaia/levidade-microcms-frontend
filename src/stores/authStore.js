@@ -1,87 +1,165 @@
-import { defineStore } from 'pinia';
-import axios from 'axios';
-import router from '../router';
+import { defineStore } from "pinia";
+import api from "@/services/api";
+import router from "../router";
 
 export const useAuthStore = defineStore({
-    id: 'auth',
-    state: () => ({
-        user: null,
-        returnUrl: null,
-        error: null,
-        isAuthenticated: false,
-    }),
-    actions: {
+  id: "auth",
 
-        async login(email, password) {
-          try {
-              const response = await axios.post('api/v1/public/auth/login', {
-                  email,
-                  password
-              });
-      
-              this.error = null;
-              this.user = response.data.data;
-              this.isAuthenticated = true;
-              router.push(this.returnUrl || '/');
-      
-          } catch (error) {
-              this.error = error.response?.data || { message: "Login failed" };
-              this.isAuthenticated = false;
-          }
-      },
-      
-
-        async fetchUser() {
-            try {
-              const response = await axios.get('api/v1/private/auth/me');
-              this.user = response.data.user;
-              this.isAuthenticated = true;
-            } catch (error) {
-              this.logout();
-            }
-          },
-
-        logout() {
-            this.user = null;
-            this.isAuthenticated = false;
-            router.push(this.returnUrl || 'api/v1/public/auth/login');
-        },          
-
-        async register(email, password, confirmPassword, name, lastname) {
-          try {
-              const response = await axios.post('api/v1/public/auth/register', {
-                  email,
-                  password,
-                  confirmPassword,
-                  name,
-                  lastname
-              });
-      
-              this.user = response.data.data;
-              this.isAuthenticated = true;
-              router.push(this.returnUrl || '/');
-      
-          } catch (error) {
-              this.error = error.response?.data || { message: "Registration failed" };
-              this.isAuthenticated = false;
-          }
-      },
-      
-
-        async initialize() {
-          try {            
-            const response = await axios.get('api/v1/private/auth/me');
+  state: () => ({
+    user: null,
+    returnUrl: null,
+    error: null,
+    isAuthenticated: false,
+    isLoading: true,
+  }),
+  
+  actions: {
+    async checkAuth() {
+        try {
+            const response = await api.get('api/v1/private/auth/me', {
+              withCredentials: true
+            });
             this.user = response.data.user;
             this.isAuthenticated = true;
+            return true;
           } catch (error) {
-              this.clearAuthData();
+            if (error.response?.status === 401 || error.response?.status === 429) {
+              await this.handleAuthError(error);
+            }
+            return false;
           }
-      },      
+    },
 
-      clearAuthData() {
+    async login(email, password) {
+        try {
+          const response = await api.post("api/v1/public/auth/login", {
+            email,
+            password,
+          });
+      
+          this.error = null;
+          this.user = response.data.data;
+          this.isAuthenticated = true;
+          router.push(this.returnUrl || "/home");
+          
+        } catch (error) {
+          if (error.response?.status === 429) {
+            this.handleRateLimitError();
+          } else {
+            this.error = error.response?.data || { 
+                message: "Falha no login. Verifique suas credenciais." 
+            };
+          }
+          
+          this.isAuthenticated = false;
+        } finally {
+            this.isLoading = false;
+        }
+      },
+      
+      // Tratar rate limiting com cookies HTTP Only
+      async handleRateLimitError() {
+        try {
+            
+          await this.forceLogout();          
+          this.clearClientSideAuthData();
+          this.error = { 
+            message: "Muitas tentativas de login. Por favor, aguarde alguns minutos antes de tentar novamente." 
+          };
+          
+          if (router.currentRoute.value.name !== 'login') {
+            router.push({
+              name: 'login',
+              query: { rateLimited: 'true' }
+            });
+          }
+          
+        } catch (logoutError) {
+          this.clearClientSideAuthData();
+          this.error = { 
+            message: "Problema de autenticação. Por favor, faça login novamente." 
+          };
+        }
+      },
+      
+      clearClientSideAuthData() {
+        localStorage.removeItem('user');
+        localStorage.removeItem('auth_data');
+        sessionStorage.removeItem('user');
+        sessionStorage.removeItem('auth_data');
+        
         this.user = null;
         this.isAuthenticated = false;
+        this.error = null;
+      },
+      
+      async forceLogout() {
+        try {
+          await api.post("api/v1/public/auth/logout", {}, {
+            withCredentials: true
+          });
+        } catch (error) {
+          console.warn("Erro durante logout forçado:", error);
+          throw error;
+        }
+      },
+
+    async fetchUser() {
+      try {
+        const response = await api.get("api/v1/private/auth/me");
+        this.user = response.data.user;
+        this.isAuthenticated = true;
+      } catch (error) {
+        this.logout();
       }
-    
-    }
+    },
+
+    async logout() {
+      try {
+        await api.post(
+          "api/v1/public/auth/logout",
+          {},
+          {
+            withCredentials: true,
+          }
+        );
+      } catch (error) {
+        console.error("Logout error:", error);
+      } finally {
+        this.user = null;
+        this.isAuthenticated = false;
+        this.clearAuthData();
+        router.push("/login");
+      }
+    },
+
+    async register(email, password, confirmPassword, name, lastname) {
+      try {
+        const response = await api.post("api/v1/public/auth/register", {
+          email,
+          password,
+          confirmPassword,
+          name,
+          lastname,
+        });
+
+        this.user = response.data.data;
+        this.isAuthenticated = true;
+        router.push(this.returnUrl || "/");
+      } catch (error) {
+        this.error = error.response?.data || { message: "Registration failed" };
+        this.isAuthenticated = false;
+      }
+    },
+
+    async initialize() {
+      await this.checkAuth();
+    },
+
+    clearAuthData() {
+      this.user = null;
+      this.isAuthenticated = false;
+      localStorage.removeItem("authToken");
+    },
+  },
 });

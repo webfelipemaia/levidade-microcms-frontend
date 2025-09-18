@@ -12,10 +12,10 @@
     <h5 class="offcanvas-title" id="offcanvasSidebarMenu">Navbar</h5>
     <button @click="updateValue" type="button" class="btn-close" aria-label="Close"></button>
   </div>
-    <div class="offcanvas-body flex-shrink-0 p-3" style="width: 280px;">
+    <div class="offcanvas-body flex-shrink-0 p-3 mt-5" style="width: 280px;">
             <ul class="nav flex-column">
                 
-                <li class="nav-item nav-item_title">
+<!--                 <li class="nav-item nav-item_title">
                     <div class="nav-header">
                         <div class="nav-header_title">
                             <a class="nav-link" href="#">UI Kit <span>version 0.1.0</span></a>                            
@@ -24,42 +24,26 @@
                             <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
                         </div>
                     </div>
-                </li>
+                </li> -->
 
                 <li class="nav-item">
                     <router-link to="/admin/articles" class="nav-link">Articles</router-link>
-                    <nav class="nav subnav flex-column">
-                        <router-link to="/admin/articles" class="nav-link">Manage Articles</router-link>
-                        <router-link :to="{name: 'admin.articles.new'}" class="nav-link">New Article</router-link>
-                    </nav>
                 </li>
 
                 <li class="nav-item">
                     <router-link to="/admin/categories" class="nav-link">Categories</router-link>
-                    <nav class="nav subnav flex-column">
-                        <router-link to="/admin/categories" class="nav-link">Manage Category</router-link>
-                    </nav>
                 </li>
 
                 <li class="nav-item">
-                    <router-link to="/admin/roles" class="nav-link">Users</router-link>
-                    <nav class="nav subnav flex-column">
-                        <router-link to="/admin/users" class="nav-link">Manage User</router-link>
-                    </nav>
+                    <router-link to="/admin/users" class="nav-link">Users</router-link>
                 </li>
 
                 <li class="nav-item">
                     <router-link to="/admin/roles" class="nav-link">Roles</router-link>
-                    <nav class="nav subnav flex-column">
-                        <router-link to="/admin/roles" class="nav-link">Manage Roles</router-link>
-                    </nav>
                 </li>
 
                 <li class="nav-item">
                     <router-link to="/admin/permissions" class="nav-link">Permissions</router-link>
-                    <nav class="nav subnav flex-column">
-                        <router-link to="/admin/permissions" class="nav-link">Manage Permissions</router-link>
-                    </nav>
                 </li>
 
                 <li class="nav-item">
@@ -119,7 +103,7 @@ const updateValue = () => {
 
 .nav-header_title a,
 .nav-header_title .nav-link {
-color: #524aac;
+    color: #524aac;
 }
 
 .nav-header_title span {
@@ -129,5 +113,7 @@ color: #524aac;
 .nav-header_body {
     padding: 0.5rem 1rem;
 }
+
+
 
 </style>

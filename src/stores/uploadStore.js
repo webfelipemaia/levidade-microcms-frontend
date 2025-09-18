@@ -1,6 +1,6 @@
 // stores/upload.js
 import { defineStore } from 'pinia';
-import axios from 'axios';
+import api from '@/services/api';
 
 export const useUploadStore = defineStore('upload', {
   state: () => ({
@@ -39,7 +39,7 @@ export const useUploadStore = defineStore('upload', {
           this.showProgress = true;
             
           try {
-            const response = await axios.post('api/v1/private/file/upload/', formData, {
+            const response = await api.post('api/v1/private/file/upload/', formData, {
               onUploadProgress: ({loaded, total}) => {
                 this.uploadedFiles[this.files.length - 1].loading = Math.floor((loaded/total)*100);
                 this.uploadProgress = Math.floor((loaded/total)*100);
