@@ -1,3 +1,4 @@
+// authStore.js
 import { defineStore } from "pinia";
 import api from "@/services/api";
 import router from "../router";
@@ -11,98 +12,104 @@ export const useAuthStore = defineStore({
     error: null,
     isAuthenticated: false,
     isLoading: true,
+    alertShown: false, // Adicionado para controle de alertas
   }),
   
   actions: {
     async checkAuth() {
-        try {
-            const response = await api.get('api/v1/private/auth/me', {
-              withCredentials: true
-            });
-            this.user = response.data.user;
-            this.isAuthenticated = true;
-            return true;
-          } catch (error) {
-            if (error.response?.status === 401 || error.response?.status === 429) {
-              await this.handleAuthError(error);
-            }
-            return false;
-          }
+      try {
+        const response = await api.get('api/v1/private/auth/me', {
+          withCredentials: true
+        });
+        this.user = response.data.user;
+        this.isAuthenticated = true;
+        this.error = null;
+        return true;
+      } catch (error) {
+        if (error.response?.status === 401) {
+          this.clearAuthData();
+          // Não redireciona automaticamente, deixa o interceptor tratar
+        } else if (error.response?.status === 429) {
+          this.handleRateLimitError();
+        }
+        return false;
+      } finally {
+        this.isLoading = false;
+      }
     },
 
     async login(email, password) {
-        try {
-          const response = await api.post("api/v1/public/auth/login", {
-            email,
-            password,
-          });
-      
-          this.error = null;
-          this.user = response.data.data;
-          this.isAuthenticated = true;
-          router.push(this.returnUrl || "/home");
-          
-        } catch (error) {
-          if (error.response?.status === 429) {
-            this.handleRateLimitError();
-          } else {
-            this.error = error.response?.data || { 
-                message: "Falha no login. Verifique suas credenciais." 
-            };
-          }
-          
-          this.isAuthenticated = false;
-        } finally {
-            this.isLoading = false;
-        }
-      },
-      
-      // Tratar rate limiting com cookies HTTP Only
-      async handleRateLimitError() {
-        try {
-            
-          await this.forceLogout();          
-          this.clearClientSideAuthData();
-          this.error = { 
-            message: "Muitas tentativas de login. Por favor, aguarde alguns minutos antes de tentar novamente." 
-          };
-          
-          if (router.currentRoute.value.name !== 'login') {
-            router.push({
-              name: 'login',
-              query: { rateLimited: 'true' }
-            });
-          }
-          
-        } catch (logoutError) {
-          this.clearClientSideAuthData();
-          this.error = { 
-            message: "Problema de autenticação. Por favor, faça login novamente." 
-          };
-        }
-      },
-      
-      clearClientSideAuthData() {
-        localStorage.removeItem('user');
-        localStorage.removeItem('auth_data');
-        sessionStorage.removeItem('user');
-        sessionStorage.removeItem('auth_data');
-        
-        this.user = null;
-        this.isAuthenticated = false;
+      try {
+        const response = await api.post("api/v1/public/auth/login", {
+          email,
+          password,
+        });
+    
         this.error = null;
-      },
-      
-      async forceLogout() {
-        try {
-          await api.post("api/v1/public/auth/logout", {}, {
-            withCredentials: true
-          });
-        } catch (error) {
-          console.warn("Erro durante logout forçado:", error);
-          throw error;
+        this.user = response.data.data;
+        this.isAuthenticated = true;
+        router.push(this.returnUrl || "/home");
+        
+      } catch (error) {
+        if (error.response?.status === 429) {
+          this.handleRateLimitError();
+        } else {
+          this.error = error.response?.data || { 
+            message: "Falha no login. Verifique suas credenciais." 
+          };
         }
-      },
+        
+        this.isAuthenticated = false;
+      } finally {
+        this.isLoading = false;
+      }
+    },
+    
+    // Tratar rate limiting
+    async handleRateLimitError() {
+      try {
+        await this.forceLogout();          
+        this.clearClientSideAuthData();
+        this.error = { 
+          message: "Muitas tentativas de login. Por favor, aguarde alguns minutos antes de tentar novamente." 
+        };
+        
+        if (router.currentRoute.value.name !== 'login') {
+          router.push({
+            name: 'login',
+            query: { rateLimited: 'true' }
+          });
+        }
+        
+      } catch (logoutError) {
+        this.clearClientSideAuthData();
+        this.error = { 
+          message: "Problema de autenticação. Por favor, faça login novamente." 
+        };
+      }
+    },
+    
+    clearClientSideAuthData() {
+      localStorage.removeItem('user');
+      localStorage.removeItem('auth_data');
+      sessionStorage.removeItem('user');
+      sessionStorage.removeItem('auth_data');
+      
+      this.user = null;
+      this.isAuthenticated = false;
+      this.error = null;
+    },
+    
+    async forceLogout() {
+      try {
+        await api.post("api/v1/public/auth/logout", {}, {
+          withCredentials: true
+        });
+      } catch (error) {
+        console.warn("Erro durante logout forçado:", error);
+        throw error;
+      }
+    },
 
     async fetchUser() {
       try {
@@ -159,7 +166,13 @@ export const useAuthStore = defineStore({
     clearAuthData() {
       this.user = null;
       this.isAuthenticated = false;
+      this.error = null;
       localStorage.removeItem("authToken");
+    },
+
+    // Método para controle de alertas
+    setAlertShown(value) {
+      this.alertShown = value;
     },
   },
 });
