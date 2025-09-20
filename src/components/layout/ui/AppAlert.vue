@@ -1,12 +1,16 @@
 <template>
     <div :class="`alert ${alertType}`" class="alert-dismissible fade show" role="alert">
-    
-    <span v-if="noIcon"></span>
-    <span v-else>
-        <i class="bi me-3" :class="`${icon}`"></i>
-    </span>
-    <span><slot></slot></span>
-    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        <span v-if="noIcon"></span>
+        <span v-else>
+            <i class="bi me-3" :class="`${icon}`"></i>
+        </span>
+        <span><slot></slot></span>
+        <button 
+            type="button" 
+            class="btn-close" 
+            @click="$emit('close')" 
+            aria-label="Close">
+        </button>
     </div>
 </template>
 
@@ -23,6 +27,8 @@ const props = defineProps ({
         default: false
     }
 })
+
+defineEmits(['close'])
 
 const alertType = computed(() => {
     return {

@@ -115,7 +115,7 @@
                     </div>
 
                     <div>
-                      <a href="/" class="text-primary">Forgot Password</a>
+                      <a href="password/recover" class="text-primary">Forgot Password</a>
                     </div>
                   </div>
 

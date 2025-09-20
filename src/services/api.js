@@ -13,8 +13,8 @@ api.defaults.baseURL = process.env.VUE_APP_API_URL || "http://localhost:4000";
 const PUBLIC_PATHS = [
   '/login',
   '/register',
-  '/password-recover',
-  '/password-reset',
+  '/password/recover',
+  '/password/reset',
   '/logout'
 ];
 
@@ -29,7 +29,7 @@ const isPublicRoute = () => {
 
 const isAuthRoute = () => {
   const currentPath = getCurrentPath();
-  const authPaths = ['/login', '/register', '/password-recover', '/password-reset'];
+  const authPaths = ['/login', '/register', '/password/recover', '/password/reset'];
   return authPaths.some(authPath => currentPath.startsWith(authPath));
 };
 

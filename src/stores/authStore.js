@@ -54,12 +54,14 @@ export const useAuthStore = defineStore({
         if (error.response?.status === 429) {
           this.handleRateLimitError();
         } else {
+          // Mensagem mais específica para detectar tentativas falhas
           this.error = error.response?.data || { 
-            message: "Falha no login. Verifique suas credenciais." 
+            message: "Credenciais inválidas. Verifique seu email e senha." 
           };
         }
         
         this.isAuthenticated = false;
+        throw error; // Importante: lançar o erro para ser capturado no componente
       } finally {
         this.isLoading = false;
       }
@@ -168,6 +170,12 @@ export const useAuthStore = defineStore({
       this.isAuthenticated = false;
       this.error = null;
       localStorage.removeItem("authToken");
+    },
+
+    clearError() {
+      this.user = null;
+      this.isAuthenticated = false;
+      this.error = null;
     },
 
     // Método para controle de alertas

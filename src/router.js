@@ -27,12 +27,24 @@ const routes =  [
       path: '/logout',
       name: 'logout', 
       component: () => import("./views/LogoutView.vue"),
-      meta: { requiresAuth: false }
+      meta: { requiresAuth: true }
     },
     { 
       path: '/register',
       name: 'register', 
       component: () => import("./views/RegisterView.vue"),
+      meta: { requiresAuth: false, isPublic: true }
+    },
+    {
+      path: '/password/recover',
+      name: 'password-recover',
+      component: () => import('./views/PasswordRecoverView.vue'),
+      meta: { requiresAuth: false, isPublic: true }
+    },
+    {
+      path: '/password/reset/',
+      name: 'password-reset',
+      component: () => import('./views/PasswordResetView.vue'),
       meta: { requiresAuth: false, isPublic: true }
     },
     { 
@@ -44,7 +56,7 @@ const routes =  [
 
     {
       path: '/',
-      redirect: '/dashboard'
+      redirect: '/home'
     },
     
     {
@@ -178,7 +190,7 @@ router.beforeEach(async (to, from, next) => {
     next({ name: 'login', query: { redirect: to.fullPath } })
   } 
   else if (authStore.isAuthenticated && isPublicRoute) {
-    next({ name: 'dashboard' })
+    next()
   }  
   else {
     next()
