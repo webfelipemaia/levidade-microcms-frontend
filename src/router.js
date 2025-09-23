@@ -105,9 +105,9 @@ const routes =  [
     },
 
     {
-      path: "/roles/:id",
-      name: "roles.details",
-      component: () => import("./components/roles/RoleDetail"),
+      path: "/admin/roles/:id/edit",
+      name: "roles.edit",
+      component: () => import("./components/roles/RoleEdit.vue"),
       meta: { requiresAuth: true }
     },
 
@@ -115,6 +115,13 @@ const routes =  [
       path: '/admin/permissions',
       name: 'admin.permissions', 
       component: () => import("./components/admin/PermissionIndex.vue"),
+      meta: { requiresAuth: true }
+    },
+
+    { 
+      path: '/admin/permission/:id/edit',
+      name: 'permission.edit', 
+      component: () => import("./components/permissions/PermissionEdit.vue"),
       meta: { requiresAuth: true }
     },
 

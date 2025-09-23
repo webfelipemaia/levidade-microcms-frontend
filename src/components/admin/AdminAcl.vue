@@ -4,10 +4,7 @@
             <template #header>
                 <app-card-header>
                     <div class="d-flex justify-content-between align-items-center">
-                        <span>All roles</span>
-                        <button @click="[showModal=true,selectedRole={}]" type="button" class="btn btn-primary">
-                            <i class="bi bi-plus"></i> New
-                        </button>
+                        <span>Gerenciador da ACL</span>
                     </div>
                 </app-card-header>
             </template>
@@ -84,7 +81,7 @@
                                     <td>
                                         <div class="d-flex">
                                             <div class="p-2 flex-fill">
-                                                <button @click="[showModal=true,selectedRole=role]" 
+                                                <button @click="goToRole(1)" 
                                                         type="button" 
                                                         class="btn btn-sm btn-outline-primary">
                                                     <i class="bi bi-pencil"></i>
@@ -138,6 +135,7 @@ import AppCard from '../layout/ui/card/AppCard'
 import AppModal from '../layout/ui/modal/AppModal'
 import AppCardHeader from '../layout/ui/card/AppCardHeader'
 import { storeToRefs } from 'pinia'
+import { useRouter } from 'vue-router'
 import { useRoleStore } from '../../stores/roleStore'
 import { usePermissionStore } from '../../stores/permissionStore'
 
@@ -151,6 +149,8 @@ const showModal = ref(false)
 const selectedRole = ref({})
 const activeModal = ref(false)
 const isLoading = ref(false)
+
+const router = useRouter()
 
 // Corrigindo: rolesPermissions pode ser um objeto com propriedade data
 const normalizedRolesPermissions = computed(() => {
@@ -258,6 +258,10 @@ const createData = async (data) => {
 
 const updateData = async (data) => {
     await roleStore.updateRole(data)
+}
+
+function goToRole(id) {
+    router.push({ name: "roles.edit", params: { id } })
 }
 
 onMounted(() => {
