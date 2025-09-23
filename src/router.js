@@ -160,6 +160,13 @@ const routes =  [
       meta: { requiresAuth: true }
     },
 
+    { 
+      path: '/admin/acl',
+      name: 'admin.acl', 
+      component: () => import("./components/admin/AdminAcl.vue"),
+      meta: { requiresAuth: true }
+    },
+
   ];
   
   const router = createRouter({

@@ -10,6 +10,8 @@
                 </app-card-header>
             </template>
             <template #body>
+
+            {{  acl }}
                 <div class="table-responsive">
                     <table class="table table-striped">
                                 <thead>
@@ -67,6 +69,7 @@ import AppModal from '../layout/ui/modal/AppModal'
 import AppCardHeader from '../layout/ui/card/AppCardHeader'
 import { storeToRefs } from 'pinia'
 import { useRoleStore } from '../../stores/roleStore'
+import { useAclStore } from '../../stores/aclStore';
 
 const roleStore = useRoleStore()
 const { roles } =  storeToRefs(roleStore)
@@ -74,6 +77,14 @@ const showModal = ref(false)
 const selectedRole = ref([])
 const activeModal = ref(false)
 
+    const aclStore = useAclStore();
+    
+    // Carregar dados da ACL
+    const acl = aclStore.fetchAclData();
+    
+    // Buscar permissões de um usuário
+    aclStore.fetchUserPermissions(1); // ID do usuário
+    
 const fetchRoles = async () => {
    await roleStore.getRoles()
 }

@@ -21,7 +21,7 @@ export const usePermissionStore = defineStore({
         },
 
         async getRolesPermissions() {
-            const response = await api.get(`/api/v1/private/role/permissions`);
+            const response = await api.get(`/api/v1/private/permission/roles/`);
             if(response.data.status === 'error') {
                 this.message = response.data
             } else {
