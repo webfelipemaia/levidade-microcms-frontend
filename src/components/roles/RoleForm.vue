@@ -121,7 +121,8 @@ const isSaving = ref(false)
     // Given a list of permissions, checks if a role contains registered permissions and returns true.
     const getPermissions = (data) => {
         var checked = []
-        rolesPermissions.value.forEach(d => {
+        console.log("ROLES: " + Object.values(rolesPermissions.value))
+        Object.values(rolesPermissions.value).forEach(d => {
             if(d.name === data.name) {
                 let permissions = d.Permissions
                 permissions.forEach(p => {

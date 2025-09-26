@@ -28,6 +28,16 @@ export const usePermissionStore = defineStore({
                 this.message = null;
                 this.rolesPermissions = response.data;
             }
+        },        
+
+        async getUsersRoles() {
+            const response = await api.get(`/api/v1/private/users/roles/`);
+            if(response.data.status === 'error') {
+                this.message = response.data
+            } else {
+                this.message = null;
+                this.rolesPermissions = response.data;
+            }
         },
         
         async deletePermission(data) {

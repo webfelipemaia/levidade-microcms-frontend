@@ -20,7 +20,6 @@ export const useRoleStore = defineStore({
             }
         },
 
-
         async getUsersRoles() {
             const response = await api.get(`api/v1/private/user/roles/`);
             if(response.data.status === 'error') {
@@ -35,7 +34,7 @@ export const useRoleStore = defineStore({
             try {                
             const response =  await api.delete(`api/v1/private/role/${data.id}`);
             this.message = response.data
-            await api.get(`api/v1/private/role`)
+            await this.getRoles() // Usar a ação interna em vez de api.get diretamente
             
             } catch (error) {
                 let errorMessage = error.response.data.message
@@ -46,10 +45,24 @@ export const useRoleStore = defineStore({
 
         async updateRole(data) {
             try {
-            const response =  await api.patch(`api/v1/private/role/${data.id}`, data);
-            this.message = response.data
-            await api.get(`api/v1/private/role`)
-            
+                // Preparar os dados para envio incluindo permissões
+                const roleData = {
+                    name: data.name,
+                    description: data.description || ''
+                }
+                
+                // Se houver permissões, incluir no payload
+                if (data.permissions && data.permissions.length > 0) {
+                    roleData.permissions = data.permissions
+                } else {
+                    // Se não houver permissões, enviar array vazio para remover todas
+                    roleData.permissions = []
+                }
+                
+                const response = await api.patch(`api/v1/private/role/${data.id}`, roleData);
+                this.message = response.data
+                await this.getRoles() // Atualizar a lista de roles
+                
             } catch (error) {
                 let errorMessage = error.response.data.message
                 this.message = { status:'error', message: errorMessage.replaceAll('"', '')}
@@ -57,17 +70,22 @@ export const useRoleStore = defineStore({
             }   
         },
 
-
         async createRole(data) {
             try {
-            const response =  await api.post('api/v1/private/role/',
-                { 
-                    name: data.name, 
+                const roleData = {
+                    name: data.name,
+                    description: data.description || ''
                 }
-            );
-            this.message = response.data
-            await api.get(`api/v1/private/role`)
-            
+                
+                // Incluir permissões se houver
+                if (data.permissions && data.permissions.length > 0) {
+                    roleData.permissions = data.permissions
+                }
+                
+                const response = await api.post('api/v1/private/role/', roleData);
+                this.message = response.data
+                await this.getRoles()
+                
             } catch (error) {
                 let errorMessage = error.response.data.message
                 this.message = { status:'error', message: errorMessage.replaceAll('"', '')}
@@ -77,9 +95,7 @@ export const useRoleStore = defineStore({
         
         async doneSuccessfully(response) {
             if(response.data.status === 'success'){                
-                const response = await api.get(`api/v1/private/role`)
-                if(response.data.status !== 'error') {
-                    this.roles = response.data;                 }
+                await this.getRoles()
             }
         },
 

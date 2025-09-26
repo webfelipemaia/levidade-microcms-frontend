@@ -111,6 +111,13 @@ const routes =  [
       meta: { requiresAuth: true }
     },
 
+    {
+      path: "/admin/roles/:id/permissions",
+      name: "roles.edit",
+      component: () => import("./components/roles/RolePermissions.vue"),
+      meta: { requiresAuth: true }
+    },    
+
     { 
       path: '/admin/permissions',
       name: 'admin.permissions', 

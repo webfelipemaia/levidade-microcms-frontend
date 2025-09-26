@@ -81,7 +81,7 @@
                                     <td>
                                         <div class="d-flex">
                                             <div class="p-2 flex-fill">
-                                                <button @click="goToRole(1)" 
+                                                <button @click="goToRole(role.id)"
                                                         type="button" 
                                                         class="btn btn-sm btn-outline-primary">
                                                     <i class="bi bi-pencil"></i>

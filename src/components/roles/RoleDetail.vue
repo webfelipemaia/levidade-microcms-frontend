@@ -1,6 +1,6 @@
 <template>
     <div>
-        
+        Role Detail
     </div>
 </template>
   
