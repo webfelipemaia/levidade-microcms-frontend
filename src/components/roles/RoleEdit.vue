@@ -98,7 +98,7 @@ const updateRole = async () => {
     try {
         await roleStore.updateRole(role.value)
         if (roleStore.message?.status === 'success') {
-            setTimeout(() => router.push('/roles'), 1500)
+            setTimeout(() => router.push('/admin/roles'), 1500)
         }
     } catch (error) {
         console.error('Erro ao atualizar role:', error)
@@ -107,7 +107,7 @@ const updateRole = async () => {
     }
 }
 
-const goBack = () => router.push('/roles')
+const goBack = () => router.push('/admin/roles')
 
 onMounted(() => fetchRole())
 </script>

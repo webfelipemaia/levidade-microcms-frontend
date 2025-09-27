@@ -28,7 +28,6 @@ export const useUserStore = defineStore({
             } catch (error) {
                 let errorMessage = error.response
                 this.message = { status:'error', message: errorMessage}
-                console.log(error.response)
             }
         },        
 
@@ -41,7 +40,6 @@ export const useUserStore = defineStore({
             } catch (error) {
                 let errorMessage = error.response
                 this.message = { status:'error', message: errorMessage}
-                console.log(error.response)
             }
         },
 
@@ -63,7 +61,6 @@ export const useUserStore = defineStore({
             } catch (error) {
                 let errorMessage = error.response
                 this.message = { status:'error', message: errorMessage}
-                console.log(error.response)
             }
         },
         

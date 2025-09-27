@@ -22,16 +22,17 @@
                                         type="checkbox"
                                         :value="p.id"
                                         :checked="getPermissions(editedItem)
-                                                    .some(permission => permission.name === p.name)"
+                                                    .some(permission => permission === p.id)"
                                         @change="togglePermission(p,
                                                                     getPermissions(editedItem)
-                                                                        .some(permission => permission.name === p.name)
+                                                                        .some(permission => permission === p.id)
                                                                         ? 'unchecked' : 'checked' )"
                                     />
                                     <label class="form-check-label" :for="'flexCheck' + p.id">
                                         {{ p.name }}
                                     </label>
                                 </div>
+                                {{ roleStore.message }}
                             </div>
                         </div>
                         
@@ -120,18 +121,14 @@ const isSaving = ref(false)
 
     // Given a list of permissions, checks if a role contains registered permissions and returns true.
     const getPermissions = (data) => {
-        var checked = []
-        console.log("ROLES: " + Object.values(rolesPermissions.value))
-        Object.values(rolesPermissions.value).forEach(d => {
-            if(d.name === data.name) {
-                let permissions = d.Permissions
-                permissions.forEach(p => {
-                    checked.push(p)
-                })
-            }
-        })
-        return checked
-    }
+    var checked = []
+    rolesPermissions.value.forEach(d => {
+        if(d.roleId === data.id) {
+            checked.push(d.permissionId)
+        }
+    })
+    return checked
+}
 
     // Check or uncheck a permission to be saved
     const togglePermission = (data,isChecked) => {

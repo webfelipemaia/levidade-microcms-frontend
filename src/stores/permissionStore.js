@@ -26,7 +26,7 @@ export const usePermissionStore = defineStore({
                 this.message = response.data
             } else {
                 this.message = null;
-                this.rolesPermissions = response.data;
+                this.rolesPermissions = response.data.data;
             }
         },        
 
