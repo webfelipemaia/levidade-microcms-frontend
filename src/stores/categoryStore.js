@@ -20,10 +20,9 @@ export const useCategoryStore = defineStore({
             }
         },
 
-
-        async deleteCategory(data) {
-            try {                
-            const response =  await api.delete(`api/v1/private/category/${data.id}`);
+        async createCategory(data) {
+            try {
+            const response =  await api.post('api/v1/private/category/', data);
             this.message = response.data
             await api.get(`api/v1/private/category`)
             
@@ -32,7 +31,7 @@ export const useCategoryStore = defineStore({
                 this.message = { status:'error', message: errorMessage}
                 console.log(error.response)
             }
-        },        
+        },
 
         async updateCategory(data) {
             try {
@@ -47,14 +46,9 @@ export const useCategoryStore = defineStore({
             }   
         },
 
-
-        async createCategory(data) {
-            try {
-            const response =  await api.post('api/v1/private/category/',
-                { 
-                    name: data.name, 
-                }
-            );
+        async deleteCategory(data) {
+            try {                
+            const response =  await api.delete(`api/v1/private/category/${data.id}`);
             this.message = response.data
             await api.get(`api/v1/private/category`)
             
@@ -64,7 +58,7 @@ export const useCategoryStore = defineStore({
                 console.log(error.response)
             }
         },
-        
+
         async doneSuccessfully(response) {
             if(response.data.status === 'success'){                
                 const response = await api.get(`api/v1/private/category`)

@@ -2,19 +2,32 @@
     <div :id="id" class="modal fade" :class="{show: (show && isEditModalOpen)}" tabindex="-1" aria-labelledby="roleFormLabel" :aria-hidden="show">
         <div class="modal-dialog">
             <div class="modal-content">
-                <form @submit.prevent="">
+                <form @submit.prevent="saveData(editedItem)">
                     <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="roleFormLabel">{{ editedItem.id ? 'Editar' : 'Adicionar' }} item</h1>
-                        <button  type="button" @click="$emit('close')" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        <h1 class="modal-title fs-5" id="roleFormLabel">{{ editedItem.id ? 'Editar' : 'Adicionar' }} categoria</h1>
+                        <button type="button" @click="closeModal" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
                         <div class="mb-3">
-                            <label for="name" class="col-form-label">Name:</label>
-                            <input v-model="editedItem.name" type="text" class="form-control" id="name">
+                            <label for="name" class="col-form-label">Nome:</label>
+                            <input v-model="editedItem.name" type="text" class="form-control" id="name" required>
                         </div>
                         
-                        <div v-if="editedItem.id">
-                            <p>Parent:</p>
+                        <div class="mb-3">
+                            <label for="parent" class="col-form-label">Categoria Pai:</label>
+                            <select v-model="editedItem.parentId" class="form-select" id="parent">
+                                <option :value="null">Nenhuma (categoria principal)</option>
+                                <option 
+                                    v-for="category in availableParentCategories" 
+                                    :key="category.id" 
+                                    :value="category.id"
+                                    :disabled="isCategoryDisabled(category)">
+                                    {{ category.name }}
+                                </option>
+                            </select>
+                            <small class="form-text text-muted">
+                                Deixe como "Nenhuma" para criar uma categoria principal
+                            </small>
                         </div>
                         
                         <div v-if="categoryStore.message">
@@ -25,11 +38,11 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" @click="$emit('close')" class="btn btn-secondary" data-bs-dismiss="modal">
-                            {{ isSaving ? 'Close' : 'Cancel' }}
+                        <button type="button" @click="closeModal" class="btn btn-secondary" data-bs-dismiss="modal">
+                            {{ isSaving ? 'Fechar' : 'Cancelar' }}
                         </button>
-                        <button type="submit" class="btn btn-primary" :disabled="isSaving" @click.prevent.stop="saveData(editedItem)">
-                            {{ isSaving ? 'Saving...' : 'Save' }}
+                        <button type="submit" class="btn btn-primary" :disabled="isSaving || !editedItem.name">
+                            {{ isSaving ? 'Salvando...' : 'Salvar' }}
                         </button>
                     </div>
                 </form>
@@ -39,71 +52,153 @@
 </template>
 
 <script setup>
-import { ref, watch, onMounted } from 'vue'
+import { ref, watch, onMounted, computed, nextTick } from 'vue'
 import { useCategoryStore } from '@/stores/categoryStore';
 import { useAddBackDrop, useRemoveBackDrop } from  '../../components/layout/composebles/HandleBackdrop';
 
 const categoryStore = useCategoryStore()
 const isEditModalOpen = ref(false)
-const editedItem = ref({})
+const editedItem = ref({
+    name: '',
+    parentId: null
+})
 const isSaving = ref(false)
 
-    const props = defineProps({
-        show: Boolean,
-        data: [Object,Array],
-        id: {
-            type: String,
-            required: true
-        },
-    })
+const props = defineProps({
+    show: Boolean,
+    data: Object,
+    id: {
+        type: String,
+        required: true
+    },
+})
 
-    const emit = defineEmits(['close', 'saveData'])
+const emit = defineEmits(['close', 'saveData'])
 
-    watch(() => props.show, () => {
-        openEditModal(props.data.id)
-        editedItem.value = props.data
-        if(!props.show){
-            closeEditModal()
-            useRemoveBackDrop()
-            categoryStore.clearSuccessMessage()
-            isSaving.value = false
-        }
-    })
+// Computed para filtrar categorias disponíveis como pai
+const availableParentCategories = computed(() => {
+    if (!categoryStore.categories || !Array.isArray(categoryStore.categories)) return []
     
-    const openEditModal = (item) => {
-      editedItem.value = { ...item }
-      isEditModalOpen.value = true
-      useAddBackDrop(props.id)
+    return categoryStore.categories.filter(category => {
+        // Filtrar categorias que podem ser pais
+        return !isCategoryDisabled(category)
+    })
+})
+
+// Função para verificar se uma categoria pode ser selecionada como pai
+const isCategoryDisabled = (category) => {
+    // Não permitir que uma categoria seja pai de si mesma
+    if (editedItem.value.id && category.id === editedItem.value.id) {
+        return true
     }
     
-    const closeEditModal = () => {    
-      isEditModalOpen.value = false
-      useRemoveBackDrop()
-      categoryStore.clearSuccessMessage()
-      isSaving.value = false
+    // Não permitir loops hierárquicos (uma categoria não pode ser pai de suas próprias subcategorias)
+    if (editedItem.value.id && isDescendant(category, editedItem.value.id)) {
+        return true
     }
+    
+    return false
+}
 
-    const saveData = (item) => {
-        isSaving.value = true
-        try {
-           emit('saveData', item)
-           fetchCategories()
-        } finally {
-            // mantém `isSaving = true` após salvar para travar o botão
-            // só reseta ao fechar modal
+// Função para verificar se uma categoria é descendente de outra
+const isDescendant = (category, targetId) => {
+    if (!targetId || !category.parentId) return false
+    
+    // Verificar se a categoria atual é descendente da categoria alvo
+    let currentCategory = category
+    const visited = new Set() // Para evitar loops infinitos
+    
+    while (currentCategory && currentCategory.parentId && !visited.has(currentCategory.id)) {
+        visited.add(currentCategory.id)
+        
+        if (currentCategory.parentId === targetId) {
+            return true
         }
         
+        // Encontrar o parent na lista
+        const parent = categoryStore.categories.find(cat => cat.id === currentCategory.parentId)
+        if (!parent) break
+        
+        currentCategory = parent
     }
     
-    // Get the permissions
-    const fetchCategories = async () => {
-       await categoryStore.getCategories()
-    }
+    return false
+}
 
-    onMounted(() => {
-        fetchCategories()
-    })
+watch(() => props.show, async (newVal) => {
+    if (newVal) {
+        await nextTick()
+        openEditModal(props.data)
+    } else {
+        closeModal()
+    }
+})
+
+const openEditModal = (item) => {
+    // Resetar editedItem com valores padrão
+    editedItem.value = {
+        name: '',
+        parentId: null
+    }
     
+    // Se estamos editando, preencher com os dados existentes
+    if (item && item.id) {
+        editedItem.value = {
+            id: item.id,
+            name: item.name || '',
+            parentId: item.parentId || null
+        }
+    }
+    
+    isEditModalOpen.value = true
+    useAddBackDrop(props.id)
+}
+
+const closeModal = () => {    
+    isEditModalOpen.value = false
+    useRemoveBackDrop()
+    categoryStore.clearSuccessMessage()
+    isSaving.value = false
+    emit('close')
+}
+
+const saveData = async (item) => {
+    if (!item.name) return
+    
+    isSaving.value = true
+    try {
+        // Preparar os dados para salvar
+        const dataToSave = {
+            name: item.name,
+            parentId: item.parentId || null // Garantir que seja null se não selecionado
+        }
+        
+        // Se é edição, incluir o ID
+        if (item.id) {
+            dataToSave.id = item.id
+        }
+        
+        console.log('Dados a serem salvos:', dataToSave)
+        
+        // Emitir os dados para o componente pai
+        emit('saveData', dataToSave)
+        
+        await new Promise(resolve => setTimeout(resolve, 500))
+        
+    } catch (error) {
+        console.error('Erro ao salvar categoria:', error)
+        isSaving.value = false
+    }
+}
+
+// Buscar categorias
+const fetchCategories = async () => {
+    await categoryStore.getCategories()
+}
+
+onMounted(() => {
+    fetchCategories()
+})
 </script>
 
 <style>
@@ -125,5 +220,6 @@ const isSaving = ref(false)
 }
 .show {
     transform: none;
+    display: block;
 }
 </style>
