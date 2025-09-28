@@ -136,12 +136,10 @@ const isSaving = ref(false)
         item.roles = selectedRoles.value
         isSaving.value = true
         try {
-           emit('saveData', item)
-        } finally {
-            // mantém `isSaving = true` após salvar para travar o botão
-            // só reseta ao fechar modal
+            emit('saveData', item)
+        } catch (error) {
+            isSaving.value = false
         }
-        
     }
 
     // Given a list of roles, checks if a role contains registered roles and returns true.
@@ -172,12 +170,10 @@ const isSaving = ref(false)
         }        
     }
     
-    // Get the roles
     const fetchRoles = async () => {
        await roleStore.getRoles()
     }
 
-    // Gets the roles 
     const fetchUsersRoles = async () => {
        await roleStore.getUsersRoles()
     }    

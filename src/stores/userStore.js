@@ -21,46 +21,49 @@ export const useUserStore = defineStore({
 
         async deleteUser(data) {
             try {                
-            const response =  await api.delete(`api/v1/private/user/${data.id}`);
-            this.message = response.data
-            await api.get(`api/v1/private/user`)
-            
+                const response = await api.delete(`api/v1/private/user/${data.id}`);
+                this.message = response.data.message;                
+                this.users = this.users.filter(user => user.id !== data.id);
+                
             } catch (error) {
-                let errorMessage = error.response
-                this.message = { status:'error', message: errorMessage}
+                let errorMessage = error.response;
+                this.message = { status:'error', message: errorMessage};
             }
         },        
 
-        async updateUser(id,data) {
+        async updateUser(id, data) {
             try {                
-            const response =  await api.put(`api/v1/private/user/${id}`, data);
-            this.message = response.data
-            await api.get(`api/v1/private/user`)
-            
+                const response = await api.put(`api/v1/private/user/${id}`, data);
+                this.message = response.data;
+                
+                const index = this.users.findIndex(user => user.id === id);
+                if (index !== -1) {
+                    this.users[index] = { ...this.users[index], ...data };
+                }
+                
             } catch (error) {
-                let errorMessage = error.response
-                this.message = { status:'error', message: errorMessage}
+                let errorMessage = error.response;
+                this.message = { status:'error', message: errorMessage};
             }
         },
 
-
         async createUser(data) {
             try {
-            const response =  await api.post('api/v1/private/user/register',
-                { 
-                    email: data.email, 
-                    password: data.password, 
-                    confirmPassword: data.confirmPassword, 
-                    name: data.name, 
-                    lastname: data.lastname,                    
-                }
-            );
-            this.message = response.data
-            await api.get(`api/v1/private/user`)
-            
+                const response = await api.post('api/v1/private/user/register',
+                    { 
+                        email: data.email, 
+                        password: data.password, 
+                        confirmPassword: data.confirmPassword, 
+                        name: data.name, 
+                        lastname: data.lastname,                    
+                    }
+                );
+                this.message = response.data;
+                await this.getUsers();
+                
             } catch (error) {
-                let errorMessage = error.response
-                this.message = { status:'error', message: errorMessage}
+                let errorMessage = error.response.data.message;
+                this.message = { status:'error', message: errorMessage};
             }
         },
         

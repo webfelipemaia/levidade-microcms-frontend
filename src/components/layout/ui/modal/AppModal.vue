@@ -34,13 +34,14 @@
                         @click="$emit('close')" 
                         :class="confirmation 
                         ? 'btn btn-lg btn-link fs-6 text-decoration-none col-6 py-3 m-0 rounded-0 border-end' 
-                        : 'btn btn-secondary'" data-bs-dismiss="modal">{{ textCancel }}</button>
+                        : 'btn btn-secondary'" data-bs-dismiss="modal">{{ userStore.message ? textClose : textCancel }}</button>
 
                     <button type="submit" 
                         @click.prevent.stop="processData(itemToHandle)"
                         :class="confirmation 
                         ? 'btn btn-lg btn-link fs-6 text-decoration-none col-6 py-3 m-0 rounded-0' 
-                        : 'btn btn-primary'">{{ textSave }}</button>
+                        : 'btn btn-primary'"
+                        :disabled="userStore.message">{{ textSave }}</button>
                 </div>
             </div>
         </div>
@@ -85,16 +86,15 @@ import { useUserStore } from '@/stores/userStore';
             type: String,
             default: 'Cancel',
         },
+        textClose: { 
+            type: String,
+            default: 'Close',
+        },
     })
-
-    // Defines the events
+ 
     const emit = defineEmits(['close', 'processData'])
-
-    // Checks if the default slot contains content
     const hasDefaultSlotContent = !!slots.default;
 
-    // Waits for the modal to activate, 
-    // then assigns the data to be manipulated to the corresponding variable
     watch(() => props.show, () => {
         openModal()
         itemToHandle.value = props.data
