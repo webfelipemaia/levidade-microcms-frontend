@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia';
 import api from '@/services/api';
-import { useValidationErrros } from '@/composables/validation';
+import { useValidationErrors } from '@/composables/validation';
 
 export const useUserStore = defineStore({
     id: 'user', 
@@ -44,7 +44,7 @@ export const useUserStore = defineStore({
                 
             } catch (error) {
                 let errorMessage = error.response;
-                this.message = { status:'error', message: useValidationErrros(errorMessage)};
+                this.message = { status:'error', message: useValidationErrors(errorMessage)};
             }
         },
 
@@ -64,7 +64,7 @@ export const useUserStore = defineStore({
                 
             } catch (error) {
                 let errorMessage = error.response.data.message;
-                this.message = { status:'error', message: useValidationErrros(errorMessage)};
+                this.message = { status:'error', message: useValidationErrors(errorMessage)};
             }
         },
         

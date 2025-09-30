@@ -1,4 +1,4 @@
-export function useValidationErrros(errorMessage) {
+export function useValidationErrors(errorMessage) {
     const cleaned = errorMessage.replace(/^Validation error:\s*/, "")
     const parts = cleaned.split(/\s*,\s*/)
     const errors = {}

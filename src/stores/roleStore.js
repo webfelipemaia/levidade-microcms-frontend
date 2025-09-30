@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia';
 import api from '@/services/api';
+import { useValidationErrors } from '@/composables/validation';
 
 export const useRoleStore = defineStore({
     id: 'role',
@@ -15,7 +16,6 @@ export const useRoleStore = defineStore({
             if(response.data.status === 'error') {
                 this.message = response.data
             } else {
-                this.message = null;
                 this.roles = response.data;
             }
         },
@@ -25,7 +25,6 @@ export const useRoleStore = defineStore({
             if(response.data.status === 'error') {
                 this.message = response.data
             } else {
-                this.message = null;
                 this.usersRoles = response.data;
             }
         },        
@@ -59,7 +58,8 @@ export const useRoleStore = defineStore({
                 
             } catch (error) {
                 let errorMessage = error.response.data?.message
-                this.message = { status:'error', message: errorMessage.replaceAll('"', '')}
+                console.log(errorMessage)
+                this.message = { status:'error', message: useValidationErrors(errorMessage)}
             }   
         },
 
@@ -78,8 +78,8 @@ export const useRoleStore = defineStore({
                 this.message = response.data
                 
             } catch (error) {
-                let errorMessage = error.response.data.message
-                this.message = { status:'error', message: errorMessage.replaceAll('"', '')}
+                let errorMessage = error.response.data?.message
+                this.message = { status:'error', message: useValidationErrors(errorMessage) }
             }
         },
         
