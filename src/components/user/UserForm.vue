@@ -2,12 +2,39 @@
     <div :id="id" class="modal fade" :class="{show: (show && isEditModalOpen)}" tabindex="-1" aria-labelledby="userFormLabel" :aria-hidden="show">
         <div class="modal-dialog">
             <div class="modal-content">
-                <form @submit.prevent="">
+                <form @submit.prevent="saveData(editedItem)">
                     <div class="modal-header">
                         <h1 class="modal-title fs-5" id="userFormLabel">{{ editedItem.id ? 'Editar' : 'Adicionar' }} item</h1>
                         <button  type="button" @click="$emit('close')" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
+                        <div v-if="userStore.message">
+                                <div
+                                    class="alert alert-dismissible fade show"
+                                    :class="`alert-${userStore.message.status === 'error'?'danger':'success'}`"
+                                    role="alert"
+                                >
+                                    <template v-if="typeof userStore.message.message === 'string'">
+                                        <p><i class="bi bi-exclamation-circle me-2"></i> {{ userStore.message.message }}</p>
+                                    </template>
+
+                                    <template v-else>
+                                        <p><i class="bi bi-exclamation-circle me-2"></i>Oops! We found some problems with the form.</p>
+                                        <ul class="mb-0">
+                                            <li v-for="(msg, field) in userStore.message.message" :key="field">
+                                            <strong>{{ field }}:</strong> {{ msg }}
+                                            </li>
+                                        </ul>
+                                    </template>
+
+                                    <button
+                                    type="button"
+                                    class="btn-close"
+                                    data-bs-dismiss="alert"
+                                    aria-label="Close"
+                                    ></button>
+                                </div>
+                            </div>
                         <div class="mb-3">
                             <label for="name" class="col-form-label">Name:</label>
                             <input v-model="editedItem.name" type="text" class="form-control" id="name">
@@ -58,19 +85,13 @@
                                 </div>
                             </div>
                         </div>
-                        
-                        <div v-if="userStore.message">
-                            <div class="alert alert-dismissible fade show" :class="`alert-${userStore.message.status === 'error'?'danger':'success'}`" role="alert">
-                                <p><i class="bi bi-exclamation-circle me-2"></i> {{ userStore.message.message }}</p>
-                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                            </div>
-                        </div>
+
                     </div>
                     <div class="modal-footer">
                         <button type="button" @click="$emit('close')" class="btn btn-secondary" data-bs-dismiss="modal">
                             {{ isSaving ? 'Close' : 'Cancel' }}
                         </button>
-                        <button type="submit" class="btn btn-primary" :disabled="isSaving" @click.prevent.stop="saveData(editedItem)">
+                        <button type="submit" class="btn btn-primary"  :disabled="isSaving || !editedItem.name">
                             {{ isSaving ? 'Saving...' : 'Save' }}
                         </button>
                     </div>
@@ -85,13 +106,11 @@ import { ref, watch, onMounted } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useUserStore } from '@/stores/userStore';
 import { useRoleStore } from '@/stores/roleStore';
-import { useAddBackDrop, useRemoveBackDrop } from '../../components/layout/composebles/HandleBackdrop';
+import { useAddBackDrop, useRemoveBackDrop } from '../layout/composables/HandleBackdrop';
 
 const userStore = useUserStore()
 const roleStore = useRoleStore()
 const { roles, usersRoles } =  storeToRefs(roleStore)
-//const { users } =  storeToRefs(userStore)
-
 const isEditModalOpen = ref(false)
 const editedItem = ref({})
 const selectedRoles = ref([])
@@ -134,9 +153,9 @@ const isSaving = ref(false)
 
     const saveData = (item) => {
         item.roles = selectedRoles.value
-        isSaving.value = true
         try {
             emit('saveData', item)
+            isSaving.value = true
         } catch (error) {
             isSaving.value = false
         }

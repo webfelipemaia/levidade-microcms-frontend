@@ -158,7 +158,7 @@ import AppCardHeader from '../layout/ui/card/AppCardHeader'
 import { useArticleStore } from '../../stores/articleStore'
 import { useCategoryStore } from '@/stores/categoryStore'
 import { useStatusStore } from '@/stores/statusStore'
-import { useSanitizeWords } from '../layout/composebles/HandleStrings'
+import { useSanitizeWords } from '../layout/composables/HandleStrings'
 import { useUploadStore } from '@/stores/uploadStore'
 
 const articleId = ref(null);

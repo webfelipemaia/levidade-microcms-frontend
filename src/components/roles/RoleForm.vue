@@ -62,7 +62,7 @@ import { ref, watch, onMounted } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useRoleStore } from '@/stores/roleStore';
 import { usePermissionStore } from '../../stores/permissionStore'
-import { useAddBackDrop, useRemoveBackDrop } from  '../../components/layout/composebles/HandleBackdrop';
+import { useAddBackDrop, useRemoveBackDrop } from  '../layout/composables/HandleBackdrop';
 
 const roleStore = useRoleStore()
 const permissionStore = usePermissionStore()

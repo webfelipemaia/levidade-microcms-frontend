@@ -110,10 +110,7 @@ const saveData = async (data) => {
     } else {
         await createData(data)  
     }
-    
-    if (!userStore.message || userStore.message.status === 'error') {
-        showModal.value = false
-    }
+
 } 
 
 const processData = async (data) => {

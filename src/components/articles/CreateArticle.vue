@@ -20,19 +20,17 @@
                                     :class="`alert-${articleStore.message.status === 'error'?'danger':'success'}`"
                                     role="alert"
                                 >
-                                    <!-- caso seja uma string -->
                                     <template v-if="typeof articleStore.message.message === 'string'">
-                                    <p><i class="bi bi-exclamation-circle me-2"></i> {{ articleStore.message.message }}</p>
+                                        <p><i class="bi bi-exclamation-circle me-2"></i> {{ articleStore.message.message }}</p>
                                     </template>
 
-                                    <!-- caso seja um objeto de erros -->
                                     <template v-else>
                                         <p><i class="bi bi-exclamation-circle me-2"></i>Oops! We found some problems with the form.</p>
-                                    <ul class="mb-0">
-                                        <li v-for="(msg, field) in articleStore.message.message" :key="field">
-                                        <strong>{{ field }}:</strong> {{ msg }}
-                                        </li>
-                                    </ul>
+                                        <ul class="mb-0">
+                                            <li v-for="(msg, field) in articleStore.message.message" :key="field">
+                                            <strong>{{ field }}:</strong> {{ msg }}
+                                            </li>
+                                        </ul>
                                     </template>
 
                                     <button
@@ -42,7 +40,7 @@
                                     aria-label="Close"
                                     ></button>
                                 </div>
-                                </div>
+                            </div>
 
 
                             <div class="row">
@@ -181,7 +179,7 @@ import AppCardHeader from '../layout/ui/card/AppCardHeader'
 import { useArticleStore } from '../../stores/articleStore'
 import { useCategoryStore } from '@/stores/categoryStore'
 import { useStatusStore } from '@/stores/statusStore'
-import { useSanitizeWords } from '../layout/composebles/HandleStrings'
+import { useSanitizeWords } from '../layout/composables/HandleStrings'
 import { useUploadStore } from '@/stores/uploadStore'
 
 const article = ref({ 

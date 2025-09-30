@@ -54,7 +54,7 @@
 <script setup>
 import { ref, watch, onMounted, computed, nextTick } from 'vue'
 import { useCategoryStore } from '@/stores/categoryStore';
-import { useAddBackDrop, useRemoveBackDrop } from  '../../components/layout/composebles/HandleBackdrop';
+import { useAddBackDrop, useRemoveBackDrop } from  '../layout/composables/HandleBackdrop';
 
 const categoryStore = useCategoryStore()
 const isEditModalOpen = ref(false)
@@ -80,7 +80,6 @@ const availableParentCategories = computed(() => {
     if (!categoryStore.categories || !Array.isArray(categoryStore.categories)) return []
     
     return categoryStore.categories.filter(category => {
-        // Filtrar categorias que podem ser pais
         return !isCategoryDisabled(category)
     })
 })
@@ -92,7 +91,7 @@ const isCategoryDisabled = (category) => {
         return true
     }
     
-    // Não permitir loops hierárquicos (uma categoria não pode ser pai de suas próprias subcategorias)
+    // Não permitir loops hierárquicos
     if (editedItem.value.id && isDescendant(category, editedItem.value.id)) {
         return true
     }
@@ -104,9 +103,8 @@ const isCategoryDisabled = (category) => {
 const isDescendant = (category, targetId) => {
     if (!targetId || !category.parentId) return false
     
-    // Verificar se a categoria atual é descendente da categoria alvo
     let currentCategory = category
-    const visited = new Set() // Para evitar loops infinitos
+    const visited = new Set()
     
     while (currentCategory && currentCategory.parentId && !visited.has(currentCategory.id)) {
         visited.add(currentCategory.id)
@@ -115,7 +113,6 @@ const isDescendant = (category, targetId) => {
             return true
         }
         
-        // Encontrar o parent na lista
         const parent = categoryStore.categories.find(cat => cat.id === currentCategory.parentId)
         if (!parent) break
         
@@ -135,13 +132,12 @@ watch(() => props.show, async (newVal) => {
 })
 
 const openEditModal = (item) => {
-    // Resetar editedItem com valores padrão
+    
     editedItem.value = {
         name: '',
         parentId: null
     }
     
-    // Se estamos editando, preencher com os dados existentes
     if (item && item.id) {
         editedItem.value = {
             id: item.id,
@@ -167,22 +163,15 @@ const saveData = async (item) => {
     
     isSaving.value = true
     try {
-        // Preparar os dados para salvar
         const dataToSave = {
             name: item.name,
-            parentId: item.parentId || null // Garantir que seja null se não selecionado
+            parentId: item.parentId || null
         }
         
-        // Se é edição, incluir o ID
         if (item.id) {
             dataToSave.id = item.id
         }
-        
-        console.log('Dados a serem salvos:', dataToSave)
-        
-        // Emitir os dados para o componente pai
-        emit('saveData', dataToSave)
-        
+        emit('saveData', dataToSave)        
         await new Promise(resolve => setTimeout(resolve, 500))
         
     } catch (error) {

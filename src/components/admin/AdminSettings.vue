@@ -118,7 +118,7 @@ import { onMounted, reactive, ref } from 'vue';
 import AppCard from '../layout/ui/card/AppCard';
 import AppCardHeader from '../layout/ui/card/AppCardHeader';
 import { useSettingStore } from '@/stores/settingStore';
-import { capitalizeFirstLetter } from '../layout/composebles/HandleStrings'
+import { capitalizeFirstLetter } from '../layout/composables/HandleStrings'
 
 const settingStore = useSettingStore();
 

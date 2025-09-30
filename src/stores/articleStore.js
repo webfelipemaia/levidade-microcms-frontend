@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia';
 import api from '@/services/api';
+import { useValidationErrros } from '@/composables/validation';
 
 export const useArticleStore = defineStore({
     id: 'article',
@@ -128,7 +129,7 @@ export const useArticleStore = defineStore({
                 let errorMessage = error.response.data.message
                 this.message = { 
                     status:'error', 
-                    message: this.getValidationErrros(errorMessage)
+                    message: useValidationErrros(errorMessage)
                 }
             }
         },
@@ -145,17 +146,6 @@ export const useArticleStore = defineStore({
             this.message = null
         },
 
-        getValidationErrros(errorMessage) {
-            const cleaned = errorMessage.replace(/^Validation error:\s*/, "")
-            const parts = cleaned.split(/\s*,\s*/)
-            const errors = {}
-            parts.forEach(part => {
-                const [field, ...rest] = part.trim().split(" ")
-                const cleanField = field.replace(/^"|"$/g, '')
-                errors[cleanField] = rest.join(" ")
-            })
-            return errors;
-        }
         
     }
 })
