@@ -14,6 +14,7 @@ export const useArticleStore = defineStore({
         // Simple query
         async getArticles() {
             const response = await api.get(`api/v1/private/article`);
+            this.message = null;
             if(response.data.status === 'error') {
                 this.message = response.data
             } else {
@@ -49,24 +50,16 @@ export const useArticleStore = defineStore({
         
         async getArticleById(id) {
             try {
-                // Faz a requisição para obter o artigo pelo ID
-                const response = await api.get(`api/v1/private/article/${id}`);
                 
-                // Armazena o artigo em uma propriedade da store
+                const response = await api.get(`api/v1/private/article/${id}`);
                 this.article = response.data;
-        
-                // Opcional: Define uma mensagem de sucesso
                 this.message = { status: 'success', message: 'Artigo carregado com sucesso.' };
-        
-                // Retorna o artigo para uso direto, se necessário
                 return response.data;
             } catch (error) {
-                // Captura a mensagem de erro e armazena na store
+                
                 let errorMessage = error.response?.data?.message || 'Erro desconhecido';
                 this.message = { status: 'error', message: errorMessage.replaceAll('"', '') };
-                console.error('Erro ao buscar artigo:', error); // Log para debugging
-        
-                // Lança o erro, caso precise tratar isso no componente
+                console.error('Erro ao buscar artigo:', error);
                 throw error;
             }
         },
@@ -125,18 +118,18 @@ export const useArticleStore = defineStore({
 
 
         async createArticle(data) {
-            console.log(data)
             try {
                 const response =  await api.post('api/v1/private/article/', data);
                 this.message = response.data
                 const last = await api.get(`api/v1/private/article/last`);
                 this.lastArticle = last.data
-                //await api.get(`/articles`)
             } catch (error) {
                 
                 let errorMessage = error.response.data.message
-                this.message = { status:'error', message: errorMessage.replaceAll('"', '')}
-                console.log(error.response)
+                this.message = { 
+                    status:'error', 
+                    message: this.getValidationErrros(errorMessage)
+                }
             }
         },
         
@@ -150,6 +143,19 @@ export const useArticleStore = defineStore({
 
         clearSuccessMessage() {
             this.message = null
+        },
+
+        getValidationErrros(errorMessage) {
+            const cleaned = errorMessage.replace(/^Validation error:\s*/, "")
+            const parts = cleaned.split(/\s*,\s*/)
+            const errors = {}
+            parts.forEach(part => {
+                const [field, ...rest] = part.trim().split(" ")
+                const cleanField = field.replace(/^"|"$/g, '')
+                errors[cleanField] = rest.join(" ")
+            })
+            return errors;
         }
+        
     }
 })

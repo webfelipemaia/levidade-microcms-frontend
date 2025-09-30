@@ -66,9 +66,10 @@ api.interceptors.response.use(
       authStore.clearAuthData();
 
       if (!isPublic && !isAuth && !authStore.alertShown) {
-        alert('Sessão expirada. Por favor, faça login novamente.');
-        authStore.setAlertShown(true);
-        setTimeout(() => authStore.setAlertShown(false), 5000);
+        //alert('Sessão expirada. Por favor, faça login novamente.');
+        //authStore.setAlertShown(true);
+        //setTimeout(() => authStore.setAlertShown(false), 5000);
+        router.push({ name: 'login' })
       }
 
       const currentPath = getCurrentPath();

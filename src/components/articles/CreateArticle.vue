@@ -14,12 +14,36 @@
                                                 
                         <div class="card-body">
 
-                        <div v-if="articleStore.message">
-                            <div class="alert alert-dismissible fade show" :class="`alert-${articleStore.message.status === 'error'?'danger':'success'}`" role="alert">
-                                <p><i class="bi bi-exclamation-circle me-2"></i> {{ articleStore.message.message }}</p>
-                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                            </div>
-                        </div>
+                            <div v-if="articleStore.message">
+                                <div
+                                    class="alert alert-dismissible fade show"
+                                    :class="`alert-${articleStore.message.status === 'error'?'danger':'success'}`"
+                                    role="alert"
+                                >
+                                    <!-- caso seja uma string -->
+                                    <template v-if="typeof articleStore.message.message === 'string'">
+                                    <p><i class="bi bi-exclamation-circle me-2"></i> {{ articleStore.message.message }}</p>
+                                    </template>
+
+                                    <!-- caso seja um objeto de erros -->
+                                    <template v-else>
+                                        <p><i class="bi bi-exclamation-circle me-2"></i>Oops! We found some problems with the form.</p>
+                                    <ul class="mb-0">
+                                        <li v-for="(msg, field) in articleStore.message.message" :key="field">
+                                        <strong>{{ field }}:</strong> {{ msg }}
+                                        </li>
+                                    </ul>
+                                    </template>
+
+                                    <button
+                                    type="button"
+                                    class="btn-close"
+                                    data-bs-dismiss="alert"
+                                    aria-label="Close"
+                                    ></button>
+                                </div>
+                                </div>
+
 
                             <div class="row">
                                 <div class="col">
@@ -216,6 +240,7 @@ const uploadStore = useUploadStore()
     }
 
     onMounted(() => {
+        articleStore.clearSuccessMessage()
         resetUploadStore()
         categoryStore.getCategories()
         statusStore.getStatus()        

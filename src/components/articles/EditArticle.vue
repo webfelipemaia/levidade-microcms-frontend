@@ -205,6 +205,7 @@ const uploadStore = useUploadStore()
 };
 
     onMounted(() => {
+      uploadStore.clearUploadData();
       articleId.value = route.params.id;
       categoryStore.getCategories();
       statusStore.getStatus();

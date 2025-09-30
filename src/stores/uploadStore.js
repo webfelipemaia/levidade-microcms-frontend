@@ -60,6 +60,14 @@ export const useUploadStore = defineStore('upload', {
             console.error(error)
           }
         }
+    },
+    clearUploadData() {
+      this.files = null;
+      this.uploadProgress = 0;
+      this.error = null;
+      this.message = null;
+      this.contentType = '';
+      this.uploadedFiles = [];
     }
   }
 });

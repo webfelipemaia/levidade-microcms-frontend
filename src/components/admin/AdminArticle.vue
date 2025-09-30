@@ -82,12 +82,10 @@ import { useCategoryStore } from '../../stores/categoryStore'
 import { useStatusStore } from '../../stores/statusStore'
 
 const articleStore = useArticleStore()
-//const { articles } =  storeToRefs(articleStore)
 const categoryStore = useCategoryStore()
 const { categories } = storeToRefs(categoryStore)
 const statusStore = useStatusStore()
 const { status } = storeToRefs(statusStore)
-//const showModal = ref(false)
 const selectedArticle = ref([])
 const activeModal = ref(false)
 
