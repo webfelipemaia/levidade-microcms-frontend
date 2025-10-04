@@ -9,6 +9,7 @@ import "bootstrap"
 import "bootstrap/dist/css/bootstrap.min.css"
 import "bootstrap-icons/font/bootstrap-icons.css"
 import "@/assets/styles/_template.scss"
+import { useSettingStore } from '@/stores/settingStore'
 
 const app = createApp(App)
 const pinia = createPinia()
@@ -16,4 +17,7 @@ app.use(pinia)
 app.use(router)
 app.use(aclPlugin)
 app.use(VueHighlightJS)
+
+const settingsStore = useSettingStore()
+settingsStore.initialize().catch(console.error)
 app.mount('#app')

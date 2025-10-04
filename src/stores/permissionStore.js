@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia';
 import api from '@/services/api';
+import { useValidationErrors } from '@/composables/validation';
 
 export const usePermissionStore = defineStore({
     id: 'permission',
@@ -15,7 +16,6 @@ export const usePermissionStore = defineStore({
             if(response.data.status === 'error') {
                 this.message = response.data
             } else {
-                this.message = null;
                 this.permissions = response.data;
             }
         },
@@ -47,7 +47,7 @@ export const usePermissionStore = defineStore({
             await api.get(`api/v1/private/permission`)
             
             } catch (error) {
-                let errorMessage = error.response.data.message
+                let errorMessage = error.response.data?.message
                 this.message = { status:'error', message: errorMessage}
                 console.log(error.response)
             }
@@ -57,12 +57,10 @@ export const usePermissionStore = defineStore({
             try {                
             const response =  await api.patch(`api/v1/private/permission/${data.id}`, data);
             this.message = response.data
-            await api.get(`api/v1/private/permission`)
             
             } catch (error) {
-                let errorMessage = error.response.data.message
-                this.message = { status:'error', message: errorMessage}
-                console.log(error.response)
+                let errorMessage = error.response.data?.message
+                this.message = { status:'error', message: useValidationErrors(errorMessage)}
             }
         },
 
@@ -75,12 +73,10 @@ export const usePermissionStore = defineStore({
                 }
             );
             this.message = response.data
-            await api.get(`api/v1/private/permission`)
             
             } catch (error) {
-                let errorMessage = error.response.data.message
-                this.message = { status:'error', message: errorMessage}
-                console.log(error.response)
+                let errorMessage = error.response.data?.message
+                this.message = { status:'error', message: useValidationErrors(errorMessage)}
             }
         },
         

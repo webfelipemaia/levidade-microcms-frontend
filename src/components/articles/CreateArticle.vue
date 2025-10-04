@@ -107,7 +107,7 @@
                             </div>
                             
                             <!-- upload -->
-                            <div class="upload-wrapper">
+                            <div v-if="settings.settings.uploadRequired.value === 'true'" class="upload-wrapper">
                               
                               <div class="upload-input mb-3">
                                 <label for="inputSingleFile" class="form-label">Browse File to Upload</label>
@@ -181,6 +181,7 @@ import { useCategoryStore } from '@/stores/categoryStore'
 import { useStatusStore } from '@/stores/statusStore'
 import { useSanitizeWords } from '../layout/composables/HandleStrings'
 import { useUploadStore } from '@/stores/uploadStore'
+import { useSettingStore } from '@/stores/settingStore'
 
 const article = ref({ 
     title : '', 
@@ -193,12 +194,11 @@ const article = ref({
     contentType: 'article',
 })
 const fileInput = ref(null)
-
 const articleStore = useArticleStore()
 const categoryStore = useCategoryStore()
 const statusStore = useStatusStore()
 const uploadStore = useUploadStore()
-//const router = useRouter()
+const settings = useSettingStore()
 
     const resetUploadStore = () => {
         uploadStore.files = null;
@@ -225,23 +225,27 @@ const uploadStore = useUploadStore()
     
     // Adiciona o createdFileId ao objeto data
     const createdFileId = uploadStore.message?.created?.id;
-    if (createdFileId) {
+    if (createdFileId && settings.settings.uploadRequired.value === 'true') {
         data.fileId = createdFileId;
+    } else {
+        data.fileId = 0;
     }
 
     articleStore.createArticle(data)
     
-    // redirecionar para página do item criado após x segundos
-    /*setTimeout(() => {
-                router.push({ name: 'admin.articles.view' });
-            }, 3000); */
+    }
+
+    const loadSettings = () => {
+        loadSettings.value = Object.values(settings).map(setting => ({
+                setting           }));
     }
 
     onMounted(() => {
         articleStore.clearSuccessMessage()
         resetUploadStore()
         categoryStore.getCategories()
-        statusStore.getStatus()        
+        statusStore.getStatus()
+        loadSettings()
     })
     
 </script>

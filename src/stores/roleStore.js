@@ -58,7 +58,6 @@ export const useRoleStore = defineStore({
                 
             } catch (error) {
                 let errorMessage = error.response.data?.message
-                console.log(errorMessage)
                 this.message = { status:'error', message: useValidationErrors(errorMessage)}
             }   
         },

@@ -8,17 +8,38 @@
                         <button  type="button" @click="$emit('close')" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
+                        <div v-if="permissionStore.message">
+                                <div
+                                    class="alert alert-dismissible fade show"
+                                    :class="`alert-${permissionStore.message.status === 'error'?'danger':'success'}`"
+                                    role="alert"
+                                >
+                                    <template v-if="typeof permissionStore.message.message === 'string'">
+                                        <p><i class="bi bi-exclamation-circle me-2"></i> {{ permissionStore.message.message }}</p>
+                                    </template>
+
+                                    <template v-else>
+                                        <p><i class="bi bi-exclamation-circle me-2"></i>Oops! We found some problems with the form.</p>
+                                        <ul class="mb-0">
+                                            <li v-for="(msg, field) in permissionStore.message.message" :key="field">
+                                            <strong>{{ field }}:</strong> {{ msg }}
+                                            </li>
+                                        </ul>
+                                    </template>
+
+                                    <button
+                                    type="button"
+                                    class="btn-close"
+                                    data-bs-dismiss="alert"
+                                    aria-label="Close"
+                                    ></button>
+                                </div>
+                            </div>
                         <div class="mb-3">
                             <label for="name" class="col-form-label">Name:</label>
                             <input v-model="editedItem.name" type="text" class="form-control" id="name">
                         </div>
-                                                
-                        <div v-if="permissionStore.message">
-                            <div class="alert alert-dismissible fade show" :class="`alert-${permissionStore.message.status === 'error'?'danger':'success'}`" role="alert">
-                                <p><i class="bi bi-exclamation-circle me-2"></i> {{ permissionStore.message.message }}</p>
-                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                            </div>
-                        </div>
+                              
                     </div>
                     <div class="modal-footer">
                         <button type="button" @click="$emit('close')" class="btn btn-secondary" data-bs-dismiss="modal">
@@ -84,8 +105,7 @@ const isSaving = ref(false)
         try {
            emit('saveData', item)
         } finally {
-            // mantém `isSaving = true` após salvar para travar o botão
-            // só reseta ao fechar modal
+            isSaving.value = false
         }
         
     }
@@ -95,7 +115,7 @@ const isSaving = ref(false)
        
        try {
         const permission = await permissionStore.getPermissions();
-        console.log(permission)
+        return permission
         } catch (error) {
         console.error('Erro ao carregar o artigo:', error);
         }

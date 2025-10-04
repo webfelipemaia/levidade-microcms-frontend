@@ -7,12 +7,34 @@
                 <p class="text-gray-600">ID: {{ route.query.id }}</p>
             </div>
 
-            <!-- Mensagem de status -->
-            <div v-if="permissionStore.message" 
-                 :class="['p-4 rounded mb-4', 
-                         permissionStore.message.status === 'success' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800']">
-                {{ permissionStore.message.message }}
-            </div>
+            <div v-if="permissionStore.message">
+                
+                                <div
+                                    class="alert alert-dismissible fade show"
+                                    :class="`alert-${permissionStore.message.status === 'error'?'danger':'success'}`"
+                                    role="alert"
+                                >
+                                    <template v-if="typeof permissionStore.message.message === 'string'">
+                                        <p><i class="bi bi-exclamation-circle me-2"></i> {{ permissionStore.message.message }}</p>
+                                    </template>
+
+                                    <template v-else>
+                                        <p><i class="bi bi-exclamation-circle me-2"></i>Oops! We found some problems with the form.</p>
+                                        <ul class="mb-0">
+                                            <li v-for="(msg, field) in permissionStore.message.message" :key="field">
+                                            <strong>{{ field }}:</strong> {{ msg }}
+                                            </li>
+                                        </ul>
+                                    </template>
+
+                                    <button
+                                    type="button"
+                                    class="btn-close"
+                                    data-bs-dismiss="alert"
+                                    aria-label="Close"
+                                    ></button>
+                                </div>
+                            </div>
 
             <!-- Formulário de edição -->
             <form @submit.prevent="updatePermission" class="space-y-4" v-if="permission">
@@ -74,7 +96,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, watch } from 'vue'
+import { ref, onMounted, onUnmounted, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { usePermissionStore } from '@/stores/permissionStore'
 
@@ -85,18 +107,13 @@ const permissionStore = usePermissionStore()
 const permission = ref(null)
 const loading = ref(false)
 
-// Buscar a permissão específica
 const fetchPermission = async () => {
     if (!route.query.id) return
     
     loading.value = true
     try {
-        // Primeiro carrega todas as permissões
         await permissionStore.getPermissions()
-        
-        // Encontra a permissão pelo ID
         const foundPermission = permissionStore.permissions.find(p => p.id === parseInt(route.query.id))
-        
         if (foundPermission) {
             permission.value = { ...foundPermission }
         } else {
@@ -110,15 +127,12 @@ const fetchPermission = async () => {
     }
 }
 
-// Atualizar permissão
 const updatePermission = async () => {
     if (!permission.value) return
     
     loading.value = true
     try {
         await permissionStore.updatePermission(permission.value)
-        
-        // Se atualizou com sucesso, redireciona após um breve delay
         if (permissionStore.message?.status === 'success') {
             setTimeout(() => {
                 router.push('/permissions')
@@ -131,25 +145,20 @@ const updatePermission = async () => {
     }
 }
 
-// Navegar de volta
 const goBack = () => {
     router.push('/permissions')
 }
 
-// Watchers para reagir a mudanças no ID
 watch(() => route.query.id, (newId) => {
     if (newId) {
         fetchPermission()
     }
 })
 
-// Limpar mensagem quando o componente for desmontado
-import { onUnmounted } from 'vue'
 onUnmounted(() => {
     permissionStore.clearSuccessMessage()
 })
 
-// Carregar dados quando o componente for montado
 onMounted(() => {
     fetchPermission()
 })

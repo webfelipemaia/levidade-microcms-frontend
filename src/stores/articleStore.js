@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia';
 import api from '@/services/api';
-import { useValidationErrros } from '@/composables/validation';
+import { useValidationErrors } from '@/composables/validation';
 
 export const useArticleStore = defineStore({
     id: 'article',
@@ -72,7 +72,6 @@ export const useArticleStore = defineStore({
             if(response.data.status === 'error') {
                 this.message = response.data
             } else {
-                this.message = null;
                 this.lastArticle = response.data;
             }
         },
@@ -84,22 +83,18 @@ export const useArticleStore = defineStore({
             if(response.data.status === 'error') {
                 this.message = response.data
             } else {
-                this.message = null;
                 this.usersArticles = response.data;
             }
         },        
 
         async deleteArticle(data) {
-            try {                
-            
+            try {            
                 const response =  await api.delete(`api/v1/private/article/${data.id}`);
                 this.message = response.data
-                await api.get(`api/v1/private/article`)
             } catch (error) {
 
                 let errorMessage = error.response.data.message
                 this.message = { status:'error', message: errorMessage.replaceAll('"', '')}
-                console.log(error.response)
             }
         },        
 
@@ -108,12 +103,10 @@ export const useArticleStore = defineStore({
                 
                 const response =  await api.patch(`api/v1/private/article/${data.id}`, data);
                 this.message = response.data
-                await api.get(`api/v1/private/article`)
             } catch (error) {
 
                 let errorMessage = error.response.data.message
-                this.message = { status:'error', message: errorMessage}
-                console.log(error.response)
+                this.message = { status:'error', message: useValidationErrors(errorMessage) }
             }   
         },
 
@@ -129,7 +122,7 @@ export const useArticleStore = defineStore({
                 let errorMessage = error.response.data.message
                 this.message = { 
                     status:'error', 
-                    message: useValidationErrros(errorMessage)
+                    message: useValidationErrors(errorMessage)
                 }
             }
         },
