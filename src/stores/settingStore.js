@@ -89,7 +89,26 @@ export const useSettingStore = defineStore('setting', {
         async getPaginationSettings() {
             try {
                 const response = await api.get(`api/v1/private/setting/pagination`);
-                
+                const data = response.data.data;
+        
+                if (data && data.pagination) {
+                    const item = data.pagination;
+                    this.pagination = {};
+        
+                    if (item.additionalValue === 'order') {
+                        this.pagination.order = JSON.parse(item.value);
+                    } else if (item.additionalValue === 'pageSize') {
+                        this.pagination.pageSize = parseInt(item.value);
+                    }
+                }
+            } catch (error) {
+                console.error('Erro ao buscar configurações de paginação:', error);
+            }
+        },
+
+        async getPaginationArraySettings() {
+            try {
+                const response = await api.get(`api/v1/private/setting/pagination`);
                 if (response.data.data) {
                     this.pagination = response.data.data.reduce((acc, item) => {
                         if (item.additionalValue === 'order') {
@@ -146,7 +165,7 @@ export const useSettingStore = defineStore('setting', {
         async updateSetting(data) {
             try {
                 const response = await api.put(`api/v1/private/setting/update`, data);
-                const { status, message, successes, errors } = response.data.data;
+                const { status, message, successes, errors } = response.data;
         
                 if (status === 'partial') {
                     this.message = {

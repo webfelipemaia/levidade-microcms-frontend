@@ -64,6 +64,33 @@
                         <div class="section-page">
                             <h4>Uploads</h4>
                         </div>
+
+                        <div class="col-md-6">
+                            <label for="uploadRequiredSwitch" class="form-label">
+                            {{ findSetting('uploadRequired').additionalValue }}:
+                            </label>
+                            <p style="min-height: 48px;">
+                            <small>{{ findSetting('uploadRequired').description }}</small>
+                            </p>
+
+                            <div class="form-check form-switch">
+                            <input
+                                class="form-check-input"
+                                type="checkbox"
+                                role="switch"
+                                id="uploadRequiredSwitch"
+                                v-model="uploadRequired"
+                                :disabled="!uploadRequired"
+                            >
+                            <label class="form-check-label" for="uploadRequiredSwitch">
+                                {{ uploadRequired ? 'Habilitado' : 'Desabilitado' }}
+                            </label>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6"></div>
+                    </div>
+                    <div class="row mb-4">
                         <div class="col-md-6">
                             
                             <label for="uploadMaxFileSize" class="form-label">{{ findSetting('uploadMaxFileSize').additionalValue }}:</label>
@@ -80,8 +107,6 @@
                                     {{ maxSize.label }}
                                 </option>
                             </select>
-
-
                         </div>
                         <div class="col-md-6">
                             <label for="uploadLimit" class="form-label">{{ findSetting('uploadLimit').additionalValue }}</label>
@@ -114,7 +139,7 @@
 </template>
 
 <script setup>
-import { onMounted, reactive, ref } from 'vue';
+import { onMounted, reactive, ref, computed } from 'vue';
 import AppCard from '../layout/ui/card/AppCard';
 import AppCardHeader from '../layout/ui/card/AppCardHeader';
 import { useSettingStore } from '@/stores/settingStore';
@@ -140,7 +165,7 @@ const allowedFields = [
         await settingStore.getUploadpathSettings();
         await settingStore.getFilesizeSettings();
 
-        Object.assign(settings, mapSettings(settingStore.settings));
+        Object.assign(settings, mapSettings(settingStore.settingsArray));
         filesizeOptions.value = Object.entries(settingStore.filesize).map(([label, expression]) => ({
             label,
             value: eval(expression)
@@ -150,6 +175,8 @@ const allowedFields = [
             value: expression
         }));        
     });
+
+
 
     const saveSettings = async () => {
         try {
@@ -187,6 +214,16 @@ const allowedFields = [
     const capitalizeIt = (word) => {
         return capitalizeFirstLetter(word);
     }
+
+    const uploadRequired = computed({
+        get() {
+            return findSetting('uploadRequired')?.value === 'true';
+        },
+        set(newVal) {
+            const setting = findSetting('uploadRequired');
+            if (setting) setting.value = newVal.toString();
+        }
+    });
 
 </script>
 
