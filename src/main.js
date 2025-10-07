@@ -19,5 +19,5 @@ app.use(aclPlugin)
 app.use(VueHighlightJS)
 
 const settingsStore = useSettingStore()
-settingsStore.initialize().catch(console.error)
+settingsStore.initialize()
 app.mount('#app')

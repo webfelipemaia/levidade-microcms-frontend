@@ -1,7 +1,7 @@
 // api.js
 import axios from "axios";
-import { useAuthStore } from "../stores/authStore";
-import router from "../router";
+import { useAuthStore } from "@/stores/authStore";
+import router from "@/router";
 
 const api = axios.create();
 
@@ -11,16 +11,14 @@ api.defaults.headers.common["X-Requested-With"] = "XMLHttpRequest";
 api.defaults.baseURL = import.meta.env.VITE_APP_API_URL || "http://localhost:4000";
 
 const PUBLIC_PATHS = [
-  '/login',
-  '/register',
-  '/password/recover',
-  '/password/reset',
-  '/logout'
+  "/login",
+  "/register",
+  "/password/recover",
+  "/password/reset",
+  "/logout",
 ];
 
-const getCurrentPath = () => {
-  return window.location.pathname;
-};
+const getCurrentPath = () => window.location.pathname;
 
 const isPublicRoute = () => {
   const currentPath = getCurrentPath();
@@ -29,57 +27,60 @@ const isPublicRoute = () => {
 
 const isAuthRoute = () => {
   const currentPath = getCurrentPath();
-  const authPaths = ['/login', '/register', '/password/recover', '/password/reset'];
+  const authPaths = ["/login", "/register", "/password/recover", "/password/reset"];
   return authPaths.some(authPath => currentPath.startsWith(authPath));
 };
 
 api.interceptors.response.use(
   (response) => response,
   (error) => {
-    console.log("Interceptor error:", error);
     const authStore = useAuthStore();
-    
     const isPublic = isPublicRoute();
     const isAuth = isAuthRoute();
+    const currentPath = getCurrentPath();
+    const message = "Não foi possível conectar ao servidor. Tente novamente mais tarde.";
 
     if (error.code === "ERR_NETWORK" || error.message === "Network Error") {
-      console.error("API offline - Network Error detected");
-      authStore.clearAuthData();
 
+      if (import.meta.env.MODE === "development") {
+        console.warn("[API] Servidor inacessível.");
+      }
+
+      authStore.clearAuthData();
       if (!isPublic && !authStore.alertShown) {
         alert("Servidor indisponível. Tente novamente mais tarde.");
         authStore.setAlertShown(true);
         setTimeout(() => authStore.setAlertShown(false), 5000);
       }
 
-      const currentPath = getCurrentPath();
       if (currentPath !== "/login" && !isPublic) {
-        authStore.error = "Servidor indisponível. Tente novamente mais tarde.";
+        authStore.error = message;
         authStore.returnUrl = window.location.pathname + window.location.search;
         router.push("/login");
       }
-      
-      return Promise.reject(error);
+
+      return Promise.reject(new Error(message));
     }
 
     if (error.response?.status === 401 || error.response?.status === 403) {
       authStore.clearAuthData();
 
       if (!isPublic && !isAuth && !authStore.alertShown) {
-        //alert('Sessão expirada. Por favor, faça login novamente.');
-        //authStore.setAlertShown(true);
-        //setTimeout(() => authStore.setAlertShown(false), 5000);
-        router.push({ name: 'login' })
+        router.push({ name: "login" });
       }
 
-      const currentPath = getCurrentPath();
       if (currentPath !== "/login" && !isPublic && !isAuth) {
         authStore.returnUrl = window.location.pathname + window.location.search;
         router.push("/login");
       }
     }
 
-    return Promise.reject(error);
+    const status = error.response?.status || 0;
+    let safeMessage = "Erro inesperado. Tente novamente.";
+
+    if (status === 404) safeMessage = "Recurso não encontrado.";
+    if (status === 500) safeMessage = "Erro interno do servidor.";
+    return Promise.reject(new Error(safeMessage));
   }
 );
 

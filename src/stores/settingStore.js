@@ -56,7 +56,11 @@ export const useSettingStore = defineStore('setting', {
                 ]);
                 this.initialized = true;
             } catch (error) {
-                console.error('Erro na inicialização das configurações:', error);
+                if (import.meta.env.MODE === "development") {
+                    console.log(error);
+                } else {
+                    console.log('Erro na inicialização das configurações');
+                }
             } finally {
                 this.loading = false;
             }
@@ -81,8 +85,12 @@ export const useSettingStore = defineStore('setting', {
                 }, {});
 
             } catch (error) {
-                console.error('Erro ao buscar configurações:', error);
                 this.message = { status: 'error', message: 'Erro ao carregar configurações' };
+                if (import.meta.env.MODE === "development") {
+                    console.log(error);
+                } else {
+                    console.log('Erro ao carregar configurações');
+                }
             }
         },
 
@@ -102,7 +110,11 @@ export const useSettingStore = defineStore('setting', {
                     }
                 }
             } catch (error) {
-                console.error('Erro ao buscar configurações de paginação:', error);
+                if (import.meta.env.MODE === "development") {
+                    console.log(error);
+                } else {
+                    console.error('Erro ao buscar configurações de paginação');
+                }
             }
         },
 
@@ -120,7 +132,11 @@ export const useSettingStore = defineStore('setting', {
                     }, {});
                 }
             } catch (error) {
-                console.error('Erro ao buscar configurações de paginação:', error);
+                if (import.meta.env.MODE === "development") {
+                    console.log(error);
+                } else {
+                    console.log('Erro ao buscar configurações de paginação');
+                }
             }
         },
 
@@ -132,7 +148,11 @@ export const useSettingStore = defineStore('setting', {
                     this.uploadpath = response.data.data;
                 }
             } catch (error) {
-                console.error('Erro ao buscar caminhos de upload:', error);
+                if (import.meta.env.MODE === "development") {
+                    console.log(error);
+                } else {
+                    console.log('Erro ao buscar caminhos de upload');
+                }
             }
         },
         
@@ -143,7 +163,11 @@ export const useSettingStore = defineStore('setting', {
                     this.filesize = response.data.data;
                 }
             } catch (error) {
-                console.error('Erro ao buscar tamanhos de arquivo:', error);
+                if (import.meta.env.MODE === "development") {
+                    console.log(error);
+                } else {
+                    console.log('Erro ao buscar tamanhos de arquivo');
+                }
             }
         },
 
@@ -176,7 +200,6 @@ export const useSettingStore = defineStore('setting', {
                     };
                 } else if (status === 'success') {
                     this.message = { status: 'success', message };
-                    // Recarregar configurações após atualização
                     await this.getSettings();
                 } else {
                     this.message = { status: 'error', message };
@@ -185,7 +208,11 @@ export const useSettingStore = defineStore('setting', {
             } catch (error) {
                 const errorMessage = error.response?.data?.message || 'Erro inesperado.';
                 this.message = { status: 'error', message: errorMessage };
-                console.error('Erro ao atualizar configurações:', error);
+                if (import.meta.env.MODE === "development") {
+                    console.log(error);
+                } else {
+                    console.log('Erro ao atualizar configurações');
+                }
             }
         },
 

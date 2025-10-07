@@ -12,7 +12,7 @@ export const useAuthStore = defineStore({
     error: null,
     isAuthenticated: false,
     isLoading: true,
-    alertShown: false, // Adicionado para controle de alertas
+    alertShown: false,
   }),
   
   actions: {
@@ -28,7 +28,6 @@ export const useAuthStore = defineStore({
       } catch (error) {
         if (error.response?.status === 401) {
           this.clearAuthData();
-          // Não redireciona automaticamente, deixa o interceptor tratar
         } else if (error.response?.status === 429) {
           this.handleRateLimitError();
         }
@@ -54,14 +53,13 @@ export const useAuthStore = defineStore({
         if (error.response?.status === 429) {
           this.handleRateLimitError();
         } else {
-          // Mensagem mais específica para detectar tentativas falhas
           this.error = error.response?.data || { 
             message: "Credenciais inválidas. Verifique seu email e senha." 
           };
         }
         
         this.isAuthenticated = false;
-        throw error; // Importante: lançar o erro para ser capturado no componente
+        throw error;
       } finally {
         this.isLoading = false;
       }
@@ -178,7 +176,6 @@ export const useAuthStore = defineStore({
       this.error = null;
     },
 
-    // Método para controle de alertas
     setAlertShown(value) {
       this.alertShown = value;
     },
