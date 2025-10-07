@@ -66,10 +66,10 @@
 import { ref, onMounted } from 'vue'
 import { storeToRefs } from 'pinia'
 import { usePermissionStore } from '../../stores/permissionStore'
-import AppCard from '../layout/ui/card/AppCard'
-import AppCardHeader from '../layout/ui/card/AppCardHeader'
-import AppModal from '../layout/ui/modal/AppModal'
-import PermissionForm from '../permissions/PermissionForm'
+import AppCard from '@/components/layout/ui/card/AppCard'
+import AppCardHeader from '@/components/layout/ui/card/AppCardHeader'
+import AppModal from '@/components/layout/ui/modal/AppModal'
+import PermissionForm from '@/views/admin/permissions/PermissionForm'
 
 const permissionStore = usePermissionStore()
 const { permissions } =  storeToRefs(permissionStore)
@@ -84,30 +84,30 @@ const fetchPermissions = async () => {
 
 const saveData = (data) => {
     if(data.id) {
-        updateData(data)
+        updateData(data);
     } else {
-        createData(data)  
+        createData(data); 
     }
-    fetchPermissions()
+    fetchPermissions();
 } 
 
 const processData = (data) => {
-    permissionStore.deletePermission(data)
+    permissionStore.deletePermission(data);
     permissions.value = permissions.value.filter(p => p.id !== data.id);
-    activeModal.value=false
+    activeModal.value = false;
 }
 
 const createData = (data) => {
-    permissionStore.createPermission(data)
+    permissionStore.createPermission(data);
 }
 
 const updateData = (data) => {
-    permissionStore.updatePermission(data)
-    fetchPermissions()
+    permissionStore.updatePermission(data);
+    fetchPermissions();
 }
 
 onMounted(() => {
-    fetchPermissions()
+    fetchPermissions();
 })
 
 </script>

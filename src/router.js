@@ -1,56 +1,56 @@
 import { createWebHistory, createRouter } from "vue-router";
-import { useAuthStore } from './stores/authStore';
+import { useAuthStore } from '@/stores/authStore';
 
 const routes =  [
     {
       path: "/",
       alias: "/home",
       name: "home",
-      component: () => import("./components/layout/AppHome"),
+      component: () => import("@/components/layout/AppHome.vue"),
       meta: { requiresAuth: true }
     },
 
     { 
       path: '/index',
       name: 'index', 
-      component: () => import("./views/IndexView.vue"),
+      component: () => import("@/views/public/IndexView.vue"),
       meta: { requiresAuth: true }
     },
 
     { 
       path: '/login',
       name: 'login', 
-      component: () => import("./views/LoginView.vue"),
+      component: () => import("@/views/public/LoginView.vue"),
       meta: { requiresAuth: false, isPublic: true }
     },
     { 
       path: '/logout',
       name: 'logout', 
-      component: () => import("./views/LogoutView.vue"),
+      component: () => import("@/views/public/LogoutView.vue"),
       meta: { requiresAuth: true }
     },
     { 
       path: '/register',
       name: 'register', 
-      component: () => import("./views/RegisterView.vue"),
+      component: () => import("@/views/public/RegisterView.vue"),
       meta: { requiresAuth: false, isPublic: true }
     },
     {
       path: '/password/recover',
       name: 'password-recover',
-      component: () => import('./views/PasswordRecoverView.vue'),
+      component: () => import('@/views/public/PasswordRecoverView.vue'),
       meta: { requiresAuth: false, isPublic: true }
     },
     {
       path: '/password/reset/',
       name: 'password-reset',
-      component: () => import('./views/PasswordResetView.vue'),
+      component: () => import('@/views/public/PasswordResetView.vue'),
       meta: { requiresAuth: false, isPublic: true }
     },
     { 
       path: '/docs',
       name: 'docs', 
-      component: () => import("./views/DocsView.vue"),
+      component: () => import("@/views/public/DocsView.vue"),
       meta: { requiresAuth: true }
     },
 
@@ -62,7 +62,7 @@ const routes =  [
     {
       path: '/:pathMatch(.*)*',
       name: 'not-found',
-      component: () => import('@/views/NotFoundView.vue')
+      component: () => import('@/views/public/NotFoundView.vue')
     },
 
     // Users
@@ -70,7 +70,7 @@ const routes =  [
     { 
       path: '/user',
       name: 'user', 
-      component: () => import("./components/user/UserDetail.vue"),
+      component: () => import("@/views/admin/user/UserDetail.vue"),
       meta: { requiresAuth: true }
     },
 
@@ -79,112 +79,112 @@ const routes =  [
     { 
       path: '/admin',
       name: 'admin', 
-      component: () => import("./components/admin/AdminIndex"),
+      component: () => import("@/views/admin/admin/AdminIndex.vue"),
       meta: { requiresAuth: true }
     },
 
     { 
       path: '/admin/settings',
       name: 'admin.settings', 
-      component: () => import("./components/admin/AdminSettings.vue"),
+      component: () => import("@/views/admin/admin/AdminSettings.vue"),
       meta: { requiresAuth: true }
     },
 
     { 
       path: '/admin/profile',
       name: 'admin.profile', 
-      component: () => import("./components/admin/AdminProfile.vue"),
+      component: () => import("@/views/admin/admin/AdminProfile.vue"),
       meta: { requiresAuth: true }
     },
 
     { 
       path: '/admin/roles',
       name: 'admin.roles', 
-      component: () => import("./components/admin/RoleIndex.vue"),
+      component: () => import("@/views/admin/admin/AdminRole.vue"),
       meta: { requiresAuth: true }
     },
 
     {
       path: "/admin/roles/:id/edit",
       name: "roles.edit",
-      component: () => import("./components/roles/RoleEdit.vue"),
+      component: () => import("@/views/admin/roles/RoleEdit.vue"),
       meta: { requiresAuth: true }
     },
 
     {
       path: "/admin/roles/:id/permissions",
       name: "roles.edit",
-      component: () => import("./components/roles/RolePermissions.vue"),
+      component: () => import("@/views/admin/roles/RolePermissions.vue"),
       meta: { requiresAuth: true }
     },    
 
     { 
       path: '/admin/permissions',
       name: 'admin.permissions', 
-      component: () => import("./components/admin/PermissionIndex.vue"),
+      component: () => import("@/views/admin/admin/AdminPermission.vue"),
       meta: { requiresAuth: true }
     },
 
     { 
       path: '/admin/permission/:id/edit',
       name: 'permission.edit', 
-      component: () => import("./components/permissions/PermissionEdit.vue"),
+      component: () => import("@/views/admin/permissions/PermissionEdit.vue"),
       meta: { requiresAuth: true }
     },
 
     { 
       path: '/admin/users',
       name: 'admin.users', 
-      component: () => import("./components/admin/AdminIndex.vue"),
+      component: () => import("@/views/admin/admin/AdminIndex.vue"),
       meta: { requiresAuth: true }
     },
 
     { 
       path: '/admin/categories',
       name: 'admin.categories', 
-      component: () => import("./components/admin/AdminCategory.vue"),
+      component: () => import("@/views/admin/admin/AdminCategory.vue"),
       meta: { requiresAuth: true }
     },
     
     { 
       path: '/admin/articles',
       name: 'admin.articles', 
-      component: () => import("./components/admin/AdminArticle.vue"),
+      component: () => import("@/views/admin/admin/AdminArticle.vue"),
       meta: { requiresAuth: true }
     },
 
     { 
       path: '/admin/articles/new',
       name: 'admin.articles.new', 
-      component: () => import("./components/articles/CreateArticle.vue"),
+      component: () => import("@/views/admin/articles/CreateArticle.vue"),
       meta: { requiresAuth: true }
     },
 
     { 
       path: '/admin/articles/:id/edit',
       name: 'admin.articles.edit', 
-      component: () => import("./components/articles/EditArticle.vue"),
+      component: () => import("@/views/admin/articles/EditArticle.vue"),
       meta: { requiresAuth: true }
     },
 
     { 
       path: '/admin/articles/view',
       name: 'admin.articles.view', 
-      component: () => import("./components/articles/ViewArticle.vue"),
+      component: () => import("@/views/admin/articles/ViewArticle.vue"),
       meta: { requiresAuth: true }
     },
 
     { 
       path: '/admin/acl',
       name: 'admin.acl', 
-      component: () => import("./components/admin/AdminAcl.vue"),
+      component: () => import("@/views/admin/admin/AdminAcl.vue"),
       meta: { requiresAuth: true }
     },
 
   ];
   
   const router = createRouter({
-    history: createWebHistory(process.env.VUE_APP_URL),
+    history: createWebHistory(import.meta.env.VUE_APP_URL),
     linkActiveClass: 'active',
     routes,
   });

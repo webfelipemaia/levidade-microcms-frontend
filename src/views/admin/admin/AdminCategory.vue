@@ -80,12 +80,12 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
-import CategoryForm from '../categories/CategoryForm'
-import AppCard from '../layout/ui/card/AppCard'
-import AppCardHeader from '../layout/ui/card/AppCardHeader'
-import AppModal from '../layout/ui/modal/AppModal'
+import CategoryForm from '@/views/admin/categories/CategoryForm'
+import AppCard from '@/components/layout/ui/card/AppCard'
+import AppCardHeader from '@/components/layout/ui/card/AppCardHeader'
+import AppModal from '@/components/layout/ui/modal/AppModal'
 import { storeToRefs } from 'pinia'
-import { useCategoryStore } from '../../stores/categoryStore'
+import { useCategoryStore } from '@/stores/categoryStore'
 
 const categoryStore = useCategoryStore()
 const { categories } =  storeToRefs(categoryStore)
@@ -99,30 +99,30 @@ const fetchCategories = async () => {
 
 const saveData = (data) => {
     if(data.id) {
-        updateData(data)
+        updateData(data);
     } else {
-        createData(data)
+        createData(data);
     }
-    fetchCategories()
+    fetchCategories();
 } 
 
 const processData = (data) => {
-    categoryStore.deleteCategory(data)
+    categoryStore.deleteCategory(data);
     categories.value = categories.value.filter(c => c.id !== data.id);
-    activeModal.value=false
+    activeModal.value = false;
 }
 
 const createData = (data) => {
-    categoryStore.createCategory(data)
+    categoryStore.createCategory(data);
 }
 
 const updateData = (data) => {
-    categoryStore.updateCategory(data)
-    fetchCategories()
+    categoryStore.updateCategory(data);
+    fetchCategories();
 }
 
 onMounted(() => {
-    fetchCategories()
+    fetchCategories();
 })
 
 </script>

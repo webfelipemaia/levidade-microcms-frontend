@@ -80,7 +80,7 @@
                                 role="switch"
                                 id="uploadRequiredSwitch"
                                 v-model="uploadRequired"
-                                :disabled="!uploadRequired"
+                                :checked="uploadRequired"
                             >
                             <label class="form-check-label" for="uploadRequiredSwitch">
                                 {{ uploadRequired ? 'Habilitado' : 'Desabilitado' }}
@@ -140,10 +140,10 @@
 
 <script setup>
 import { onMounted, reactive, ref, computed } from 'vue';
-import AppCard from '../layout/ui/card/AppCard';
-import AppCardHeader from '../layout/ui/card/AppCardHeader';
+import AppCard from '@/components/layout/ui/card/AppCard.vue';
+import AppCardHeader from '@/components/layout/ui/card/AppCardHeader.vue';
 import { useSettingStore } from '@/stores/settingStore';
-import { capitalizeFirstLetter } from '../layout/composables/HandleStrings'
+import { capitalizeFirstLetter } from '@/components/layout/composables/HandleStrings'
 
 const settingStore = useSettingStore();
 

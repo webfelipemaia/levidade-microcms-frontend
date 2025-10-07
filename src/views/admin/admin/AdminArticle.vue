@@ -72,14 +72,14 @@
 
 <script setup>
 import { ref, onMounted, computed } from 'vue'
-import AppCard from '../layout/ui/card/AppCard'
-import AppModal from '../layout/ui/modal/AppModal'
-import AppCardHeader from '../layout/ui/card/AppCardHeader'
-import AppPagination from '../layout/ui/AppPagination.vue'
+import AppCard from '@/components/layout/ui/card/AppCard'
+import AppModal from '@/components/layout/ui/modal/AppModal'
+import AppCardHeader from '@/components/layout/ui/card/AppCardHeader'
+import AppPagination from '@/components/layout/ui/AppPagination.vue'
 import { storeToRefs } from 'pinia'
-import { useArticleStore } from '../../stores/articleStore'
-import { useCategoryStore } from '../../stores/categoryStore'
-import { useStatusStore } from '../../stores/statusStore'
+import { useArticleStore } from '@/stores/articleStore'
+import { useCategoryStore } from '@/stores/categoryStore'
+import { useStatusStore } from '@/stores/statusStore'
 
 const articleStore = useArticleStore()
 const categoryStore = useCategoryStore()

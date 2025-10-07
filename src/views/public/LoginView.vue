@@ -103,7 +103,7 @@
 <script setup>
 import { onUnmounted, computed, ref, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
-import { useAuthStore } from '../stores/authStore'
+import { useAuthStore } from '@/stores/authStore'
 import AppAlert from '@/components/layout/ui/AppAlert.vue';
 
 const authStore = useAuthStore()

@@ -31,7 +31,7 @@
 
 <script setup>
 import { computed } from 'vue';
-import { useAuthStore } from '../../stores/authStore';    
+import { useAuthStore } from '@/stores/authStore';    
 
 const authStore = useAuthStore();
 const isAuthenticated = computed(() => authStore.isAuthenticated);

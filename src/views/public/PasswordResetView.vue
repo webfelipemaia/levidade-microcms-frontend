@@ -154,8 +154,8 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import api from '../services/api'
-import AppAlert from '../components/layout/ui/AppAlert.vue'
+import api from '@/services/api'
+import AppAlert from '@/components/layout/ui/AppAlert.vue'
 
 const route = useRoute()
 const router = useRouter()

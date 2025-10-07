@@ -12,7 +12,6 @@ export const useArticleStore = defineStore({
 
     actions: {
         
-        // Simple query
         async getArticles() {
             const response = await api.get(`api/v1/private/article`);
             this.message = null;
@@ -24,7 +23,6 @@ export const useArticleStore = defineStore({
             }
         },
 
-        // Paginated data
         async getPaginatedArticles({ page, pageSize, search, order }) {
             try {
                 const response = await api.get(`api/v1/private/article`, {
@@ -103,6 +101,11 @@ export const useArticleStore = defineStore({
                 
                 const response =  await api.patch(`api/v1/private/article/${data.id}`, data);
                 this.message = response.data
+
+                const index = this.articles.findIndex(article => article.id === data.id);
+                if (index !== -1) {
+                    this.articles[index] = { ...this.articles[index], ...data };
+                }
             } catch (error) {
 
                 let errorMessage = error.response.data.message

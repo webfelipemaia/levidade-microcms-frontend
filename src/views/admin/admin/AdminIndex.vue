@@ -80,13 +80,13 @@
 
 <script setup>
 import { ref, onMounted, watch } from 'vue'
-import UserForm from '../user/UserForm'
-import AppCard from '../layout/ui/card/AppCard'
-import AppModal from '../layout/ui/modal/AppModal'
-import AppCardHeader from '../layout/ui/card/AppCardHeader'
+import UserForm from '@/views/admin/user/UserForm'
+import AppCard from '@/components/layout/ui/card/AppCard'
+import AppModal from '@/components/layout/ui/modal/AppModal'
+import AppCardHeader from '@/components/layout/ui/card/AppCardHeader'
 import { storeToRefs } from 'pinia'
-import { useUserStore } from '../../stores/userStore'
-import { useRoleStore } from '../../stores/roleStore'
+import { useUserStore } from '@/stores/userStore'
+import { useRoleStore } from '@/stores/roleStore'
 
 const userStore = useUserStore()
 const { users, message } = storeToRefs(userStore)
@@ -97,41 +97,41 @@ const selectedUser = ref({})
 const activeModal = ref(false)
 
 const fetchUsers = async () => {
-    await userStore.getUsers()
+    await userStore.getUsers();
 }
 
 const fetchRoles = async () => {
-    await roleStore.getRoles()
+    await roleStore.getRoles();
 }
 
 const saveData = async (data) => {
     if(data.id) {
-        await updateData(data)
+        await updateData(data);
     } else {
-        await createData(data)  
+        await createData(data); 
     }
 
 } 
 
 const processData = async (data) => {
-    await userStore.deleteUser(data)
+    await userStore.deleteUser(data);
     
     if (!userStore.message || userStore.message.status === 'error') {
-        activeModal.value = false
+        activeModal.value = false;
     }
 }
 
 const createData = async (data) => {
-    await userStore.createUser(data)
+    await userStore.createUser(data);
 }
 
 const updateData = async (data) => {
-    await userStore.updateUser(data.id, data)
+    await userStore.updateUser(data.id, data);
 }
 
 const closeUserForm = () => {
-    showModal.value = false
-    userStore.clearSuccessMessage()
+    showModal.value = false;
+    userStore.clearSuccessMessage();
 }
 
 const formatDate = (dateString) => {
@@ -142,7 +142,7 @@ const formatDate = (dateString) => {
 watch(message, (newMessage) => {
     if (newMessage && newMessage.status === 'success') {
         setTimeout(() => {
-            userStore.clearSuccessMessage()
+            userStore.clearSuccessMessage();
         }, 3000)
     }
 })

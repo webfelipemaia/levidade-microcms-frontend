@@ -62,12 +62,12 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
-import RoleForm from '../../components/roles/RoleForm'
-import AppCard from '../layout/ui/card/AppCard'
-import AppModal from '../layout/ui/modal/AppModal'
-import AppCardHeader from '../layout/ui/card/AppCardHeader'
+import RoleForm from '@/views/admin/roles/RoleForm'
+import AppCard from '@/components/layout/ui/card/AppCard'
+import AppModal from '@/components/layout/ui/modal/AppModal'
+import AppCardHeader from '@/components/layout/ui/card/AppCardHeader'
 import { storeToRefs } from 'pinia'
-import { useRoleStore } from '../../stores/roleStore'
+import { useRoleStore } from '@/stores/roleStore'
 
 const roleStore = useRoleStore()
 const { roles } =  storeToRefs(roleStore)
@@ -76,31 +76,31 @@ const selectedRole = ref([])
 const activeModal = ref(false)
     
 const fetchRoles = async () => {
-   await roleStore.getRoles()
+   await roleStore.getRoles();
 }
 
 const saveData = (data) => {
     if(data.id) {
-        updateData(data)
+        updateData(data);
     } else {
-        createData(data)  
+        createData(data);
     }
     fetchRoles()
 } 
 
 const processData = (data) => {
-    roleStore.deleteRole(data)
+    roleStore.deleteRole(data);
     roles.value = roles.value.filter(r => r.id !== data.id);
-    activeModal.value=false
+    activeModal.value = false;
 }
 
 const createData = (data) => {
-    roleStore.createRole(data)
+    roleStore.createRole(data);
 }
 
 const updateData = (data) => {
-    roleStore.updateRole(data)
-    fetchRoles()
+    roleStore.updateRole(data);
+    fetchRoles();
 }
 
 onMounted(() => {

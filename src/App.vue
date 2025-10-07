@@ -17,10 +17,10 @@
 
 <script setup>
 import { ref } from 'vue';
-import AppNavigation from './components/layout/AppNavigation.vue'
-import AppFooter from './components/layout/AppFooter.vue'
-import AppSidebar from './components/layout/AppSidebar.vue'
-import { useAuthStore } from './stores/authStore'
+import AppNavigation from '@/components/layout/AppNavigation.vue'
+import AppFooter from '@/components/layout/AppFooter.vue'
+import AppSidebar from '@/components/layout/AppSidebar.vue'
+import { useAuthStore } from '@/stores/authStore'
     
 const authStore = useAuthStore()
 const sidebarOpen = ref(false)

@@ -130,14 +130,14 @@
 
 <script setup>
 import { ref, onMounted, computed } from 'vue'
-import RoleForm from '../../components/roles/RoleForm'
-import AppCard from '../layout/ui/card/AppCard'
-import AppModal from '../layout/ui/modal/AppModal'
-import AppCardHeader from '../layout/ui/card/AppCardHeader'
+import RoleForm from '@/views/admin/roles/RoleForm'
+import AppCard from '@/components/layout/ui/card/AppCard'
+import AppModal from '@/components/layout/ui/modal/AppModal'
+import AppCardHeader from '@/components/layout/ui/card/AppCardHeader'
 import { storeToRefs } from 'pinia'
 import { useRouter } from 'vue-router'
-import { useRoleStore } from '../../stores/roleStore'
-import { usePermissionStore } from '../../stores/permissionStore'
+import { useRoleStore } from '@/stores/roleStore'
+import { usePermissionStore } from '@/stores/permissionStore'
 
 const roleStore = useRoleStore()
 const permissionStore = usePermissionStore()
@@ -152,7 +152,7 @@ const isLoading = ref(false)
 
 const router = useRouter()
 
-// Corrigindo: rolesPermissions pode ser um objeto com propriedade data
+// rolesPermissions objeto com propriedade data
 const normalizedRolesPermissions = computed(() => {
     if (!rolesPermissions.value) return []
     
@@ -175,13 +175,11 @@ const normalizedRolesPermissions = computed(() => {
     return []
 })
 
-// Matriz ACL computada
 const aclMatrix = computed(() => {
     const matrix = {}
     
     if (!roles.value.length || !permissions.value.length) return matrix
     
-    // Inicializa a matriz
     roles.value.forEach(role => {
         matrix[role.id] = {}
         permissions.value.forEach(permission => {
@@ -189,7 +187,6 @@ const aclMatrix = computed(() => {
         })
     })
     
-    // Preenche a matriz com as permissões existentes
     const rpData = normalizedRolesPermissions.value
     if (rpData && rpData.length) {
         rpData.forEach(rp => {
@@ -202,12 +199,12 @@ const aclMatrix = computed(() => {
     return matrix
 })
 
-// Método para verificar se uma role tem uma permissão
+// Verifica se uma role tem uma permissão
 const hasPermission = (roleId, permissionId) => {
     return aclMatrix.value[roleId] && aclMatrix.value[roleId][permissionId] === true
 }
 
-// Método para obter as permissões de uma role
+// Obter as permissões de uma role
 const getRolePermissions = (roleId) => {
     if (!aclMatrix.value[roleId] || !permissions.value.length) return []
     

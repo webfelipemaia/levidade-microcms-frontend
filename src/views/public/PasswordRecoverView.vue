@@ -89,9 +89,9 @@
 <script setup>
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
-import api from '../services/api'
-import AppAlert from '../components/layout/ui/AppAlert.vue'
-import NavbarBrand from '../components/layout/ui/NavbarBrand.vue'
+import api from '@/services/api'
+import AppAlert from '@/components/layout/ui/AppAlert.vue'
+import NavbarBrand from '@/components/layout/ui/NavbarBrand.vue'
 
 const router = useRouter()
 const email = ref('')

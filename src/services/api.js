@@ -8,7 +8,7 @@ const api = axios.create();
 api.defaults.withCredentials = true;
 api.defaults.withXSRFToken = true;
 api.defaults.headers.common["X-Requested-With"] = "XMLHttpRequest";
-api.defaults.baseURL = process.env.VUE_APP_API_URL || "http://localhost:4000";
+api.defaults.baseURL = import.meta.env.VITE_APP_API_URL || "http://localhost:4000";
 
 const PUBLIC_PATHS = [
   '/login',
