@@ -126,7 +126,7 @@
                         class="btn btn-primary" 
                         type="submit"
                         :disabled="isLoading || !passwordsMatch">
-                        <span v-if="isLoading">
+                        <span v-if="isLoading">NavbarBrand
                           <span class="spinner-border spinner-border-sm me-2"></span>
                           Redefinindo...
                         </span>
@@ -156,6 +156,7 @@ import { ref, computed, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import api from '@/services/api'
 import AppAlert from '@/components/layout/ui/AppAlert.vue'
+import NavbarBrand from '@/components/layout/ui/nav/NavbarBrand.vue'
 
 const route = useRoute()
 const router = useRouter()

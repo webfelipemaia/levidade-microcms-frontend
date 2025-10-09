@@ -54,7 +54,7 @@
 <script setup>
 import { ref, watch, onMounted, computed, nextTick } from 'vue'
 import { useCategoryStore } from '@/stores/categoryStore';
-import { useAddBackDrop, useRemoveBackDrop } from  '../layout/composables/HandleBackdrop';
+import { useAddBackDrop, useRemoveBackDrop } from  '@/components/layout/composables/HandleBackdrop.js';
 
 const categoryStore = useCategoryStore()
 const isEditModalOpen = ref(false)

@@ -105,6 +105,7 @@ import { onUnmounted, computed, ref, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { useAuthStore } from '@/stores/authStore'
 import AppAlert from '@/components/layout/ui/AppAlert.vue';
+import NavbarBrand from '@/components/layout/ui/nav/NavbarBrand.vue'
 
 const authStore = useAuthStore()
 const route = useRoute()

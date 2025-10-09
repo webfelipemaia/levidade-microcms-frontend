@@ -80,10 +80,10 @@
 
 <script setup>
 import { ref, onMounted, watch } from 'vue'
-import UserForm from '@/views/admin/user/UserForm'
-import AppCard from '@/components/layout/ui/card/AppCard'
-import AppModal from '@/components/layout/ui/modal/AppModal'
-import AppCardHeader from '@/components/layout/ui/card/AppCardHeader'
+import UserForm from '@/views/admin/user/UserForm.vue'
+import AppCard from '@/components/layout/ui/card/AppCard.vue'
+import AppModal from '@/components/layout/ui/modal/AppModal.vue'
+import AppCardHeader from '@/components/layout/ui/card/AppCardHeader.vue'
 import { storeToRefs } from 'pinia'
 import { useUserStore } from '@/stores/userStore'
 import { useRoleStore } from '@/stores/roleStore'

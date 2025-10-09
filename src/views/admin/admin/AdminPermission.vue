@@ -65,11 +65,11 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { storeToRefs } from 'pinia'
-import { usePermissionStore } from '../../stores/permissionStore'
-import AppCard from '@/components/layout/ui/card/AppCard'
-import AppCardHeader from '@/components/layout/ui/card/AppCardHeader'
-import AppModal from '@/components/layout/ui/modal/AppModal'
-import PermissionForm from '@/views/admin/permissions/PermissionForm'
+import { usePermissionStore } from '@/stores/permissionStore'
+import AppCard from '@/components/layout/ui/card/AppCard.vue'
+import AppCardHeader from '@/components/layout/ui/card/AppCardHeader.vue'
+import AppModal from '@/components/layout/ui/modal/AppModal.vue'
+import PermissionForm from '@/views/admin/permissions/PermissionForm.vue'
 
 const permissionStore = usePermissionStore()
 const { permissions } =  storeToRefs(permissionStore)

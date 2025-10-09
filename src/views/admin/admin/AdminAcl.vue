@@ -130,10 +130,10 @@
 
 <script setup>
 import { ref, onMounted, computed } from 'vue'
-import RoleForm from '@/views/admin/roles/RoleForm'
-import AppCard from '@/components/layout/ui/card/AppCard'
-import AppModal from '@/components/layout/ui/modal/AppModal'
-import AppCardHeader from '@/components/layout/ui/card/AppCardHeader'
+import RoleForm from '@/views/admin/roles/RoleForm.vue'
+import AppCard from '@/components/layout/ui/card/AppCard.vue'
+import AppModal from '@/components/layout/ui/modal/AppModal.vue'
+import AppCardHeader from '@/components/layout/ui/card/AppCardHeader.vue'
 import { storeToRefs } from 'pinia'
 import { useRouter } from 'vue-router'
 import { useRoleStore } from '@/stores/roleStore'

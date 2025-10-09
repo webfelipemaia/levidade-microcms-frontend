@@ -153,12 +153,12 @@
 <script setup>
 import { ref, onMounted, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router';
-import AppCard from '../layout/ui/card/AppCard'
-import AppCardHeader from '../layout/ui/card/AppCardHeader'
-import { useArticleStore } from '../../stores/articleStore'
+import AppCard from '@/components/layout/ui/card/AppCard.vue'
+import AppCardHeader from '@/components/layout/ui/card/AppCardHeader.vue'
+import { useArticleStore } from '@/stores/articleStore'
 import { useCategoryStore } from '@/stores/categoryStore'
 import { useStatusStore } from '@/stores/statusStore'
-import { useSanitizeWords } from '../layout/composables/HandleStrings'
+import { useSanitizeWords } from '@/components/layout/composables/HandleStrings'
 import { useUploadStore } from '@/stores/uploadStore'
 
 const articleId = ref(null);

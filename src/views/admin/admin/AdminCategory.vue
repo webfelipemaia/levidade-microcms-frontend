@@ -80,10 +80,10 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
-import CategoryForm from '@/views/admin/categories/CategoryForm'
-import AppCard from '@/components/layout/ui/card/AppCard'
-import AppCardHeader from '@/components/layout/ui/card/AppCardHeader'
-import AppModal from '@/components/layout/ui/modal/AppModal'
+import CategoryForm from '@/views/admin/categories/CategoryForm.vue'
+import AppCard from '@/components/layout/ui/card/AppCard.vue'
+import AppCardHeader from '@/components/layout/ui/card/AppCardHeader.vue'
+import AppModal from '@/components/layout/ui/modal/AppModal.vue'
 import { storeToRefs } from 'pinia'
 import { useCategoryStore } from '@/stores/categoryStore'
 

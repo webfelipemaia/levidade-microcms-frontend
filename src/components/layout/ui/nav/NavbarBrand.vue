@@ -5,7 +5,7 @@
       :class="linkClasses"
       :style="linkStyle"
     >
-      <!-- Opção com imagem -->
+    
       <img 
         v-if="imgSrc" 
         :src="imgSrc" 
@@ -14,14 +14,11 @@
         class="navbar-brand-img"
       >
       
-      <!-- Opção com texto apenas -->
       <span v-else-if="brandText" :style="getTextStyle">
         {{ brandText }}
       </span>
       
-      <!-- Opção com slot personalizado -->
       <slot v-else>
-        <!-- Conteúdo padrão caso não tenha img, text ou slot -->
         <span class="brand-default">MyApp</span>
       </slot>
     </router-link>
@@ -92,7 +89,6 @@
     }
   })
   
-  // Estilos computados para a imagem (AGORA USADO)
   const getImgStyle = computed(() => {
     const baseStyle = {
       'max-width': typeof props.imgMaxWidth === 'number' 

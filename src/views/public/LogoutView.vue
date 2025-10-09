@@ -48,6 +48,7 @@
 <script setup>
 import { ref } from 'vue';
 import { useAuthStore } from "@/stores/authStore";
+import NavbarBrand from '@/components/layout/ui/nav/NavbarBrand.vue'
 
 const authStore = useAuthStore();
 const isLoading = ref(false);

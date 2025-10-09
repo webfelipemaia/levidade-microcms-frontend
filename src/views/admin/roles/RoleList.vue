@@ -8,7 +8,7 @@
   
 <script setup>
 import { ref, onMounted } from 'vue';
-import RoleService from '../../services/RoleService'
+import RoleService from '@/services/RoleService'
 
 const users = ref([]);
 

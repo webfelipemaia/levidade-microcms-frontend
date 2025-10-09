@@ -3,12 +3,8 @@
         <div class="container-fluid">
             <div class="d-flex flex-wrap align-items-center justify-content-between">
                 
-                <a href="" class="d-flex align-items-center mb-2 mb-lg-0 link-body-emphasis text-decoration-none">
-                    <svg class="bi me-2" width="40" height="32" role="img" aria-label="Bootstrap">
-                        <use xlink:href="#bootstrap"></use>
-                    </svg>
-                    <span class="navbar-brand">Navbar</span>
-                </a>
+
+              <NavbarBrand linkClasses="justify-content-center" imgStyle="height: 90px;"></NavbarBrand>
 
 
                 <div class="profile-container d-flex align-items-center">
@@ -35,6 +31,7 @@
 import { computed } from 'vue';
 import { useAuthStore } from '@/stores/authStore';    
 import AppProfile from '@/components/layout/ui/nav/NavProfile.vue';
+import NavbarBrand from '@/components/layout/ui/nav/NavbarBrand.vue'
 
 const authStore = useAuthStore();
 const isAuthenticated = computed(() => authStore.isAuthenticated);
