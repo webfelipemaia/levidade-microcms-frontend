@@ -38,32 +38,16 @@ api.interceptors.response.use(
     const isPublic = isPublicRoute();
     const isAuth = isAuthRoute();
     const currentPath = getCurrentPath();
-    const message = "Não foi possível conectar ao servidor. Tente novamente mais tarde.";
-
-    if (error.code === "ERR_NETWORK" || error.message === "Network Error") {
-
-      if (import.meta.env.MODE === "development") {
-        console.warn("[API] Servidor inacessível.");
-      }
-
-      authStore.clearAuthData();
-      if (!isPublic && !authStore.alertShown) {
-        alert("Servidor indisponível. Tente novamente mais tarde.");
-        authStore.setAlertShown(true);
-        setTimeout(() => authStore.setAlertShown(false), 5000);
-      }
-
-      if (currentPath !== "/login" && !isPublic) {
-        authStore.error = message;
-        authStore.returnUrl = window.location.pathname + window.location.search;
-        router.push("/login");
-      }
-
-      return Promise.reject(new Error(message));
+    
+    if (error.response?.status === 422) {
+      return Promise.reject(error);
     }
-
+    
     if (error.response?.status === 401 || error.response?.status === 403) {
       authStore.clearAuthData();
+      authStore.isAuthenticated = false
+      authStore.user = null
+      authStore.authChecked = false;
 
       if (!isPublic && !isAuth && !authStore.alertShown) {
         router.push({ name: "login" });
@@ -74,7 +58,7 @@ api.interceptors.response.use(
         router.push("/login");
       }
     }
-
+    
     const status = error.response?.status || 0;
     let safeMessage = "Erro inesperado. Tente novamente.";
 

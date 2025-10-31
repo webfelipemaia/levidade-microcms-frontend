@@ -5,7 +5,7 @@
         <div class="row">
           <div class="col-xl-4 offset-xl-4 col-md-12 col-12">
             <div class="text-center">
-              <NavbarBrand linkClasses="justify-content-center" imgStyle="height: 90px;"></NavbarBrand>
+              <NavbarBrand linkClasses="justify-content-center" :imgStyle="{ height: '90px' }"></NavbarBrand>
               <h1 class="mb-1">Redefinir Senha</h1>
               <p class="mb-0">Digite o código recebido por email</p>
             </div>
@@ -20,7 +20,7 @@
           <div class="col-xl-5 col-lg-6 col-md-8 col-12">
             <div class="card shadow-sm mb-6">
               <div class="card-body">
-                <!-- Etapa 1: Inserir código -->
+                
                 <div v-if="step === 1">
                   <form @submit.prevent="verifyCode" class="needs-validation mb-6">
                     <app-alert v-if="error" :type="(error === 'Código reenviado com sucesso!') ? 'success': 'danger'" @close="error = ''">
@@ -76,8 +76,7 @@
                     </div>
                   </form>
                 </div>
-
-                <!-- Etapa 2: Nova senha -->
+                
                 <div v-if="step === 2">
                   <form @submit.prevent="resetPassword" class="needs-validation mb-6">
                     <app-alert v-if="error" type="danger" @close="error = ''">
@@ -181,7 +180,6 @@ onMounted(() => {
   } else if (storedEmail) {
     email.value = storedEmail
   } else {
-    // Se não tem email, voltar para recuperação
     router.push('/password/recover')
   }
 })
@@ -221,7 +219,6 @@ const resetPassword = async () => {
       newPassword: newPassword.value
     })
 
-    // Limpar storage e redirecionar
     sessionStorage.removeItem('recoveryEmail')
     router.push('/login?message=password_reset_success')
 

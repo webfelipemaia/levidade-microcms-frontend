@@ -2,17 +2,17 @@ import { defineStore } from 'pinia';
 import api from '@/services/api';
 import { useValidationErrors } from '@/composables/useValidation';
 
-export const useArticleStore = defineStore({
-    id: 'article',
+export const useFileStore = defineStore({
+    id: 'file',
     state: () => ({
-        articles: [],
-        lastArticle: [],
+        files: [],
+        lastFile: [],
         message: null,
     }),
 
     actions: {
         
-        async getArticles() {
+/*         async getArticles() {
             const response = await api.get(`api/v1/private/article`);
             this.message = null;
             if(response.data.status === 'error') {
@@ -112,50 +112,25 @@ export const useArticleStore = defineStore({
                 this.message = { status:'error', message: useValidationErrors(errorMessage) }
             }   
         },
+ */
 
-        async createArticle(data) {
+        async createFile(data) {
             try {
-                const response = await api.post('api/v1/private/article/', data);
-                this.message = response.data.message;
-                const last = await api.get(`api/v1/private/article/last`);
-                this.lastArticle = last.data;
-                return {
-                    status: 'success',
-                    data: response.data
-                };
+                const response =  await api.post('api/v1/private/file/upload/', data);
+                this.message = response.message
             } catch (error) {
                 
-                if (error.response?.status === 422) {
-                    const errorData = error.response.data;
-                    
-                    this.message = {
-                        status: 'error',
-                        message: useValidationErrors(errorData.message) || 'Erro de validação'
-                    };
-                } 
-                
-                else if (error.response?.data) {
-                    this.message = {
-                        status: 'error',
-                        message: useValidationErrors(error.response.data.message) || 'Erro ao criar artigo'
-                    };
-                } else {
-                    this.message = {
-                        status: 'error',
-                        message: error.message || 'Erro de conexão'
-                    };
+                let errorMessage = error.response.data.message
+                this.message = { 
+                    status:'error', 
+                    message: useValidationErrors(errorMessage)
                 }
-                
-                return {
-                    status: 'error',
-                    error: this.message
-                };
             }
         },
         
         async doneSuccessfully(response) {
             if(response.data.status === 'success'){                
-                const response = await api.get(`api/v1/private/article`)
+                const response = await api.get(`api/v1/private/file`)
                 if(response.data.status !== 'error') {
                     this.articles = response.data;                 }
             }

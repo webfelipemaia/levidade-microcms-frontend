@@ -13,22 +13,23 @@
                     <form @submit.prevent="" enctype="multipart/form-data">
                                                 
                         <div class="card-body">
-
+                            
                             <div v-if="articleStore.message">
                                 <div
                                     class="alert alert-dismissible fade show"
                                     :class="`alert-${articleStore.message.status === 'error'?'danger':'success'}`"
                                     role="alert"
                                 >
-                                    <template v-if="typeof articleStore.message.message === 'string'">
-                                        <p><i class="bi bi-exclamation-circle me-2"></i> {{ articleStore.message.message }}</p>
+                                    <template v-if="typeof articleStore.message === 'string'">
+                                        <p><i class="bi bi-exclamation-circle me-2"></i> {{ articleStore.message }}</p>
                                     </template>
 
-                                    <template v-else>
+                                    <template v-else-if="hasValidationErrors">
                                         <p><i class="bi bi-exclamation-circle me-2"></i>Oops! We found some problems with the form.</p>
+                                        
                                         <ul class="mb-0">
-                                            <li v-for="(msg, field) in articleStore.message.message" :key="field">
-                                            <strong>{{ field }}:</strong> {{ msg }}
+                                            <li v-for="(msg, field) in validationErrors" :key="field">
+                                                <strong>{{ field }}:</strong> {{ msg }}
                                             </li>
                                         </ul>
                                     </template>
@@ -105,9 +106,8 @@
                                 <label for="subtitle" class="col-form-label">Subtitle:</label>
                                 <input v-model="article.subtitle" type="text" class="form-control" id="subtitle">
                             </div>
-                            
-                            <!-- upload -->
-                            <div v-if="settings.settings.uploadRequired.value === 'true'" class="upload-wrapper">
+                             
+                            <div v-if="isUploadEnabled" class="upload-wrapper">
                               
                               <div class="upload-input mb-3">
                                 <label for="inputSingleFile" class="form-label">Browse File to Upload</label>
@@ -182,6 +182,7 @@ import { useStatusStore } from '@/stores/statusStore'
 import { useSanitizeWords } from '@/components/layout/composables/HandleStrings'
 import { useUploadStore } from '@/stores/uploadStore'
 import { useSettingStore } from '@/stores/settingStore'
+import { useBoolean } from '@/composables/useBoolean'
 
 const article = ref({ 
     title : '', 
@@ -208,10 +209,24 @@ const settings = useSettingStore()
         uploadStore.message = null;
         uploadStore.contentType = '';
     }
+     
+    const uploadSettings = ref({});
+    const { toBoolean } = useBoolean()
+    const isUploadEnabled = toBoolean(uploadSettings.value)
 
     article.value.slug = computed(() => {
       return useSanitizeWords(article.value.title)
     })
+
+    const validationErrors = computed(() => {
+        return articleStore.message?.message || {};
+    });
+
+    const hasValidationErrors = computed(() => {
+        return articleStore.message?.status === 'error' && 
+            typeof articleStore.message.message === 'object' &&
+            Object.keys(articleStore.message.message).length > 0;
+    });
    
     const uploadFile = (event) => {
         uploadStore.files = Array.from(event.target.files)
@@ -223,21 +238,16 @@ const settings = useSettingStore()
 
     const onSubmit = (data) => {
     
-    // Adiciona o createdFileId ao objeto data
-    const createdFileId = uploadStore.message?.created?.id;
-    if (createdFileId && settings.settings.uploadRequired.value === 'true') {
-        data.fileId = createdFileId;
-    } else {
-        data.fileId = 0;
-    }
+        // Adiciona o createdFileId ao objeto data
+        const createdFileId = uploadStore.message?.created?.id;
+        if (createdFileId && settings.settings.uploadRequired.value === 'true') {
+            data.fileId = createdFileId;
+        } else {
+            data.fileId = 0;
+        }
 
-    articleStore.createArticle(data)
+        articleStore.createArticle(data)
     
-    }
-
-    const loadSettings = () => {
-        loadSettings.value = Object.values(settings).map(setting => ({
-                setting           }));
     }
 
     onMounted(() => {
@@ -245,7 +255,8 @@ const settings = useSettingStore()
         resetUploadStore()
         categoryStore.getCategories()
         statusStore.getStatus()
-        loadSettings()
+        settings.initialize()
+        uploadSettings.value = settings.settings.uploadRequired        
     })
     
 </script>

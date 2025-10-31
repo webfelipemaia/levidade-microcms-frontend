@@ -98,6 +98,13 @@ const routes =  [
     },
 
     { 
+      path: '/admin/profile/avatar',
+      name: 'admin.profile.avatar', 
+      component: () => import("@/views/admin/user/UploadAvatar.vue"),
+      meta: { requiresAuth: true }
+    },
+
+    { 
       path: '/admin/roles',
       name: 'admin.roles', 
       component: () => import("@/views/admin/admin/AdminRole.vue"),
@@ -189,33 +196,34 @@ const routes =  [
     routes,
   });
 
-let isAppInitialized = false
 
 router.beforeEach(async (to, from, next) => {
   const authStore = useAuthStore()
-  
-  if (!isAppInitialized) {
+  const publicPages = ['login', 'register', 'password-recover', 'password-reset']
+  const authRequired = !publicPages.includes(to.name)
+
+  if (!authRequired) {
+    next()
+    return
+  }
+
+  if (!authStore.authChecked) {
     try {
-      await authStore.initialize()
-      isAppInitialized = true
+      await authStore.checkAuth()
     } catch (error) {
-      console.error('Erro na inicialização:', error)
-      isAppInitialized = true
+      console.error('Error during auth check:', error)
+      next('/login')
+      return
     }
   }
 
-  const publicRoutes = ['login', 'register', 'password-recover', 'password-reset']
-  const isPublicRoute = publicRoutes.includes(to.name) || to.meta.isPublic
-  
-  if (to.meta.requiresAuth && !authStore.isAuthenticated) {
-    next({ name: 'login', query: { redirect: to.fullPath } })
-  } 
-  else if (authStore.isAuthenticated && isPublicRoute) {
-    next()
-  }  
-  else {
+  if (!authStore.isAuthenticated) {
+    next('/login')
+  } else {
     next()
   }
 })
+  
+  
 
 export default router

@@ -5,7 +5,7 @@
             <div class="row">
                <div class="col-xl-4 offset-xl-4 col-md-12 col-12">
                   <div class="text-center">
-                     <NavbarBrand linkClasses="justify-content-center" imgStyle="height: 90px;"></NavbarBrand>
+                     <NavbarBrand linkClasses="justify-content-center" :imgStyle="{ height: '90px' }"></NavbarBrand>
                      <h1 class="mb-1">Welcome Back</h1>
                      <p class="mb-0">
                         Don't have an account yet?
@@ -81,7 +81,7 @@
                               <button 
                                 class="btn btn-primary" 
                                 type="submit"
-                                :disabled="isLockedOut || authStore.isLoading">
+                                >
                                 <span v-if="authStore.isLoading">Signing In...</span>
                                 <span v-else-if="isLockedOut">
                                   Wait {{ formatTime(remainingTime) }}

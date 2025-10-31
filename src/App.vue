@@ -1,35 +1,31 @@
 <template>
+  <AppNavigation @open-sidebar="toggleSidebar" />
 
-  <AppNavigation @open-sidebar="sidebarIsActive" />
-  
-  <div class="d-flex align-items-strech">
-    
-    <AppSidebar v-if="authStore.isAuthenticated" :is-active="sidebarOpen" @close-sidebar="sidebarIsActive"  />
-    
-    <div class="maincontent container">      
+  <div class="d-flex align-items-stretch">
+    <AppSidebar
+      v-if="authStore.isAuthenticated"
+      :is-active="sidebarOpen"
+      @close-sidebar="toggleSidebar"
+    />
+    <div class="maincontent container">
       <router-view />
     </div>
-
   </div>
-  
-  <app-footer/>
+
+  <AppFooter />
 </template>
 
 <script setup>
 import { ref } from 'vue';
-import AppNavigation from '@/components/layout/AppNavigation.vue'
-import AppFooter from '@/components/layout/AppFooter.vue'
-import AppSidebar from '@/components/layout/AppSidebar.vue'
-import { useAuthStore } from '@/stores/authStore'
-    
-const authStore = useAuthStore()
-const sidebarOpen = ref(false)
+import { useAuthStore } from '@/stores/authStore';
+import AppNavigation from '@/components/layout/AppNavigation.vue';
+import AppFooter from '@/components/layout/AppFooter.vue';
+import AppSidebar from '@/components/layout/AppSidebar.vue';
 
-function sidebarIsActive() {
-  sidebarOpen.value = sidebarOpen.value === true ? false : true
+const sidebarOpen = ref(false);
+const authStore = useAuthStore();
+
+function toggleSidebar() {
+  sidebarOpen.value = !sidebarOpen.value;
 }
-
 </script>
-
-<style lang="scss">
-</style>

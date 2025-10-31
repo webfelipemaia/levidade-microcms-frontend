@@ -5,7 +5,7 @@
         <div class="row">
           <div class="col-xl-4 offset-xl-4 col-md-12 col-12">
             <div class="text-center">
-              <NavbarBrand linkClasses="justify-content-center" imgStyle="height: 90px;"></NavbarBrand>
+              <NavbarBrand linkClasses="justify-content-center" :imgStyle="{ height: '90px' }"></NavbarBrand>
               <h1 class="mb-1">Recuperar Senha</h1>
               <p class="mb-0">
                 Lembrou sua senha?
@@ -114,7 +114,6 @@ const handleRecover = async () => {
     if (response.data.success) {
       successMessage.value = 'Código enviado com sucesso! Verifique seu email.'
       
-      // Redirecionar para a tela de reset com o email como parâmetro
       setTimeout(() => {
         router.push({
           path: '/password/reset',

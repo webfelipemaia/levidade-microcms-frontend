@@ -8,7 +8,7 @@
         aria-expanded="false"
       >
         <img
-          src="https://avatars.githubusercontent.com/u/2156393?v=4"
+          :src="avatarUrl"
           :alt="fullName"
           width="32"
           height="32"
@@ -17,6 +17,7 @@
       </a>
   
       <ul class="dropdown-menu text-small shadow">
+        
         <li class="dropdown-header fw-semibold">
           Olá {{ user.name }}
         </li>
@@ -38,6 +39,10 @@
     user: {
       type: Object,
       required: true,
+    },
+    avatarUrl: {
+      type: String,
+      default: '',
     },
   })
   

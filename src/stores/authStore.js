@@ -2,28 +2,37 @@
 import { defineStore } from "pinia";
 import api from "@/services/api";
 import router from "../router";
+import defaultAvatar from "@/assets/images/profile.png";
 
 export const useAuthStore = defineStore({
   id: "auth",
 
   state: () => ({
     user: null,
-    returnUrl: null,
+    avatarUrl: null,
     error: null,
     isAuthenticated: false,
+    authChecked: false,
     isLoading: true,
     alertShown: false,
   }),
   
+  getters: {
+    avatar: (state) => state.avatarUrl || defaultAvatar,
+  }, 	
+
   actions: {
     async checkAuth() {
       try {
+        this.isLoading = true;
         const response = await api.get('api/v1/private/auth/me', {
           withCredentials: true
-        });
+        }).catch(() => null);
         this.user = response.data.user;
         this.isAuthenticated = true;
+        this.authChecked = true;
         this.error = null;
+        this.fetchAvatar()
         return true;
       } catch (error) {
         if (error.response?.status === 401) {
@@ -43,7 +52,7 @@ export const useAuthStore = defineStore({
           email,
           password,
         });
-    
+        this.authChecked = false;
         this.error = null;
         this.user = response.data.data;
         this.isAuthenticated = true;
@@ -113,7 +122,7 @@ export const useAuthStore = defineStore({
 
     async fetchUser() {
       try {
-        const response = await api.get("api/v1/private/auth/me");
+        const response = await api.get("api/v1/private/auth/me").catch(() => null);
         this.user = response.data.user;
         this.isAuthenticated = true;
       } catch (error) {
@@ -130,12 +139,13 @@ export const useAuthStore = defineStore({
             withCredentials: true,
           }
         );
+        this.authChecked = false;
       } catch (error) {
         console.error("Logout error:", error);
       } finally {
         this.user = null;
         this.isAuthenticated = false;
-        this.clearAuthData();
+        this.authChecked = false;
         router.push("/login");
       }
     },
@@ -159,13 +169,71 @@ export const useAuthStore = defineStore({
       }
     },
 
-    async initialize() {
-      await this.checkAuth();
+    async fetchAvatar() {
+      try {
+        
+        if (!this.user) return;
+        if (!this.user.files || this.user.files.length === 0) {
+          this.avatarUrl = null;
+          return;
+        }
+
+        const avatar = this.user.files[0];
+        const avatarResponse = await api.get(`/api/v1/private/file/${avatar.id}/url`);
+
+        if (avatarResponse.data.success) {
+          this.avatarUrl = avatarResponse.data.data.url;
+        } else {
+          throw new Error(avatarResponse.data.error);
+        }
+      } catch (error) {
+        const errorMsg = error.response?.data?.error || error.message;
+        this.error = errorMsg;
+        this.avatarUrl = null;
+      } finally {
+        this.isLoading = false;
+      }
     },
+
+    async checkSession() {
+      try {
+        this.isLoading = true;
+        const res = await api.get('/api/v1/public/auth/session-check', {
+          withCredentials: true
+        }).catch(() => null);
+
+          if (res.data.authenticated) {
+            this.user = res.data.user
+            this.isAuthenticated = true
+            this.loading = false
+            this.fetchAvatar()
+          } else {
+            this.clearAuthData()
+          }
+      } catch (err) {
+        this.clearAuthData()
+      } finally {
+        this.loading = false
+      }
+    },
+
+    async initialize() {
+      try {
+        await this.checkSession();
+    
+        if (this.isAuthenticated) {
+          await this.checkAuth();
+        }
+      } finally {
+        this.isLoading = false;
+      }
+    }
+    ,
 
     clearAuthData() {
       this.user = null;
       this.isAuthenticated = false;
+      this.authChecked = true;
       this.error = null;
       localStorage.removeItem("authToken");
     },

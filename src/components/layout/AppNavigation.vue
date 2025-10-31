@@ -3,12 +3,11 @@
         <div class="container-fluid">
             <div class="d-flex flex-wrap align-items-center justify-content-between">
                 
-
-              <NavbarBrand linkClasses="justify-content-center" imgStyle="height: 90px;"></NavbarBrand>
+            <NavbarBrand linkClasses="justify-content-center" :imgStyle="{ height: '90px' }"></NavbarBrand>
 
 
                 <div class="profile-container d-flex align-items-center">
-                    <app-profile v-if="isAuthenticated" :user="authStore.user"></app-profile>                    
+                    <nav-profile v-if="isAuthenticated" :user="authStore.user" :avatarUrl="authStore.avatar"></nav-profile>
                     <button
                         @click="notifyParent"
                         class="btn sidebar-offcanvas-btn navbar-toggler ms-2 me-2 d-lg-none"
@@ -29,17 +28,19 @@
 
 <script setup>
 import { computed } from 'vue';
-import { useAuthStore } from '@/stores/authStore';    
-import AppProfile from '@/components/layout/ui/nav/NavProfile.vue';
+import { useAuthStore } from '@/stores/authStore';
+import NavProfile from '@/components/layout/ui/nav/NavProfile.vue';
 import NavbarBrand from '@/components/layout/ui/nav/NavbarBrand.vue'
 
 const authStore = useAuthStore();
 const isAuthenticated = computed(() => authStore.isAuthenticated);
 const emit = defineEmits(['openSidebar'])
 
+
 function notifyParent() {
     emit('openSidebar', true)
 }
+
 </script>
 
 <style scoped>

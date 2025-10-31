@@ -7,7 +7,7 @@
             <div class="text-center">
               <NavbarBrand
                 linkClasses="justify-content-center"
-                imgStyle="height: 90px;"
+                :imgStyle="{ height: '90px' }"
               ></NavbarBrand>
               <h1 class="mb-1">Welcome Back</h1>
               <p class="mb-2">
