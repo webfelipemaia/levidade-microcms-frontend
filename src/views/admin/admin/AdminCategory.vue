@@ -97,28 +97,36 @@ const fetchCategories = async () => {
    await categoryStore.getCategories()
 }
 
-const saveData = (data) => {
-    if(data.id) {
-        updateData(data);
-    } else {
-        createData(data);
+const saveData = async (data) => {
+    try {
+        if(data.id) {
+            await updateData(data);
+        } else {
+            await createData(data);
+        }
+    } catch (error) {
+        console.error("Error saving data:", error);
     }
-    fetchCategories();
 } 
 
-const processData = (data) => {
-    categoryStore.deleteCategory(data);
-    categories.value = categories.value.filter(c => c.id !== data.id);
-    activeModal.value = false;
+const processData = async (data) => {
+    try {        
+        await categoryStore.deleteCategory(data);
+        categories.value = categories.value.filter(c => c.id !== data.id);
+        activeModal.value = false;
+    } catch (error) {
+        console.error('Error deleting data:', error);
+    }
 }
 
-const createData = (data) => {
-    categoryStore.createCategory(data);
+const createData = async (data) => {
+    await categoryStore.createCategory(data);
+    await fetchCategories();
 }
 
-const updateData = (data) => {
-    categoryStore.updateCategory(data);
-    fetchCategories();
+const updateData = async (data) => {
+    await categoryStore.updateCategory(data);
+    await fetchCategories();
 }
 
 onMounted(() => {

@@ -57,8 +57,23 @@
         </app-card>
     </div>
 
-    <app-modal :id="'app-modal-01'" :data="selectedPermission" :show="activeModal" confirmation text-save="Delete" :show-header="false" @close="activeModal=false" @process-data="processData($event)"></app-modal>
-    <permission-form :id="'app-modal-02'" :data="selectedPermission" :show="showModal" @close="showModal=false" @save-data="saveData($event)"></permission-form>
+    <app-modal 
+        :id="'app-modal-01'" 
+        :data="selectedPermission" 
+        :show="activeModal" 
+        confirmation 
+        text-save="Delete" 
+        :show-header="false" 
+        @close="activeModal=false" 
+        @process-data="processData($event)">
+    </app-modal>
+    <permission-form 
+        :id="'app-modal-02'" 
+        :data="selectedPermission" 
+        :show="showModal" 
+        @close="showModal=false" 
+        @save-data="saveData($event)">
+    </permission-form>
 
 </template>
 
@@ -72,44 +87,52 @@ import AppModal from '@/components/layout/ui/modal/AppModal.vue'
 import PermissionForm from '@/views/admin/permissions/PermissionForm.vue'
 
 const permissionStore = usePermissionStore()
-const { permissions } =  storeToRefs(permissionStore)
+const { permissions } = storeToRefs(permissionStore)
 const showModal = ref(false)
 const activeModal = ref(false)
-const selectedPermission = ref([])
-
+const selectedPermission = ref({})
 
 const fetchPermissions = async () => {
    await permissionStore.getPermissions()
 }
 
-const saveData = (data) => {
-    if(data.id) {
-        updateData(data);
-    } else {
-        createData(data); 
+const saveData = async (data) => {
+    try {
+        if(data.id) {
+            await updateData(data);
+        } else {
+            await createData(data); 
+        }
+        showModal.value = false;
+        selectedPermission.value = {};
+    } catch (error) {
+        console.error('Error saving data:', error);
     }
-    fetchPermissions();
 } 
 
-const processData = (data) => {
-    permissionStore.deletePermission(data);
-    permissions.value = permissions.value.filter(p => p.id !== data.id);
-    activeModal.value = false;
+const processData = async (data) => {
+    try {
+        await permissionStore.deletePermission(data);
+        activeModal.value = false;
+        selectedPermission.value = {};
+    } catch (error) {
+        console.error('Error deleting data:', error);
+    }
 }
 
-const createData = (data) => {
-    permissionStore.createPermission(data);
+const createData = async (data) => {
+    await permissionStore.createPermission(data);
+    await fetchPermissions();
 }
 
-const updateData = (data) => {
-    permissionStore.updatePermission(data);
-    fetchPermissions();
+const updateData = async (data) => {
+    await permissionStore.updatePermission(data);
+    await fetchPermissions();
 }
 
 onMounted(() => {
     fetchPermissions();
 })
-
 </script>
 
 <style>

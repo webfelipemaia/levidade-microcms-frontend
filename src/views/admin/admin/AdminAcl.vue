@@ -156,17 +156,14 @@ const router = useRouter()
 const normalizedRolesPermissions = computed(() => {
     if (!rolesPermissions.value) return []
     
-    // Se rolesPermissions.value for um array, retorna diretamente
     if (Array.isArray(rolesPermissions.value)) {
         return rolesPermissions.value
     }
     
-    // Se for um objeto com propriedade data (resposta da API)
     if (rolesPermissions.value.data && Array.isArray(rolesPermissions.value.data)) {
         return rolesPermissions.value.data
     }
     
-    // Se for um objeto com propriedade status e data
     if (rolesPermissions.value.status === 'success' && Array.isArray(rolesPermissions.value.data)) {
         return rolesPermissions.value.data
     }
@@ -199,12 +196,10 @@ const aclMatrix = computed(() => {
     return matrix
 })
 
-// Verifica se uma role tem uma permissão
 const hasPermission = (roleId, permissionId) => {
     return aclMatrix.value[roleId] && aclMatrix.value[roleId][permissionId] === true
 }
 
-// Obter as permissões de uma role
 const getRolePermissions = (roleId) => {
     if (!aclMatrix.value[roleId] || !permissions.value.length) return []
     
@@ -213,7 +208,6 @@ const getRolePermissions = (roleId) => {
     )
 }
 
-// Formatar data
 const formatDate = (dateString) => {
     if (!dateString) return '-'
     return new Date(dateString).toLocaleDateString('pt-BR')

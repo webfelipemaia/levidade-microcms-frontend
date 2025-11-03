@@ -56,8 +56,23 @@
         </app-card>
     </div>
 
-    <app-modal :id="'app-modal-01'" :data="selectedRole" :show="activeModal" confirmation text-save="Delete" :show-header="false" @close="activeModal=false" @process-data="processData($event)"></app-modal>
-    <role-form :id="'app-modal-02'" :data="selectedRole" :show="showModal" @close="showModal=false" @save-data="saveData($event)"></role-form>
+    <app-modal 
+        :id="'app-modal-01'" 
+        :data="selectedRole" 
+        :show="activeModal" 
+        confirmation 
+        text-save="Delete" 
+        :show-header="false" 
+        @close="activeModal=false" 
+        @process-data="processData($event)">
+    </app-modal>
+    <role-form 
+        :id="'app-modal-02'" 
+        :data="selectedRole" 
+        :show="showModal" 
+        @close="showModal=false" 
+        @save-data="saveData($event)">
+    </role-form>
 </template>
 
 <script setup>
@@ -79,28 +94,37 @@ const fetchRoles = async () => {
    await roleStore.getRoles();
 }
 
-const saveData = (data) => {
-    if(data.id) {
-        updateData(data);
-    } else {
-        createData(data);
+const saveData = async (data) => {
+    try {
+        if(data.id) {
+            await updateData(data);
+        } else {
+            await createData(data);
+        }        
+    } catch (error) {
+        console.error("Error saving data:", error);
+        
     }
-    fetchRoles()
 } 
 
-const processData = (data) => {
-    roleStore.deleteRole(data);
-    roles.value = roles.value.filter(r => r.id !== data.id);
-    activeModal.value = false;
+const processData = async (data) => {
+    try {            
+        await roleStore.deleteRole(data);
+        roles.value = roles.value.filter(r => r.id !== data.id);
+        activeModal.value = false;
+    } catch (error) {
+        console.error("Error deleting data:", error);
+    }
 }
 
-const createData = (data) => {
-    roleStore.createRole(data);
+const createData = async (data) => {
+    await roleStore.createRole(data);
+    await fetchRoles();
 }
 
-const updateData = (data) => {
-    roleStore.updateRole(data);
-    fetchRoles();
+const updateData = async (data) => {
+    await roleStore.updateRole(data);
+    await fetchRoles();
 }
 
 onMounted(() => {

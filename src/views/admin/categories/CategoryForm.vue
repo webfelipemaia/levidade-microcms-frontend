@@ -1,11 +1,17 @@
 <template>
-    <div :id="id" class="modal fade" :class="{show: (show && isEditModalOpen)}" tabindex="-1" aria-labelledby="roleFormLabel" :aria-hidden="show">
+    <div v-if="show && isEditModalOpen" class="modal-backdrop fade show"></div>
+    <div :id="id" 
+         class="modal fade" 
+         :class="{'show d-block': (show && isEditModalOpen)}" 
+         tabindex="-1" 
+         aria-labelledby="roleFormLabel" 
+         :aria-hidden="!show">
         <div class="modal-dialog">
             <div class="modal-content">
                 <form @submit.prevent="saveData(editedItem)">
                     <div class="modal-header">
                         <h1 class="modal-title fs-5" id="roleFormLabel">{{ editedItem.id ? 'Editar' : 'Adicionar' }} categoria</h1>
-                        <button type="button" @click="closeModal" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        <button type="button" @click="closeModal" class="btn-close" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
                         <div class="mb-3">
@@ -29,19 +35,18 @@
                                 Deixe como "Nenhuma" para criar uma categoria principal
                             </small>
                         </div>
-                        
                         <div v-if="categoryStore.message">
                             <div class="alert alert-dismissible fade show" :class="`alert-${categoryStore.message.status === 'error'?'danger':'success'}`" role="alert">
-                                <p><i class="bi bi-exclamation-circle me-2"></i> {{ categoryStore.message.message }}</p>
-                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                <p><i class="bi bi-exclamation-circle me-2"></i> {{ categoryStore.message.message || categoryStore.message }}</p>
+                                <!-- <button type="button" class="btn-close" @click="categoryStore.clearSuccessMessage()" aria-label="Close"></button> -->
                             </div>
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" @click="closeModal" class="btn btn-secondary" data-bs-dismiss="modal">
-                            {{ isSaving ? 'Fechar' : 'Cancelar' }}
+                        <button type="button" @click="closeModal" class="btn btn-secondary">
+                            {{ categoryStore.message ? 'Fechar' : 'Cancelar' }}
                         </button>
-                        <button type="submit" class="btn btn-primary" :disabled="isSaving || !editedItem.name">
+                        <button v-show="!categoryStore.message" type="submit" class="btn btn-primary" :disabled="isSaving || !editedItem.name">
                             {{ isSaving ? 'Salvando...' : 'Salvar' }}
                         </button>
                     </div>
@@ -54,7 +59,6 @@
 <script setup>
 import { ref, watch, onMounted, computed, nextTick } from 'vue'
 import { useCategoryStore } from '@/stores/categoryStore';
-import { useAddBackDrop, useRemoveBackDrop } from  '@/components/layout/composables/HandleBackdrop.js';
 
 const categoryStore = useCategoryStore()
 const isEditModalOpen = ref(false)
@@ -75,7 +79,7 @@ const props = defineProps({
 
 const emit = defineEmits(['close', 'saveData'])
 
-// Computed para filtrar categorias disponíveis como pai
+// Filtrar categorias disponíveis como pai
 const availableParentCategories = computed(() => {
     if (!categoryStore.categories || !Array.isArray(categoryStore.categories)) return []
     
@@ -84,22 +88,18 @@ const availableParentCategories = computed(() => {
     })
 })
 
-// Função para verificar se uma categoria pode ser selecionada como pai
+// Verificar se uma categoria pode ser selecionada como pai
 const isCategoryDisabled = (category) => {
-    // Não permitir que uma categoria seja pai de si mesma
     if (editedItem.value.id && category.id === editedItem.value.id) {
         return true
     }
-    
-    // Não permitir loops hierárquicos
     if (editedItem.value.id && isDescendant(category, editedItem.value.id)) {
         return true
-    }
-    
+    }    
     return false
 }
 
-// Função para verificar se uma categoria é descendente de outra
+// Verificar se uma categoria é descendente de outra
 const isDescendant = (category, targetId) => {
     if (!targetId || !category.parentId) return false
     
@@ -132,7 +132,6 @@ watch(() => props.show, async (newVal) => {
 })
 
 const openEditModal = (item) => {
-    
     editedItem.value = {
         name: '',
         parentId: null
@@ -147,12 +146,10 @@ const openEditModal = (item) => {
     }
     
     isEditModalOpen.value = true
-    useAddBackDrop(props.id)
 }
 
 const closeModal = () => {    
     isEditModalOpen.value = false
-    useRemoveBackDrop()
     categoryStore.clearSuccessMessage()
     isSaving.value = false
     emit('close')
@@ -171,16 +168,17 @@ const saveData = async (item) => {
         if (item.id) {
             dataToSave.id = item.id
         }
+        
         emit('saveData', dataToSave)        
-        await new Promise(resolve => setTimeout(resolve, 500))
+        await new Promise(resolve => setTimeout(resolve, 1000))
         
     } catch (error) {
         console.error('Erro ao salvar categoria:', error)
+    } finally {
         isSaving.value = false
     }
 }
 
-// Buscar categorias
 const fetchCategories = async () => {
     await categoryStore.getCategories()
 }
@@ -190,25 +188,15 @@ onMounted(() => {
 })
 </script>
 
-<style>
-.modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.5);
-    display: flex;
-    justify-content: center;
-    align-items: center;
+<style scoped>
+.modal-backdrop {
+    z-index: 1040;
 }
-
-.modal-content {
-    padding: 0;
-    border-radius: 8px;
+.modal {
+    z-index: 1050;
 }
 .show {
     transform: none;
-    display: block;
+    display: block !important;
 }
 </style>

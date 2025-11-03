@@ -43,9 +43,9 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" @click="$emit('close')" class="btn btn-secondary" data-bs-dismiss="modal">
-                            {{ isSaving ? 'Close' : 'Cancel' }}
+                            {{ permissionStore.message ? 'Close' : 'Cancel' }}
                         </button>
-                        <button type="submit" class="btn btn-primary" :disabled="isSaving" @click.prevent.stop="saveData(editedItem)">
+                        <button v-show="!permissionStore.message" type="submit" class="btn btn-primary" :disabled="isSaving" @click.prevent.stop="saveData(editedItem)">
                             {{ isSaving ? 'Saving...' : 'Save' }}
                         </button>
                     </div>
@@ -104,20 +104,21 @@ const isSaving = ref(false)
         isSaving.value = true
         try {
            emit('saveData', item)
+        } catch (error) {
+            console.error('Erro ao salvar permissão:', error);
         } finally {
             isSaving.value = false
         }
         
     }
     
-    // Get the permissions
     const fetchPermissions = async () => {
        
        try {
         const permission = await permissionStore.getPermissions();
         return permission
         } catch (error) {
-        console.error('Erro ao carregar o artigo:', error);
+        console.error('Erro ao carregar permissões:', error);
         }
     }
 
