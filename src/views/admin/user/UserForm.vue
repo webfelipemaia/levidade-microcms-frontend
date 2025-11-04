@@ -89,9 +89,9 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" @click="$emit('close')" class="btn btn-secondary" data-bs-dismiss="modal">
-                            {{ isSaving ? 'Close' : 'Cancel' }}
+                            {{ userStore.message ? 'Close' : 'Cancel' }}
                         </button>
-                        <button type="submit" class="btn btn-primary"  :disabled="isSaving || !editedItem.name">
+                        <button v-show="!userStore.message" type="submit" class="btn btn-primary"  :disabled="isSaving || !editedItem.name">
                             {{ isSaving ? 'Saving...' : 'Save' }}
                         </button>
                     </div>
@@ -139,24 +139,29 @@ const isSaving = ref(false)
     })
     
     const openEditModal = (item) => {
-      editedItem.value = { ...item }
-      isEditModalOpen.value = true
-      useAddBackDrop(props.id)
+        fetchUsersRoles()
+        editedItem.value = { ...item }
+        isEditModalOpen.value = true
+        useAddBackDrop(props.id)
     }
     
     const closeEditModal = () => {    
-      isEditModalOpen.value = false
-      useRemoveBackDrop()
-      userStore.clearSuccessMessage()
-      isSaving.value = false
+        isEditModalOpen.value = false
+        useRemoveBackDrop()
+        userStore.clearSuccessMessage()
+        isSaving.value = false
     }
 
-    const saveData = (item) => {
+    const saveData = async (item) => {
         item.roles = selectedRoles.value
+        isSaving.value = true
         try {
             emit('saveData', item)
             isSaving.value = true
+            await new Promise(resolve => setTimeout(resolve, 1000))
         } catch (error) {
+            console.error('Error saving data:', error)
+        } finally {
             isSaving.value = false
         }
     }

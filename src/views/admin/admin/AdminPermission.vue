@@ -103,8 +103,6 @@ const saveData = async (data) => {
         } else {
             await createData(data); 
         }
-        showModal.value = false;
-        selectedPermission.value = {};
     } catch (error) {
         console.error('Error saving data:', error);
     }
@@ -113,8 +111,9 @@ const saveData = async (data) => {
 const processData = async (data) => {
     try {
         await permissionStore.deletePermission(data);
+        permissions.value = permissions.value.filter(p => p.id !== data.id);
         activeModal.value = false;
-        selectedPermission.value = {};
+        //selectedPermission.value = {};
     } catch (error) {
         console.error('Error deleting data:', error);
     }

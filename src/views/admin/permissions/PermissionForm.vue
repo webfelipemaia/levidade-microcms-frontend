@@ -98,6 +98,7 @@ const isSaving = ref(false)
       useRemoveBackDrop()
       permissionStore.clearSuccessMessage()
       isSaving.value = false
+      emit('close')
     }
 
     const saveData = (item) => {
