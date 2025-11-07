@@ -23,65 +23,33 @@ export const useArticleStore = defineStore({
             }
         },
 
-        async getPaginatedArticles({ page, pageSize, search, order }) {
+        async getPaginatedArticles({ page, pageSize, search, order, categoryId, status, date }) {
             try {
-                const response = await api.get(`api/v1/private/article`, {
-                    params: {
-                        page,
-                        pageSize,
-                        search,
-                        order,
-                    },
-                });
-          
+                
+                const finalOrder = Array.isArray(order) ? order : JSON.parse(order || '[["createdAt", "DESC"]]');
+                const params = {
+                    page,
+                    pageSize,
+                    search: search || undefined,
+                    order: JSON.stringify(finalOrder),
+                };
+        
+                if (categoryId) params.categoryId = categoryId;
+                if (status !== null && status !== undefined && status !== '') params.status = status;
+                if (date) params.date = date;
+        
+                const response = await api.get(`api/v1/private/article/paginated`, { params });
+        
                 return {
-                    data: response.data,
+                    data: response.data.data,
                     total: response.data.total,
                 };
             } catch (error) {
                 console.error('Failed to fetch articles:', error);
-                return { 
-                    data: [], 
-                    total: 0 
+                return {
+                    data: [],
+                    total: 0,
                 };
-            }
-        },
-        
-        async getArticleById(id) {
-            try {
-                
-                const response = await api.get(`api/v1/private/article/${id}`);
-                this.article = response.data;
-                this.message = { status: 'success', message: 'Artigo carregado com sucesso.' };
-                return response.data;
-            } catch (error) {
-                
-                let errorMessage = error.response?.data?.message || 'Erro desconhecido';
-                this.message = { status: 'error', message: errorMessage.replaceAll('"', '') };
-                console.error('Erro ao buscar artigo:', error);
-                throw error;
-            }
-        },
-        
-
-        async getLastInsertedArticle() {
-            const response = await api.get(`api/v1/private/article/last`);
-            
-            if(response.data.status === 'error') {
-                this.message = response.data
-            } else {
-                this.lastArticle = response.data;
-            }
-        },
-
-
-        async getUsersArticles() {
-            const response = await api.get(`api/v1/user/articles/`);
-            
-            if(response.data.status === 'error') {
-                this.message = response.data
-            } else {
-                this.usersArticles = response.data;
             }
         },        
 
