@@ -24,6 +24,34 @@ export const useRoleStore = defineStore({
             }
         },
 
+                async getPaginatedRoles({ page, pageSize, search, order, date }) {
+                    try {
+                        
+                        const finalOrder = Array.isArray(order) ? order : JSON.parse(order || '[["createdAt", "DESC"]]');
+                        const params = {
+                            page,
+                            pageSize,
+                            search: search || undefined,
+                            order: JSON.stringify(finalOrder),
+                        };
+                
+                        if (date) params.date = date;
+                
+                        const response = await api.get(`api/v1/private/role/paginated`, { params });
+                
+                        return {
+                            data: response.data.data,
+                            total: response.data.total,
+                        };
+                    } catch (error) {
+                        console.error('Failed to fetch roles:', error);
+                        return {
+                            data: [],
+                            total: 0,
+                        };
+                    }
+                }, 
+
         async getUsersRoles() {
             try {
                 const response = await api.get(`api/v1/private/user/roles/`);
