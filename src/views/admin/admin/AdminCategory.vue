@@ -54,7 +54,6 @@
                                 </tr>
                             </template>
                             <template v-else-if="_categories && _categories.length">
-                                {{ categories }}
                                 <tr v-for="category in _categories" :key="category.id">            
                                     <th class="align-middle" scope="row">{{ category.id }}</th>
                                     <td class="align-middle"> 
@@ -62,7 +61,7 @@
                                         {{ category.name }}
                                     </td>
                                     <td class="align-middle">{{ formatDate(category.updatedAt) }}</td>
-                                    <td>
+                                    <td class="align-middle">
                                         <div class="d-flex">
                                             <button @click="[showModal=true,selectedCategory=category]" type="button" class="btn">
                                                 <i class="bi bi-pencil"></i>
@@ -126,11 +125,11 @@ import AppCard from '@/components/layout/ui/card/AppCard.vue'
 import AppCardHeader from '@/components/layout/ui/card/AppCardHeader.vue'
 import AppModal from '@/components/layout/ui/modal/AppModal.vue'
 import AppPagination from '@/components/layout/ui/AppPagination.vue'
-import { storeToRefs } from 'pinia'
+//import { storeToRefs } from 'pinia'
 import { useCategoryStore } from '@/stores/categoryStore'
 
 const categoryStore = useCategoryStore()
-const { categories } = storeToRefs(categoryStore)
+//const { categories } = storeToRefs(categoryStore)
 
 const _categories = ref([])
 const currentPage = ref(1)

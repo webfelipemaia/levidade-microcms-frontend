@@ -39,7 +39,6 @@
                             <tr>
                                 <th>#</th>
                                 <th>Name</th>
-                                <th>Permissions</th>
                                 <th>Updated at</th>
                                 <th>Actions</th>
                             </tr>
@@ -58,7 +57,6 @@
                                 <tr v-for="permission in _permissions" :key="permission.id">                        
                                     <th class="align-middle" scope="row">{{ permission.id }}</th>
                                     <td class="align-middle">{{ permission.name }}</td>
-                                    <td class="align-middle">0</td>
                                     <td class="align-middle">{{ formatDate(permission.updatedAt) }}</td>
                                     <td>
                                         <div class="d-flex">
