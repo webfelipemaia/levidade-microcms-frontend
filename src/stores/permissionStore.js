@@ -64,7 +64,7 @@ export const usePermissionStore = defineStore({
         if (response.data.status === "error") {
           this.message = response.data;
         } else {
-          this.rolesPermissions = response.data.data;
+          this.rolesPermissions = response.data;
         }
       } catch (error) {
         this.message = {

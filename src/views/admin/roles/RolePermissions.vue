@@ -98,10 +98,8 @@ const fetchData = async () => {
         await permissionStore.getPermissions()
         permissions.value = permissionStore.permissions
 
-        // Carregar permissões atuais do role
-        await permissionStore.getRolesPermissions()
-        const rolePermissions = permissionStore.rolesPermissions.data?.filter(rp => rp.roleId === parseInt(id)) || []
-        selectedPermissions.value = rolePermissions.map(rp => rp.permissionId)
+        // Carregar permissões atuais do role - CORREÇÃO AQUI
+        await loadRolePermissions()
 
     } catch (error) {
         console.error('Erro ao carregar dados:', error)
@@ -111,10 +109,29 @@ const fetchData = async () => {
     }
 }
 
+// Função corrigida para carregar permissões do role
+const loadRolePermissions = async () => {
+    try {
+        // Primeiro, carrega as roles permissions se ainda não estiverem carregadas
+        if (!permissionStore.rolesPermissions || !permissionStore.rolesPermissions.data) {
+            await permissionStore.getRolesPermissions()
+        }
+
+        // Acessa o array correto: permissionStore.rolesPermissions.data
+        const rolePermissions = permissionStore.rolesPermissions.data.filter(rp => rp.roleId === parseInt(id))
+        selectedPermissions.value = rolePermissions.map(rp => rp.permissionId)
+        
+        console.log('Permissões carregadas para o role:', selectedPermissions.value)
+        
+    } catch (error) {
+        console.error('Erro ao carregar permissões do role:', error)
+        message.value = { status: 'error', message: 'Erro ao carregar permissões' }
+    }
+}
+
 const savePermissions = async () => {
     loading.value = true
     try {
-        // Chamar API específica para atualizar permissões
         const response = await api.patch(`/api/v1/private/role/${id}/permissions`, {
             permissions: selectedPermissions.value
         })
