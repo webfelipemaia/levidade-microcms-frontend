@@ -1,59 +1,82 @@
 <template>
-    <div class="container mx-auto p-4">
-        <div class="bg-white shadow-md rounded-lg p-6">
-            <div class="mb-6">
-                <h1 class="text-2xl font-bold text-gray-800">Permissões do Role: {{ roleName }}</h1>
-                <p class="text-gray-600">ID: {{ id }}</p>
-            </div>
+    <div class="container-fluid">
+        <app-card>
+            <template #header>
+                <app-card-header>
+                    <div class="d-flex justify-content-between">
+                        <span>New articles</span>
+                        <router-link :to="{name: 'admin.acl'}" class="btn btn-primary"> Back</router-link>
+                    </div>
+                </app-card-header>
+            </template>
+            <template #body>
+                <div class="mb-6">
+                    <h4>Permissões para {{ roleName }}</h4>
+                    <p>Permite especificar quais grupos de usuários têm quais permissões. De modo simples, a atribuição de permissões 
+                        serve para definir quem (usuário, grupo ou papel) pode fazer o quê (ação, recurso, operação) dentro do sistema.</p>
+                </div>
 
-            <div v-if="message" 
-                 :class="['p-4 rounded mb-4', 
-                         message.status === 'success' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800']">
-                {{ message.message }}
-            </div>
+                <div v-if="message" 
+                    :class="['p-4 rounded mb-4', 
+                            message.status === 'success' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800']">
+                    {{ message.message }}
+                </div>
 
-            <div v-if="permissions.length > 0">
-                <label class="block text-sm font-medium text-gray-700 mb-2">Permissões</label>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-2 max-h-96 overflow-y-auto p-2 border border-gray-300 rounded">
-                    <div v-for="permission in permissions" :key="permission.id" class="flex items-center">
-                        <input 
-                            type="checkbox" 
-                            :id="`permission-${permission.id}`"
-                            :checked="isPermissionSelected(permission)"
-                            @change="togglePermission(permission)"
-                            class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
-                        <label :for="`permission-${permission.id}`" class="ml-2 text-sm text-gray-700">
-                            {{ permission.name }}
-                        </label>
+                <div v-if="permissions.length > 0">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Permissões</label>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-2 max-h-96 overflow-y-auto p-2 border border-gray-300 rounded">
+                        <div 
+                            v-for="(permission, index) in permissions" 
+                            :key="permission.id" 
+                            class="flex items-center list-group-item"
+                            :class="index % 2 === 0 ? '' : 'list-group-item-secondary'"
+                        >
+                            <input 
+                                type="checkbox" 
+                                :id="`permission-${permission.id}`"
+                                :checked="isPermissionSelected(permission)"
+                                @change="togglePermission(permission)"
+                                class="ms-2"
+                            > 
+                            <label 
+                                :for="`permission-${permission.id}`"
+                                class="ms-2 w-full py-2"
+                            >
+                                {{ permission.name }}
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="m-2 text-sm">
+                        {{ selectedPermissionsCount }} permissão(ões) selecionada(s)
+                    </div>
+
+                    <div class="card-footer">
+                        <div class="d-flex justify-content-between">
+                            <button 
+                                @click="goBack"
+                                class="btn btn-secondary">
+                                Voltar para Edição
+                            </button>
+                            <button 
+                                @click="savePermissions"
+                                :disabled="loading"
+                                class="btn btn-primary">
+                                <span v-if="loading">Salvando...</span>
+                                <span v-else>Salvar Permissões</span>
+                            </button>
+                        </div>
                     </div>
                 </div>
-                
-                <div class="mt-4 text-sm text-gray-600">
-                    {{ selectedPermissionsCount }} permissão(ões) selecionada(s)
-                </div>
-
-                <div class="mt-6 flex space-x-4">
-                    <button 
-                        @click="savePermissions"
-                        :disabled="loading"
-                        class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 disabled:opacity-50">
-                        <span v-if="loading">Salvando...</span>
-                        <span v-else>Salvar Permissões</span>
-                    </button>
-
-                    <button 
-                        @click="goBack"
-                        class="inline-flex justify-center py-2 px-4 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
-                        Voltar para Edição
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
+            </template>
+        </app-card>
+    </div>    
 </template>
 
 <script setup>
 import { ref, onMounted, computed } from 'vue'
+import AppCard from '@/components/layout/ui/card/AppCard.vue'
+import AppCardHeader from '@/components/layout/ui/card/AppCardHeader.vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useRoleStore } from '@/stores/roleStore'
 import { usePermissionStore } from '@/stores/permissionStore'
@@ -148,7 +171,7 @@ const savePermissions = async () => {
     }
 }
 
-const goBack = () => router.push(`/roles/${id}/edit`)
+const goBack = () => router.push(`/admin/acl`)
 
 onMounted(() => fetchData())
 </script>

@@ -52,6 +52,10 @@
             .nav-link {
               color: vars.$link-color;
               font-weight: bold;
+
+              &.active {
+                color: var(--bs-nav-pills-link-active-color);
+              }
       
               &:hover {
                 color: vars.$leve-secondary;

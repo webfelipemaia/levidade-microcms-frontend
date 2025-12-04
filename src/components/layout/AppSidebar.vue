@@ -1,104 +1,144 @@
 <template>
-    <div 
-        :class="[offCanvas,{'show': isActive}]"
-        class="sidebar leve offcanvas-start" 
-        tabindex="-1" 
-        id="offcanvasExample" 
-        aria-labelledby="offcanvasSidebarMenu"
-        ref="offcanvas"
-        >
+    <div :class="[offCanvas, { 'show': isActive }]" class="sidebar leve offcanvas-start" tabindex="-1"
+        id="offcanvasExample" aria-labelledby="offcanvasSidebarMenu" ref="offcanvas">
         <div class="offcanvas-header">
-            
-    <h5 class="offcanvas-title" id="offcanvasSidebarMenu">Navbar</h5>
-    <button @click="updateValue" type="button" class="btn-close" aria-label="Close"></button>
-  </div>
-    <div class="offcanvas-body flex-shrink-0 p-3 mt-5" style="width: 280px;">
-            <ul class="nav flex-column">
-                
-<!--                 <li class="nav-item nav-item_title">
-                    <div class="nav-header">
-                        <div class="nav-header_title">
-                            <a class="nav-link" href="#">UI Kit <span>version 0.1.0</span></a>                            
-                        </div>
-                        <div class="nav-header_body">
-                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.</p>
-                        </div>
-                    </div>
-                </li> -->
 
-                <li class="nav-item">
-                    <router-link to="/admin/articles" class="nav-link">Articles</router-link>
-                </li>
-
-                <li class="nav-item">
-                    <router-link to="/admin/categories" class="nav-link">Categories</router-link>
-                </li>
-
-                <li class="nav-item">
-                    <router-link to="/admin/users" class="nav-link">Users</router-link>
-                </li>
-
-                <li class="nav-item">
-                    <router-link to="/admin/roles" class="nav-link">Roles</router-link>
-                </li>
-
-                <li class="nav-item">
-                    <router-link to="/admin/permissions" class="nav-link">Permissions</router-link>
-                </li>
-
-                <li class="nav-item">
-                    <router-link to="/admin/settings" class="nav-link">Settings</router-link>
-                </li>
-
-            </ul>
+            <h5 class="offcanvas-title" id="offcanvasSidebarMenu">Navbar</h5>
+            <button @click="updateValue" type="button" class="btn-close" aria-label="Close"></button>
         </div>
+        <div class="offcanvas-body flex-shrink-0 p-3 mt-5" style="width: 280px;">
+        <ul class="nav offcanvas-nav nav-pills flex-column mb-auto" style="width: 280px;">
+            <li class="nav-item">
+                <router-link to="/home" class="nav-link" active-class="active" exact-active-class="active">
+                    <i class="bi bi-house me-2"></i>
+                    <span class="menu-text">Dashboard</span>
+                </router-link>
+            </li>
+            <li class="nav-item">
+                <router-link to="/admin/articles" class="nav-link" active-class="active">
+                    <i class="bi bi-file-text me-2"></i>
+                    <span class="menu-text">Articles</span>
+                </router-link>
+            </li>
+
+            <li class="nav-item">
+                <router-link to="/admin/categories" class="nav-link" active-class="active">
+                    <i class="bi bi-collection me-2"></i>
+                    <span class="menu-text">Categories</span>
+                </router-link>
+            </li>
+
+            <!-- Menu Usuários com subitens colapsíveis -->
+            <li class="nav-item">
+                <a class="nav-link collapsed d-flex justify-content-between" data-bs-toggle="collapse" href="#usuariosCollapse" role="button"
+                    aria-expanded="false" aria-controls="usuariosCollapse"
+                    :class="{ active: isUsersMenuActive, collapsed: !isUsersMenuActive }">
+                    <i class="bi bi-people me-2"></i>
+                    <span class="menu-text">Usuários</span>
+                    <i class="bi bi-chevron-down menu-arrow"></i>
+                </a>
+                <div class="collapse submenu" id="usuariosCollapse"
+                     :class="{ show: isUsersMenuActive }">
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <router-link to="/admin/users" class="nav-link" active-class="active">
+                                <span class="menu-text">Users</span>
+                            </router-link>
+                        </li>
+                        <li class="nav-item">
+                            <router-link to="/admin/roles" class="nav-link" active-class="active">
+                                <span class="menu-text">Roles</span>
+                            </router-link>
+                        </li>
+                        <li class="nav-item">
+                            <router-link to="/admin/permissions" class="nav-link" active-class="active">
+                                <span class="menu-text">Permissions</span>
+                            </router-link>
+                        </li>
+                        <li class="nav-item">
+                            <router-link to="/admin/acl" class="nav-link" active-class="active">
+                                <span class="menu-text">Controle de Acesso (ACL)</span>
+                            </router-link>
+                        </li>
+                    </ul>
+                </div>
+            </li>
+
+            <li class="nav-item">
+                <router-link to="/relatorios" class="nav-link" active-class="active">
+                    <i class="bi bi-table me-2"></i>
+                    <span class="menu-text">Relatórios</span>
+                </router-link>
+            </li>
+            <li class="nav-item">
+                <router-link to="/admin/settings" class="nav-link" active-class="active">
+                    <i class="bi bi-gear me-2"></i>
+                    <span class="menu-text">Configurações</span>
+                </router-link>
+            </li>
+        </ul>
+    </div>
     </div>
 </template>
 
 <script setup>
-import {  ref, watch, computed} from 'vue';
+import { ref, watch, computed } from 'vue';
+import { useRoute } from 'vue-router';
 
 const props = defineProps({
     isActive: {
-      type: Boolean,
-      default: false
+        type: Boolean,
+        default: false
     }
 });
-
+const route = useRoute();
 const emit = defineEmits(['closeSidebar']);
 
 const activeValue = ref(Boolean(props.isActive));
 watch(() => props.isActive, (newVal) => {
-  activeValue.value = newVal;
+    activeValue.value = newVal;
 });
 
 const offCanvas = computed(() => {
-      return props.isActive ? 'offcanvas' : 'offcanvas-md'
-    })
+    return props.isActive ? 'offcanvas' : 'offcanvas-md'
+})
 
 const updateValue = () => {
-    
-    // remove Bootstrap styles from body tag
+
     var bodyElem = document.getElementsByTagName("body")[0];
     bodyElem.removeAttribute("style");
-    // delete element that activates overlay
+
     Array.from(document.getElementsByClassName("offcanvas-backdrop"))
-    .forEach(element => element.remove());
+        .forEach(element => element.remove());
     activeValue.value = false;
-    // updates the value of the variable that activates the menu
+
     emit('closeSidebar', activeValue.value);
 };
 
+const isUsersMenuActive = computed(() => {
+            const usersRoutes = [
+                'admin.users',
+                'admin.roles', 
+                'admin.permissions',
+                'admin.acl',
+                'roles.edit',
+                'roles.permissions',
+                'permission.edit'
+            ];
+            
+            return usersRoutes.includes(route.name);
+        });
+     
 </script>
 <style>
 .nav-header {
-    border-bottom: 1px solid rgba(76,103,118,.15);
+    border-bottom: 1px solid rgba(76, 103, 118, .15);
     margin-bottom: 1rem;
 }
 
 .nav-header_title {
     font-size: 20px;
-    font-weight: bold;
+    font-weight: normal;
 }
 
 .nav-header_title a,
@@ -110,10 +150,66 @@ const updateValue = () => {
     font-weight: 400;
     font-size: 18px;
 }
+
 .nav-header_body {
     padding: 0.5rem 1rem;
 }
 
+.offcanvas-body {
+    padding: 0;
+}
 
+.offcanvas-nav {
+    width: 280px;
+}
 
+.nav-link {
+    font-weight: 500;
+    color: #333;
+    padding: 0.75rem 1rem;
+    display: flex;
+    align-items: center;
+    border-radius: 0;
+    border-left: 3px solid transparent;
+}
+
+.nav-link:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+.nav-link.active {
+    background-color: #e7f1ff;
+    color: #0d6efd;
+    border-left-color: #0d6efd;
+}
+
+.nav-link .menu-text {
+    flex-grow: 1;
+}
+
+.nav-link .menu-arrow {
+    margin-left: auto;
+    transition: transform 0.2s ease-in-out;
+}
+
+.nav-link:not(.collapsed) .menu-arrow,  a[data-bs-toggle=collapse][aria-expanded=true] .menu-arrow {
+    -webkit-transform: rotate(180deg);
+    transform: rotate(180deg);
+}
+
+.submenu {
+    background-color: rgba(0, 0, 0, 0.02);
+}
+
+.submenu .nav-link {
+    padding-left: 2.5rem;
+    font-size: 0.9rem;
+    border-left: none;
+}
+
+.submenu .nav-link.active {
+    background-color: rgba(13, 110, 253, 0.1);
+    color: #0d6efd;
+    font-weight: 500;
+}
 </style>
