@@ -48,7 +48,7 @@
                         <div class="card-body mb-3 mt-3">
 
                             
-                            <div v-if="settings.settings.uploadRequired.value" class="upload-wrapper">
+                            <div class="upload-wrapper">
                               
                               <div class="upload-input mb-3">
                                 <label for="inputSingleFile" class="form-label">Browse File to Upload</label>
@@ -76,9 +76,7 @@
                                       {{ uploadStore.message.uploaded }}
                                   </section>
                                 </section>
-                                <section v-else>
-                                  <p>{{ uploadStore.error}}</p>
-                                </section>
+                                
                             </div>
 
                             </div>

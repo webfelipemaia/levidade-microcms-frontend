@@ -173,13 +173,14 @@ const fetchRoles = async () => {
 }
 
 const saveData = async (data) => {
+    console.log("saveData: ", data)
     try {
         if(data.id) {
             await updateData(data);
         } else {
             await createData(data); 
         }
-        // Recarregar a lista após salvar
+        
         fetchUsers();
     } catch (error) {
         console.error("Error saving data:", error);
@@ -191,7 +192,7 @@ const processData = async (data) => {
         await userStore.deleteUser(data);
         _users.value = _users.value.filter(u => u.id !== data.id);
         activeModal.value = false;
-        // Recarregar a lista para atualizar a paginação
+        
         fetchUsers();
     } catch (error) {
         console.error('Error deleting data:', error);

@@ -15,36 +15,28 @@ export const useSettingStore = defineStore('setting', {
     }),
 
     getters: {
-        // Getter para acesso fácil às configurações
         getSetting: (state) => (key, defaultValue = null) => {
             return state.settings[key]?.value ?? defaultValue;
         },
 
-        // Getters específicos para configurações comuns
-        siteName: (state) => state.getSetting('siteName', 'Levidade CMS'),
-        siteDescription: (state) => state.getSetting('siteDescription', ''),
-        siteUrl: (state) => state.getSetting('siteAddress', ''),
-        uploadMaxSize: (state) => state.getSetting('uploadMaxFileSize', '2 MB'),
+        siteName: (state) => state.getSetting('site_name', 'Levidade CMS'),
+        siteDescription: (state) => state.getSetting('site_description', ''),
         
-        // Getter para configurações agrupadas por tipo
         uploadPaths: (state) => ({
-            root: state.getSetting('uploadPathRoot', '/storage/'),
-            content: state.getSetting('uploadPathContent', '/storage/content/'),
-            profile: state.getSetting('uploadPathProfile', '/storage/profile/')
+            root: state.uploadpath?.root || '/storage/',
+            content: state.uploadpath?.content || '/storage/content/',
+            profile: state.uploadpath?.profile || '/storage/profile/'
         }),
 
-        // Getter para paginação
         paginationSettings: (state) => ({
-            order: state.pagination.order || ['createdAt', 'DESC'],
-            pageSize: state.pagination.pageSize || 10
+            order: state.pagination?.order || ['createdAt', 'DESC'],
+            pageSize: state.pagination?.page_size || 10
         })
     },
 
     actions: {
         async initialize() {
-            if (this.initialized && Object.keys(this.settings).length > 0) {
-                return;
-            }
+            if (this.initialized) return;
 
             this.loading = true;
             try {
@@ -56,11 +48,7 @@ export const useSettingStore = defineStore('setting', {
                 ]);
                 this.initialized = true;
             } catch (error) {
-                if (import.meta.env.MODE === "development") {
-                    console.log(error);
-                } else {
-                    console.log('Erro na inicialização das configurações');
-                }
+                console.error('Erro na inicialização:', error);
             } finally {
                 this.loading = false;
             }
@@ -69,155 +57,82 @@ export const useSettingStore = defineStore('setting', {
         async getSettings() {
             try {
                 const response = await api.get(`api/v1/private/setting`);
-                
-                if (response.data.status === 'error') {
-                    this.message = response.data.data;
-                    return;
-                }
-
-                this.message = null;
                 const settingsData = response.data.data;
-                this.settingsArray = settingsData;
-
-                this.settings = settingsData.reduce((acc, setting) => {
-                    acc[setting.settingName] = setting;
-                    return acc;
-                }, {});
-
+        
+                this.settings = settingsData;
+                       
+                const flatList = [];
+                const flatten = (obj, prefix = '') => {
+                    for (let key in obj) {
+                        const name = prefix ? `${prefix}.${key}` : key;
+                        
+                        if (obj[key] && typeof obj[key] === 'object' && 'id' in obj[key]) {
+                            flatList.push({
+                                id: obj[key].id,
+                                settingName: name,
+                                value: obj[key].value
+                            });
+                        } 
+                        
+                        else if (typeof obj[key] === 'object' && obj[key] !== null && !Array.isArray(obj[key])) {
+                            flatten(obj[key], name);
+                        }
+                    }
+                };
+                
+                flatten(settingsData);
+                this.settingsArray = flatList;
+        
             } catch (error) {
-                this.message = { status: 'error', message: 'Erro ao carregar configurações' };
-                if (import.meta.env.MODE === "development") {
-                    console.log(error);
-                } else {
-                    console.log('Erro ao carregar configurações');
-                }
+                console.error('Erro ao carregar configurações:', error);
             }
         },
 
         async getPaginationSettings() {
             try {
                 const response = await api.get(`api/v1/private/setting/pagination`);
-                const data = response.data.data;
-        
-                if (data && data.pagination) {
-                    const item = data.pagination;
-                    this.pagination = {};
-        
-                    if (item.additionalValue === 'order') {
-                        this.pagination.order = JSON.parse(item.value);
-                    } else if (item.additionalValue === 'pageSize') {
-                        this.pagination.pageSize = parseInt(item.value);
-                    }
+                if (response.data.status === 'success') {
+                    this.pagination = response.data.data;
                 }
             } catch (error) {
-                if (import.meta.env.MODE === "development") {
-                    console.log(error);
-                } else {
-                    console.error('Erro ao buscar configurações de paginação');
-                }
-            }
-        },
-
-        async getPaginationArraySettings() {
-            try {
-                const response = await api.get(`api/v1/private/setting/pagination`);
-                if (response.data.data) {
-                    this.pagination = response.data.data.reduce((acc, item) => {
-                        if (item.additionalValue === 'order') {
-                            acc.order = JSON.parse(item.value);
-                        } else if (item.additionalValue === 'pageSize') {
-                            acc.pageSize = parseInt(item.value);
-                        }
-                        return acc;
-                    }, {});
-                }
-            } catch (error) {
-                if (import.meta.env.MODE === "development") {
-                    console.log(error);
-                } else {
-                    console.log('Erro ao buscar configurações de paginação');
-                }
+                console.error('Erro paginação:', error);
             }
         },
 
         async getUploadpathSettings() {
             try {
-                const response = await api.get(`api/v1/private/setting/uploadpath`);     
-            
-                if (response.data) {
+                const response = await api.get(`api/v1/private/setting/uploadpath`);
+                if (response.data.status === 'success') {
                     this.uploadpath = response.data.data;
                 }
             } catch (error) {
-                if (import.meta.env.MODE === "development") {
-                    console.log(error);
-                } else {
-                    console.log('Erro ao buscar caminhos de upload');
-                }
+                console.error('Erro uploadpath:', error);
             }
         },
-        
+
         async getFilesizeSettings() {
             try {
-                const response = await api.get(`api/v1/private/setting/filesize`);       
-                if (response.data && response.data.status === 'success') {
+                const response = await api.get(`api/v1/private/setting/filesize`);
+                if (response.data.status === 'success') {
                     this.filesize = response.data.data;
                 }
             } catch (error) {
-                if (import.meta.env.MODE === "development") {
-                    console.log(error);
-                } else {
-                    console.log('Erro ao buscar tamanhos de arquivo');
-                }
+                console.error('Erro filesize:', error);
             }
         },
 
-        // Action para agrupar filetypes
-        async getFiletypeSettings() {
+        async updateSetting(payload) {
             try {
-                const response = await api.get(`api/v1/private/setting/filetype`);       
-                if (response.data && response.data.status === 'success') {
-                    this.filetype = response.data.data.reduce((acc, item) => {
-                        acc[item.additionalValue] = item.value;
-                        return acc;
-                    }, {});
-                }
-            } catch (error) {
-                console.error('Erro ao buscar tipos de arquivo:', error);
-            }
-        },
-
-        async updateSetting(data) {
-            try {
-                const response = await api.put(`api/v1/private/setting/update`, data);
-                const { status, message, successes, errors } = response.data;
-        
-                if (status === 'partial') {
-                    this.message = {
-                        status: 'warning',
-                        message: `${message} Por favor, revise os erros listados.`,
-                        errors: errors.map(err => err.message),
-                        successes: successes.map(suc => suc.message),
-                    };
-                } else if (status === 'success') {
-                    this.message = { status: 'success', message };
+                const response = await api.put(`api/v1/private/setting/update`, payload);
+                if (response.data.status === 'success') {
+                    this.message = { status: 'success', message: 'Configurações atualizadas!' };
                     await this.getSettings();
-                } else {
-                    this.message = { status: 'error', message };
                 }
-                
+                return response.data;
             } catch (error) {
-                const errorMessage = error.response?.data?.message || 'Erro inesperado.';
-                this.message = { status: 'error', message: errorMessage };
-                if (import.meta.env.MODE === "development") {
-                    console.log(error);
-                } else {
-                    console.log('Erro ao atualizar configurações');
-                }
+                this.message = { status: 'error', message: 'Falha na atualização' };
+                throw error;
             }
-        },
-
-        clearMessage() {
-            this.message = null;
         }
     }
 });

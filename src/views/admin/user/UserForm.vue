@@ -66,20 +66,17 @@
 
                         <div v-if="editedItem.id">
                             <p>Roles:</p>
-                            <div class="mb-3" v-for="r in roles" :key="r.i">
+                            <div class="mb-3" v-for="r in roles" :key="r.id">
                                 <div class="form-check">
                                     <input
                                         class="form-check-input"
                                         type="checkbox"
+                                        :id="'role-' + r.id"
                                         :value="r.id"
-                                        :checked="getRoles(editedItem)
-                                                    .some(role => role.name === r.name)"
-                                        @change="toggleRole(r,
-                                                                    getRoles(editedItem)
-                                                                        .some(role => role.name === r.name)
-                                                                        ? 'unchecked' : 'checked' )"
+                                        :checked="selectedRoles.includes(r.id)"
+                                        @change="handleRoleChange(r.id)"
                                     />
-                                    <label class="form-check-label" :for="'flexCheck' + r.id">
+                                    <label class="form-check-label" :for="'role-' + r.id">
                                         {{ r.name }}
                                     </label>
                                 </div>
@@ -127,23 +124,33 @@ const isSaving = ref(false)
 
     const emit = defineEmits(['close', 'saveData'])
 
-    watch(() => props.show, () => {
-        openEditModal()
-        editedItem.value = props.data
-        if(!props.show){
-            closeEditModal()
-            useRemoveBackDrop()
-            userStore.clearSuccessMessage()
-            isSaving.value = false
+    watch(() => props.show, async (newVal) => {
+    if (newVal && props.data && props.data.id) {
+        editedItem.value = { ...props.data };
+        isEditModalOpen.value = true;
+        useAddBackDrop(props.id);
+
+        await fetchUsersRoles(); 
+        const userWithRoles = usersRoles.value.find(u => u.id === props.data.id);
+        if (userWithRoles && userWithRoles.roles) {
+            selectedRoles.value = userWithRoles.roles.map(r => r.id);
+        } else if (props.data.roles) {
+            selectedRoles.value = props.data.roles.map(r => r.id);
+        } else {
+            selectedRoles.value = [];
         }
-    })
+    } else {
+        closeEditModal();
+        selectedRoles.value = [];
+    }
+});
     
-    const openEditModal = (item) => {
+/*     const openEditModal = (item) => {
         fetchUsersRoles()
         editedItem.value = { ...item }
         isEditModalOpen.value = true
         useAddBackDrop(props.id)
-    }
+    } */
     
     const closeEditModal = () => {    
         isEditModalOpen.value = false
@@ -152,22 +159,37 @@ const isSaving = ref(false)
         isSaving.value = false
     }
 
-    const saveData = async (item) => {
-        item.roles = selectedRoles.value
-        isSaving.value = true
-        try {
-            emit('saveData', item)
-            isSaving.value = true
-            await new Promise(resolve => setTimeout(resolve, 1000))
-        } catch (error) {
-            console.error('Error saving data:', error)
-        } finally {
-            isSaving.value = false
-        }
+const saveData = async () => {
+    isSaving.value = true;
+    
+    try {
+        
+        const payload = {
+            ...editedItem.value,
+            roleIds: [...selectedRoles.value]
+        };
+        emit('saveData', payload);
+        
+    } catch (error) {
+        console.error('Erro ao preparar dados:', error);
+    } finally {
+        isSaving.value = false;
     }
+}
+
+
+// Gerencia a seleção sem depender do backend no momento do clique
+const handleRoleChange = (roleId) => {
+    const index = selectedRoles.value.indexOf(roleId);
+    if (index > -1) {
+        selectedRoles.value.splice(index, 1);
+    } else {
+        selectedRoles.value.push(roleId);
+    }
+};
 
     // Given a list of roles, checks if a role contains registered roles and returns true.
-    const getRoles = (data) => {
+/*     const getRoles = (data) => {
         var checked = []
         usersRoles.value.forEach(d => {
             if(d.name === data.name) {
@@ -178,21 +200,21 @@ const isSaving = ref(false)
             }
         })
         return checked
-    }
+    } */
     
     // Check or uncheck a role to be saved
     // is checked, then enter the data
     // is not checked, then delete the data
-    const toggleRole = (data,isChecked) => {
-        const index = selectedRoles.value.indexOf(data)
-        if (index !== -1 && selectedRoles.value.length === 1) {
-            selectedRoles.value.length = 0
-        } else if (index !== -1) {
-            selectedRoles.value.splice(index,1)
+/*     const toggleRole = (role, action) => {
+        const roleId = role.id;
+        const index = selectedRoles.value.indexOf(roleId);
+        
+        if (index !== -1) {
+            selectedRoles.value.splice(index, 1);
         } else {
-            selectedRoles.value.push({data,isChecked})
-        }        
-    }
+            selectedRoles.value.push(roleId);
+        }
+    } */
     
     const fetchRoles = async () => {
        await roleStore.getRoles()

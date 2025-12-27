@@ -61,6 +61,9 @@ export const useUserStore = defineStore({
         },        
 
         async updateUser(id, data) {
+            console.log("Updating user:");
+            console.log(id);
+            console.log(data);
             try {                
                 const response = await api.put(`api/v1/private/user/${id}`, data);
                 this.message = response.data;
