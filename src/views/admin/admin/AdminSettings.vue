@@ -18,7 +18,8 @@
                         <h4>Configurações Gerais</h4>
                     </div>
                     <div class="row">
-                        <div v-if="message" class="alert" :class="message.status === 'error' ? 'alert-danger' : (message.status === 'success' ? 'alert-success' : 'alert-warning')">
+                        <div v-if="message" class="alert"
+                            :class="message.status === 'error' ? 'alert-danger' : (message.status === 'success' ? 'alert-success' : 'alert-warning')">
                             {{ message.message }}
                             <div v-if="message.status === 'warning'">
                                 <div v-if="message.successes?.length">
@@ -41,16 +42,12 @@
                         <template v-for="item in settings.list" :key="item.settingName">
                             <div v-if="allowedFields.includes(item.settingName)" class="col-md-6">
                                 <label :for="item.settingName" class="form-label">
-                                    {{ item.settingName === 'pagination' ? `${capitalizeIt(item.settingName)} - ` : '' }} 
+                                    {{ item.settingName === 'pagination' ? `${capitalizeIt(item.settingName)} - ` : ''
+                                    }}
                                     {{ item.additionalValue }}
                                 </label>
                                 <p style="min-height: 48px;"><small>{{ item.description }}</small></p>
-                                <input 
-                                    type="text" 
-                                    class="form-control" 
-                                    :id="item.settingName" 
-                                    v-model="item.value"
-                                >
+                                <input type="text" class="form-control" :id="item.settingName" v-model="item.value">
                             </div>
                         </template>
                     </div>
@@ -69,13 +66,8 @@
                             </p>
 
                             <div class="form-check form-switch">
-                                <input
-                                    class="form-check-input"
-                                    type="checkbox"
-                                    role="switch"
-                                    id="uploadRequiredSwitch"
-                                    v-model="uploadRequired"
-                                >
+                                <input class="form-check-input" type="checkbox" role="switch" id="uploadRequiredSwitch"
+                                    v-model="uploadRequired">
                                 <label class="form-check-label" for="uploadRequiredSwitch">
                                     {{ uploadRequired ? 'Habilitado' : 'Desabilitado' }}
                                 </label>
@@ -85,36 +77,34 @@
 
                     <div class="row mb-4">
                         <div class="col-md-6">
-                            <label for="uploadMaxFileSize" class="form-label">{{ findSetting('upload.max_file_size').additionalValue }}:</label>
-                            <p style="min-height: 48px;"><small>{{ findSetting('upload.max_file_size').description }}</small></p>
-                            <select v-model="findSetting('upload.max_file_size').value" class="form-select" id="uploadMaxFileSize">
+                            <label for="uploadMaxFileSize" class="form-label">{{
+                                findSetting('upload.max_file_size').additionalValue
+                                }}:</label>
+                            <p style="min-height: 48px;"><small>{{ findSetting('upload.max_file_size').description
+                                    }}</small></p>
+                            <select v-model="findSetting('upload.max_file_size').value" class="form-select"
+                                id="uploadMaxFileSize">
                                 <option disabled value="">Select</option>
-                                <option 
-                                    v-for="maxSize in filesizeOptions" 
-                                    :key="maxSize.label" 
-                                    :value="maxSize.bytes"
-                                >
+                                <option v-for="maxSize in filesizeOptions" :key="maxSize.label" :value="maxSize.bytes">
                                     {{ maxSize.label }}
                                 </option>
                             </select>
                         </div>
                         <div class="col-md-6">
-                            <label for="uploadLimit" class="form-label">{{ findSetting('upload.limit').additionalValue }}</label>
-                            <p style="min-height: 48px;"><small>{{ findSetting('upload.limit').description }}</small></p>
-                            <input 
-                                type="text" 
-                                class="form-control" 
-                                id="uploadLimit" 
-                                v-model="findSetting('upload.limit').value"
-                            >
+                            <label for="uploadLimit" class="form-label">{{ findSetting('upload.limit').additionalValue
+                                }}</label>
+                            <p style="min-height: 48px;"><small>{{ findSetting('upload.limit').description }}</small>
+                            </p>
+                            <input type="text" class="form-control" id="uploadLimit"
+                                v-model="findSetting('upload.limit').value">
                         </div>
-                        
+
                         <div class="col-md mt-4">
                             <p>Os arquivos são armazenados de acordo com o assunto associado ao evento de upload.</p>
                             <dl class="row" v-for="path in uploadPaths" :key="path.label">
                                 <dt class="col-sm-3 text-capitalize">{{ path.label }}</dt>
                                 <dd class="col-sm-9">
-                                    <p class="mb-0"><code>{{ path.value }}</code></p>
+                                    <p class="mb-0"><code>{{ path.value.value }}</code></p>
                                 </dd>
                             </dl>
                         </div>
@@ -122,41 +112,81 @@
                 </form>
             </template>
         </app-card>
+
         <app-card class="mt-4">
-    <template #header>
-        <app-card-header>
-            <div class="d-flex justify-content-between">
-                <span>Infraestrutura de Armazenamento</span>
-                <button class="btn btn-warning btn-sm" @click="saveRootPath">
-                    Atualizar Caminho Raiz
-                </button>
-            </div>
-        </app-card-header>
-    </template>
-    <template #body>
-        <div class="row">
-            <div class="col-md-12">
-                <label for="rootPath" class="form-label">
-                    {{ findSetting('upload_path.root').additionalValue }}
-                </label>
-                <p><small>{{ findSetting('upload_path.root').description }}</small></p>
-                <div class="input-group">
-                    <span class="input-group-text">Path</span>
-                    <input 
-                        type="text" 
-                        class="form-control" 
-                        id="rootPath" 
-                        v-model="findSetting('upload_path.root').value"
-                        placeholder="/storage/"
-                    >
+            <template #header>
+                <app-card-header>
+                    <div class="d-flex justify-content-between">
+                        <span>Infraestrutura de Armazenamento</span>
+                        <button class="btn btn-warning btn-sm" @click="saveSpecificPath('upload_path.root')">
+                            Atualizar Caminho Raiz
+                        </button>
+                    </div>
+                </app-card-header>
+            </template>
+            <template #body>
+                <div class="row">
+                    <div class="col-md-12">
+                        <label for="rootPath" class="form-label">
+                            {{ findSetting('upload_path.root').additionalValue }}
+                        </label>
+                        <p><small>{{ findSetting('upload_path.root').description }}</small></p>
+                        <div class="input-group">
+                            <span class="input-group-text">Path</span>
+                            <input type="text" class="form-control" id="rootPath"
+                                v-model="findSetting('upload_path.root').value" placeholder="/storage/">
+                        </div>
+                        <div class="form-text text-danger">
+                            Cuidado: Alterar este caminho pode tornar arquivos antigos inacessíveis.
+                        </div>
+                    </div>
                 </div>
-                <div class="form-text text-danger">
-                    Cuidado: Alterar este caminho pode tornar arquivos antigos inacessíveis.
+            </template>
+        </app-card>
+
+        <app-card class="mt-4">
+            <template #header>
+                <app-card-header>
+                    <div class="d-flex justify-content-between">
+                        <span>Armazenamento de Conteúdo</span>
+                        <button class="btn btn-outline-primary btn-sm" @click="saveSpecificPath('upload_path.content')">
+                            Atualizar Pasta de Conteúdo
+                        </button>
+                    </div>
+                </app-card-header>
+            </template>
+            <template #body>
+                <div class="row">
+                    <div class="col-md-12">
+                        <label class="form-label">{{ findSetting('upload_path.content').additionalValue }}</label>
+                        <p><small>{{ findSetting('upload_path.content').description }}</small></p>
+                        <input type="text" class="form-control" v-model="findSetting('upload_path.content').value">
+                    </div>
                 </div>
-            </div>
-        </div>
-    </template>
-</app-card>
+            </template>
+        </app-card>
+
+        <app-card class="mt-4">
+            <template #header>
+                <app-card-header>
+                    <div class="d-flex justify-content-between">
+                        <span>Armazenamento de Perfis</span>
+                        <button class="btn btn-outline-primary btn-sm" @click="saveSpecificPath('upload_path.profile')">
+                            Atualizar Pasta de Perfil
+                        </button>
+                    </div>
+                </app-card-header>
+            </template>
+            <template #body>
+                <div class="row">
+                    <div class="col-md-12">
+                        <label class="form-label">{{ findSetting('upload_path.profile').additionalValue }}</label>
+                        <p><small>{{ findSetting('upload_path.profile').description }}</small></p>
+                        <input type="text" class="form-control" v-model="findSetting('upload_path.profile').value">
+                    </div>
+                </div>
+            </template>
+        </app-card>
     </div>
 </template>
 
@@ -192,6 +222,8 @@ const friendlyNames = {
     'upload.max_file_size': 'Tamanho Máximo',
     'upload.limit': 'Limite de Arquivos',
     'upload_path.root': 'Caminho Raiz do Storage',
+    'upload_path.content': 'Diretório de Mídia/Conteúdo',
+    'upload_path.profile': 'Diretório de Avatares/Perfil'
 };
 
 onMounted(async () => {
@@ -200,7 +232,7 @@ onMounted(async () => {
     await settingStore.getUploadpathSettings();
 
     if (settingStore.settingsArray) {
-        
+
         settings.list = settingStore.settingsArray.map(item => ({
             id: item.id,
             settingName: item.settingName,
@@ -208,7 +240,6 @@ onMounted(async () => {
             additionalValue: friendlyNames[item.settingName] || item.settingName,
             description: item.description || `Configuração de ${item.settingName}`
         }));
-        console.log(settings.list);
     }
 
     filesizeOptions.value = Object.values(settingStore.filesize);
@@ -225,13 +256,13 @@ const saveSettings = async () => {
         const payload = settings.list.map(s => {
 
             return {
-                id: s.id, 
+                id: s.id,
                 value: s.value
             };
         });
 
         await settingStore.updateSetting(payload);
-        
+
         message.value = { status: 'success', message: 'Configurações salvas com sucesso' };
     } catch (error) {
         console.error(error);
@@ -239,40 +270,30 @@ const saveSettings = async () => {
     }
 };
 
-const saveRootPath = async () => {
-    const rootSetting = findSetting('upload_path.root');
-    
-    // Validamos se o ID foi carregado
-    if (!rootSetting.id) {
-        message.value = { status: 'error', message: 'ID da configuração não encontrado.' };
-        return;
-    }
+/**
+ * Envia apenas uma configuração específica para o backend
+ * @param {String} settingName Nome da chave (ex: upload_path.content)
+ */
+ const saveSpecificPath = async (settingName) => {
+    const item = findSetting(settingName);
+    if (!item.id) return;
 
     try {
-        // Enviamos um array contendo APENAS este item
-        const payload = [{
-            id: rootSetting.id,
-            value: rootSetting.value
-        }];
-
+        const payload = [{ id: item.id, value: item.value }];
         await settingStore.updateSetting(payload);
         
-        // Feedback específico
-        message.value = { 
-            status: 'success', 
-            message: 'Caminho raiz atualizado com sucesso!' 
-        };
-        
-        // Recarrega os caminhos visuais na lista inferior
-        await settingStore.getUploadpathSettings();
-        uploadPaths.value = Object.entries(settingStore.uploadpath).map(([key, val]) => ({
-            label: key,
-            value: val
-        }));
-        
+        message.value = { status: 'success', message: `${item.additionalValue} atualizado!` };
+
+        // Se a chave alterada for relacionada a paths, atualizamos a lista de visualização inferior
+        if (settingName.includes('upload_path')) {
+            await settingStore.getUploadpathSettings();
+            uploadPaths.value = Object.entries(settingStore.uploadpath).map(([key, val]) => ({
+                label: key,
+                value: val
+            }));
+        }
     } catch (error) {
-        console.error(error);
-        message.value = { status: 'error', message: 'Falha ao atualizar o caminho raiz.' };
+        message.value = { status: 'error', message: 'Erro na atualização.' };
     }
 };
 
