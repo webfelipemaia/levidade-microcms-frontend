@@ -4,13 +4,14 @@
   "private": true,
   "scripts": {
     "dev": "vite",
+    "watch": "vite --watch",
     "build": "vite build",
     "serve": "vite preview"
   },
   "dependencies": {
     "@popperjs/core": "^2.11.8",
     "axios": "^1.7.2",
-    "bootstrap": "^5.3.3",
+    "bootstrap": "^5.3.7",
     "bootstrap-icons": "^1.11.3",
     "core-js": "^3.8.3",
     "pinia": "^2.1.7",

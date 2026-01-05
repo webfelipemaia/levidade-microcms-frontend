@@ -1,0 +1,33 @@
+/* src/assets/scss/_animations.scss */
+
+@keyframes slideFromLeft {
+    from {
+      transform: translateX(-50%);
+      opacity: 0;
+    }
+    to {
+      transform: translateX(0);
+      opacity: 1;
+    }
+  }
+  
+  @keyframes slideFromRight {
+    from {
+      transform: translateX(50%);
+      opacity: 0;
+    }
+    to {
+      transform: translateX(0);
+      opacity: 1;
+    }
+  }
+  
+  .slide-left {
+    animation: slideFromLeft 1s ease-out forwards;
+  }
+  
+  .slide-right {
+    animation: slideFromRight 1s ease-out forwards;
+    animation-delay: 0.3s;
+  }
+  

@@ -5,10 +5,9 @@ import App from './App.vue'
 import aclPlugin from './plugins/acl'
 import VueHighlightJS from 'vue3-highlightjs'
 import 'highlight.js/styles/lightfair.css'
-import "bootstrap"
-import "bootstrap/dist/css/bootstrap.min.css"
 import "bootstrap-icons/font/bootstrap-icons.css"
-import "@/assets/styles/_template.scss"
+import "@/assets/styles/styles.scss"
+import "bootstrap"
 
 const app = createApp(App)
 const pinia = createPinia()

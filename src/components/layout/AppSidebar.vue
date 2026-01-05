@@ -6,8 +6,8 @@
             <h5 class="offcanvas-title" id="offcanvasSidebarMenu">Navbar</h5>
             <button @click="updateValue" type="button" class="btn-close" aria-label="Close"></button>
         </div>
-        <div class="offcanvas-body flex-shrink-0 p-3 mt-5" style="width: 280px;">
-        <ul class="nav offcanvas-nav nav-pills flex-column mb-auto" style="width: 280px;">
+        <div class="offcanvas-body flex-shrink-0 p-3 mt-5">
+        <ul class="nav offcanvas-nav nav-pills flex-column mb-auto">
             <li class="nav-item">
                 <router-link to="/home" class="nav-link" active-class="active" exact-active-class="active">
                     <i class="bi bi-house me-2"></i>
@@ -159,10 +159,6 @@ const isUsersMenuActive = computed(() => {
     padding: 0;
 }
 
-.offcanvas-nav {
-    width: 280px;
-}
-
 .nav-link {
     font-weight: 500;
     color: #333;
@@ -192,9 +188,20 @@ const isUsersMenuActive = computed(() => {
     transition: transform 0.2s ease-in-out;
 }
 
-.nav-link:not(.collapsed) .menu-arrow,  a[data-bs-toggle=collapse][aria-expanded=true] .menu-arrow {
+.nav-link:not(.collapsed) .menu-arrow,  
+a[data-bs-toggle=collapse][aria-expanded=true] .menu-arrow {
     -webkit-transform: rotate(180deg);
     transform: rotate(180deg);
+}
+
+.nav-link[data-bs-toggle=collapse][aria-expanded=true].active {
+    background-color: rgba(0, 0, 0, 0.15);
+    color: #333;
+}
+
+.nav-link[data-bs-toggle=collapse][aria-expanded=true].active i,
+.nav-link[data-bs-toggle=collapse][aria-expanded=true].active .menu-text {
+    color: #333;
 }
 
 .submenu {
