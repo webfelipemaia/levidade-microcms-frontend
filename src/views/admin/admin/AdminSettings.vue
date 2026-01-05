@@ -1,192 +1,272 @@
 <template>
     <div class="container-fluid">
-        <app-card>
-            <template #header>
-                <app-card-header>
-                    <div class="d-flex justify-content-between">
-                        <span>Configurações</span>
-                        <button class="btn btn-primary" @click="saveSettings">
-                            Salvar Alterações
-                        </button>
+        
+        <div class="row g-3">
+            <div v-if="message" class="alert"
+                :class="message.status === 'error' ? 'alert-danger' : (message.status === 'success' ? 'alert-success' : 'alert-warning')">
+                {{ message.message }}
+                <div v-if="message.status === 'warning'">
+                    <div v-if="message.successes?.length">
+                        <h5>Itens atualizados com sucesso:</h5>
+                        <ul>
+                            <li v-for="success in message.successes" :key="success">{{ success }}</li>
+                        </ul>
                     </div>
-                </app-card-header>
-            </template>
+                    <div v-if="message.errors?.length">
+                        <h5>Itens com erro:</h5>
+                        <ul>
+                            <li v-for="error in message.errors" :key="error">{{ error }}</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
 
-            <template #body>
-                <form class="row g-3">
-                    <div class="section-page">
-                        <h4>Configurações Gerais</h4>
+            <div class="section-page">
+                <h4>Configurações Gerais</h4>
+                <div class="row">
+                    <p>
+                        Gerencie parâmetros de listagem, políticas de armazenamento de arquivos e até a forma como a identidade visual pode ser apresentada.
+                    </p>
+                </div>                    
+            </div>
+                    
+            
+            <app-card class="mt-4">
+                <template #header>
+                    <app-card-header>
+                        <div class="d-flex justify-content-between">
+                            <h5 class="setting-title">Identidade do Projeto</h5>
+                        </div>
+                    </app-card-header>
+                </template>
+                <template #body>
+                    <div class="row g-3 mb-5">
+                        <div class="col-md-6">
+                            <label class="form-label">{{ findSetting('site_name').additionalValue }}</label>
+                            <input type="text" class="form-control" v-model="findSetting('site_name').value">
+                            <div class="form-text">{{ findSetting('site_name').description }}</div>
+                        </div>
+                        <div class="col-md-6 text-end">
+                            <button type="button" class="btn btn-outline-primary btn-sm" @click="saveSetting('site_name')">
+                                Salvar Nome
+                            </button>
+                        </div>
                     </div>
+                    <div class="pb-3"><hr class="content-divider"></div>
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label">{{ findSetting('site_description').additionalValue }}</label>
+                            <textarea class="form-control" rows="1" v-model="findSetting('site_description').value"></textarea>
+                            <div class="form-text">{{ findSetting('site_description').description }}</div>
+                        </div>
+                        <div class="col-md-6 text-end">
+                            <button type="button" class="btn btn-outline-primary btn-sm" @click="saveSetting('site_description')">
+                                Salvar Descrição
+                            </button>
+                        </div>
+                    </div>
+                </template>
+            </app-card>
+
+            <app-card class="mt-4">
+                <template #header>
+                    <app-card-header>
+                        <div class="d-flex justify-content-between">
+                            <h5 class="setting-title">Canais de Contato</h5>
+                        </div>
+                    </app-card-header>
+                </template>
+                <template #body>
+                    <div class="row g-3 mb-5">
+                        <div class="col-md-6">
+                            <label class="form-label">{{ findSetting('admin_email').additionalValue }}</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-envelope"></i></span>
+                                <input type="email" class="form-control" v-model="findSetting('admin_email').value">
+                            </div>
+                            <div class="form-text text-danger">Atenção: Este e-mail recebe notificações críticas do sistema.</div>
+                        </div>
+                        <div class="col-md-6 text-end">
+                            <button type="button" class="btn btn-outline-primary btn-sm" @click="saveSetting('admin_email')">
+                                Salvar E-mail
+                            </button>
+                        </div>
+                    </div>
+                    <div class="pb-3">
+                        <hr class="content-divider">
+                    </div>
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label">{{ findSetting('site_contact').additionalValue }}</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-telephone"></i></span>
+                                <input type="text" class="form-control" v-model="findSetting('site_contact').value">
+                            </div>
+                            <div class="form-text">{{ findSetting('site_contact').description }}</div>
+                        </div>
+                        <div class="col-md-6 text-end">
+                            <button type="button" class="btn btn-outline-primary btn-sm" @click="saveSetting('site_contact')">
+                                Salvar Contato
+                            </button>
+                        </div>
+                    </div>
+                </template>
+            </app-card>
+
+            <app-card class="mt-4">
+                <template #header>
+                    <app-card-header>
+                        <div class="d-flex justify-content-between">
+                            <h5 class="setting-title">Ordenação Padrão</h5>
+                            <button type="button" class="btn btn-outline-primary btn-sm" @click="saveSetting('pagination.order')">
+                                Salvar Ordenação
+                            </button>
+                        </div>
+                    </app-card-header>
+                </template>
+                <template #body>
                     <div class="row">
-                        <div v-if="message" class="alert"
-                            :class="message.status === 'error' ? 'alert-danger' : (message.status === 'success' ? 'alert-success' : 'alert-warning')">
-                            {{ message.message }}
-                            <div v-if="message.status === 'warning'">
-                                <div v-if="message.successes?.length">
-                                    <h5>Itens atualizados com sucesso:</h5>
-                                    <ul>
-                                        <li v-for="success in message.successes" :key="success">{{ success }}</li>
-                                    </ul>
-                                </div>
-                                <div v-if="message.errors?.length">
-                                    <h5>Itens com erro:</h5>
-                                    <ul>
-                                        <li v-for="error in message.errors" :key="error">{{ error }}</li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="row mb-4">
-                        <template v-for="item in settings.list" :key="item.settingName">
-                            <div v-if="allowedFields.includes(item.settingName)" class="col-md-6">
-                                <label :for="item.settingName" class="form-label">
-                                    {{ item.settingName === 'pagination' ? `${capitalizeIt(item.settingName)} - ` : ''
-                                    }}
-                                    {{ item.additionalValue }}
-                                </label>
-                                <p style="min-height: 48px;"><small>{{ item.description }}</small></p>
-                                <input type="text" class="form-control" :id="item.settingName" v-model="item.value">
-                            </div>
-                        </template>
-                    </div>
-
-                    <div class="row mb-4">
-                        <div class="section-page">
-                            <h4>Uploads</h4>
-                        </div>
-
-                        <div class="col-md-6">
-                            <label for="uploadRequiredSwitch" class="form-label">
-                                {{ findSetting('upload.required').additionalValue }}:
+                        <div class="col-md-12">
+                            <label class="form-label d-block">
+                                {{ findSetting('pagination.order').additionalValue }}
                             </label>
-                            <p style="min-height: 48px;">
-                                <small>{{ findSetting('upload.required').description }}</small>
-                            </p>
-
-                            <div class="form-check form-switch">
-                                <input class="form-check-input" type="checkbox" role="switch" id="uploadRequiredSwitch"
-                                    v-model="uploadRequired">
-                                <label class="form-check-label" for="uploadRequiredSwitch">
-                                    {{ uploadRequired ? 'Habilitado' : 'Desabilitado' }}
-                                </label>
+                            <p><small>{{ findSetting('pagination.order').description }}</small></p>
+                            
+                            <div class="d-flex gap-4 mt-2">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="orderDir" id="orderAsc" 
+                                        value="ASC" v-model="paginationDirection">
+                                    <label class="form-check-label" for="orderAsc">
+                                        <i class="bi bi-sort-numeric-down"></i> Crescente (ASC)
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="orderDir" id="orderDesc" 
+                                        value="DESC" v-model="paginationDirection">
+                                    <label class="form-check-label" for="orderDesc">
+                                        <i class="bi bi-sort-numeric-up-alt"></i> Decrescente (DESC)
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="form-text mt-3">
+                                Atualmente ordenando pelo campo: <code>{{ paginationField }}</code>
                             </div>
                         </div>
                     </div>
+                </template>
+            </app-card>
 
-                    <div class="row mb-4">
+            <app-card class="mt-4">
+                <template #header>
+                    <app-card-header>
+                        <div class="d-flex justify-content-between">
+                            <h5 class="setting-title">Densidade da Listagem</h5>
+                            <button type="button" class="btn btn-outline-primary btn-sm" @click="saveSetting('pagination.page_size')">
+                                Salvar Tamanho
+                            </button>
+                        </div>
+                    </app-card-header>
+                </template>
+                <template #body>
+                    <div class="row">
                         <div class="col-md-6">
-                            <label for="uploadMaxFileSize" class="form-label">{{
-                                findSetting('upload.max_file_size').additionalValue
-                                }}:</label>
-                            <p style="min-height: 48px;"><small>{{ findSetting('upload.max_file_size').description
-                                    }}</small></p>
-                            <select v-model="findSetting('upload.max_file_size').value" class="form-select"
-                                id="uploadMaxFileSize">
-                                <option disabled value="">Select</option>
-                                <option v-for="maxSize in filesizeOptions" :key="maxSize.label" :value="maxSize.bytes">
-                                    {{ maxSize.label }}
+                            <label for="pageSizeSelect" class="form-label">
+                                {{ findSetting('pagination.page_size').additionalValue }}
+                            </label>
+                            <p><small>{{ findSetting('pagination.page_size').description }}</small></p>
+                            
+                            <select 
+                                v-model.number="findSetting('pagination.page_size').value" 
+                                class="form-select" 
+                                id="pageSizeSelect"
+                            >
+                                <option v-for="size in [10, 25, 50, 100, 200]" :key="size" :value="size">
+                                    {{ size }} itens por página
                                 </option>
                             </select>
+                            <div class="form-text mt-2">
+                                Define quantos registros serão carregados inicialmente em cada tabela.
+                            </div>
                         </div>
-                        <div class="col-md-6">
-                            <label for="uploadLimit" class="form-label">{{ findSetting('upload.limit').additionalValue
-                                }}</label>
-                            <p style="min-height: 48px;"><small>{{ findSetting('upload.limit').description }}</small>
-                            </p>
-                            <input type="text" class="form-control" id="uploadLimit"
-                                v-model="findSetting('upload.limit').value">
-                        </div>
+                    </div>
+                </template>
+            </app-card>
 
-                        <div class="col-md mt-4">
-                            <p>Os arquivos são armazenados de acordo com o assunto associado ao evento de upload.</p>
-                            <dl class="row" v-for="path in uploadPaths" :key="path.label">
-                                <dt class="col-sm-3 text-capitalize">{{ path.label }}</dt>
-                                <dd class="col-sm-9">
-                                    <p class="mb-0"><code>{{ path.value.value }}</code></p>
-                                </dd>
-                            </dl>
+            <app-card class="mt-4">
+                <template #header>
+                    <app-card-header>
+                        <div class="d-flex justify-content-between">
+                            <h5 class="setting-title">Infraestrutura de Armazenamento</h5>
+                            <button type="button" class="btn btn-outline-primary btn-sm" @click="saveSetting('upload_path.root')">
+                                Salvar Caminho Raiz
+                            </button>
+                        </div>
+                    </app-card-header>
+                </template>
+                <template #body>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <label for="rootPath" class="form-label">
+                                {{ findSetting('upload_path.root').additionalValue }}
+                            </label>
+                            <p><small>{{ findSetting('upload_path.root').description }}</small></p>
+                            <div class="input-group">
+                                <span class="input-group-text">Path</span>
+                                <input type="text" class="form-control" id="rootPath"
+                                    v-model="findSetting('upload_path.root').value" placeholder="/storage/">
+                            </div>
+                            <div class="form-text text-danger">
+                                Cuidado: Alterar este caminho pode tornar arquivos antigos inacessíveis.
+                            </div>
                         </div>
                     </div>
-                </form>
-            </template>
-        </app-card>
+                </template>
+            </app-card>
 
-        <app-card class="mt-4">
-            <template #header>
-                <app-card-header>
-                    <div class="d-flex justify-content-between">
-                        <span>Infraestrutura de Armazenamento</span>
-                        <button class="btn btn-warning btn-sm" @click="saveSpecificPath('upload_path.root')">
-                            Atualizar Caminho Raiz
-                        </button>
-                    </div>
-                </app-card-header>
-            </template>
-            <template #body>
-                <div class="row">
-                    <div class="col-md-12">
-                        <label for="rootPath" class="form-label">
-                            {{ findSetting('upload_path.root').additionalValue }}
-                        </label>
-                        <p><small>{{ findSetting('upload_path.root').description }}</small></p>
-                        <div class="input-group">
-                            <span class="input-group-text">Path</span>
-                            <input type="text" class="form-control" id="rootPath"
-                                v-model="findSetting('upload_path.root').value" placeholder="/storage/">
+            <app-card class="mt-4">
+                <template #header>
+                    <app-card-header>
+                        <div class="d-flex justify-content-between">
+                            <h5 class="setting-title">Armazenamento de Conteúdo</h5>
+                            <button type="button" class="btn btn-outline-primary btn-sm" @click="saveSetting('upload_path.content')">
+                                Salvar Pasta de Conteúdo
+                            </button>
                         </div>
-                        <div class="form-text text-danger">
-                            Cuidado: Alterar este caminho pode tornar arquivos antigos inacessíveis.
+                    </app-card-header>
+                </template>
+                <template #body>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <label class="form-label">{{ findSetting('upload_path.content').additionalValue }}</label>
+                            <p><small>{{ findSetting('upload_path.content').description }}</small></p>
+                            <input type="text" class="form-control" v-model="findSetting('upload_path.content').value">
                         </div>
                     </div>
-                </div>
-            </template>
-        </app-card>
+                </template>
+            </app-card>
 
-        <app-card class="mt-4">
-            <template #header>
-                <app-card-header>
-                    <div class="d-flex justify-content-between">
-                        <span>Armazenamento de Conteúdo</span>
-                        <button class="btn btn-outline-primary btn-sm" @click="saveSpecificPath('upload_path.content')">
-                            Atualizar Pasta de Conteúdo
-                        </button>
+            <app-card class="mt-4">
+                <template #header>
+                    <app-card-header>
+                        <div class="d-flex justify-content-between">
+                            <h5 class="setting-title">Armazenamento de Avatar de Perfil</h5>
+                            <button type="button" class="btn btn-outline-primary btn-sm" @click="saveSetting('upload_path.profile')">
+                                Salvar Pasta de Avatar de Perfil
+                            </button>
+                        </div>
+                    </app-card-header>
+                </template>
+                <template #body>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <label class="form-label">{{ findSetting('upload_path.profile').additionalValue }}</label>
+                            <p><small>{{ findSetting('upload_path.profile').description }}</small></p>
+                            <input type="text" class="form-control" v-model="findSetting('upload_path.profile').value">
+                        </div>
                     </div>
-                </app-card-header>
-            </template>
-            <template #body>
-                <div class="row">
-                    <div class="col-md-12">
-                        <label class="form-label">{{ findSetting('upload_path.content').additionalValue }}</label>
-                        <p><small>{{ findSetting('upload_path.content').description }}</small></p>
-                        <input type="text" class="form-control" v-model="findSetting('upload_path.content').value">
-                    </div>
-                </div>
-            </template>
-        </app-card>
-
-        <app-card class="mt-4">
-            <template #header>
-                <app-card-header>
-                    <div class="d-flex justify-content-between">
-                        <span>Armazenamento de Perfis</span>
-                        <button class="btn btn-outline-primary btn-sm" @click="saveSpecificPath('upload_path.profile')">
-                            Atualizar Pasta de Perfil
-                        </button>
-                    </div>
-                </app-card-header>
-            </template>
-            <template #body>
-                <div class="row">
-                    <div class="col-md-12">
-                        <label class="form-label">{{ findSetting('upload_path.profile').additionalValue }}</label>
-                        <p><small>{{ findSetting('upload_path.profile').description }}</small></p>
-                        <input type="text" class="form-control" v-model="findSetting('upload_path.profile').value">
-                    </div>
-                </div>
-            </template>
-        </app-card>
+                </template>
+            </app-card>
+        </div>
     </div>
 </template>
 
@@ -195,7 +275,7 @@ import { onMounted, reactive, ref, computed } from 'vue';
 import AppCard from '@/components/layout/ui/card/AppCard.vue';
 import AppCardHeader from '@/components/layout/ui/card/AppCardHeader.vue';
 import { useSettingStore } from '@/stores/settingStore';
-import { capitalizeFirstLetter } from '@/components/layout/composables/HandleStrings'
+//import { capitalizeFirstLetter } from '@/components/layout/composables/HandleStrings'
 
 const settingStore = useSettingStore();
 
@@ -204,27 +284,42 @@ const message = ref(null);
 const filesizeOptions = ref([]);
 const uploadPaths = ref([]);
 
-const allowedFields = [
-    'site_name',
-    'site_description',
-    'admin_email',
-    'site_contact',
-    'pagination'
-];
-
 const friendlyNames = {
     'site_name': 'Nome do Site',
     'site_description': 'Descrição do Site',
     'admin_email': 'E-mail Admin',
     'site_contact': 'Contato',
     'pagination': 'Itens por Página',
+    'pagination.page_size': 'Quantidade de Itens Padrão',
     'upload.required': 'Upload Obrigatório',
     'upload.max_file_size': 'Tamanho Máximo',
     'upload.limit': 'Limite de Arquivos',
     'upload_path.root': 'Caminho Raiz do Storage',
     'upload_path.content': 'Diretório de Mídia/Conteúdo',
-    'upload_path.profile': 'Diretório de Avatares/Perfil'
+    'upload_path.profile': 'Diretório de Avatares/Perfil',
+    
 };
+
+// Computada para extrair/salvar apenas a direção (ASC/DESC)
+const paginationDirection = computed({
+    get() {
+        const s = findSetting('pagination.order');
+        // Assume que o valor é um array ['CAMPO', 'DIREÇÃO']
+        return Array.isArray(s.value) ? s.value[1] : 'DESC';
+    },
+    set(newDir) {
+        const s = findSetting('pagination.order');
+        if (s && Array.isArray(s.value)) {
+            s.value = [s.value[0], newDir];
+        }
+    }
+});
+
+// Apenas para exibir qual campo está sendo usado (ex: 'id')
+const paginationField = computed(() => {
+    const s = findSetting('pagination.order');
+    return Array.isArray(s.value) ? s.value[0] : 'N/A';
+});
 
 onMounted(async () => {
     await settingStore.getSettings();
@@ -250,41 +345,31 @@ onMounted(async () => {
     }));
 });
 
-const saveSettings = async () => {
-    try {
-
-        const payload = settings.list.map(s => {
-
-            return {
-                id: s.id,
-                value: s.value
-            };
-        });
-
-        await settingStore.updateSetting(payload);
-
-        message.value = { status: 'success', message: 'Configurações salvas com sucesso' };
-    } catch (error) {
-        console.error(error);
-        message.value = { status: 'error', message: 'Erro ao salvar configurações' };
-    }
-};
-
 /**
- * Envia apenas uma configuração específica para o backend
+ * Envia uma configuração específica para o backend
  * @param {String} settingName Nome da chave (ex: upload_path.content)
  */
- const saveSpecificPath = async (settingName) => {
+const saveSetting = async (settingName) => {
     const item = findSetting(settingName);
-    if (!item.id) return;
+    if (!item?.id) {
+        message.value = { 
+            status: 'error', 
+            message: `Configuração "${settingName}" não encontrada` 
+        };
+        return;
+    }
 
     try {
-        const payload = [{ id: item.id, value: item.value }];
-        await settingStore.updateSetting(payload);
+        await settingStore.updateItem({
+            key: settingName,
+            value: item.value
+        });
         
-        message.value = { status: 'success', message: `${item.additionalValue} atualizado!` };
+        message.value = { 
+            status: 'success', 
+            message: `${item.additionalValue} atualizado com sucesso!` 
+        };
 
-        // Se a chave alterada for relacionada a paths, atualizamos a lista de visualização inferior
         if (settingName.includes('upload_path')) {
             await settingStore.getUploadpathSettings();
             uploadPaths.value = Object.entries(settingStore.uploadpath).map(([key, val]) => ({
@@ -292,8 +377,17 @@ const saveSettings = async () => {
                 value: val
             }));
         }
+        
+/*         setTimeout(() => {
+            message.value = null;
+        }, 3000); */
+        
     } catch (error) {
-        message.value = { status: 'error', message: 'Erro na atualização.' };
+        console.error('Erro ao salvar configuração:', error);
+        message.value = { 
+            status: 'error', 
+            message: `Erro ao salvar ${settingName}: ${error.message}` 
+        };
     }
 };
 
@@ -301,7 +395,7 @@ const findSetting = (settingName) => {
     return settings.list.find(s => s.settingName === settingName) || { value: '', additionalValue: settingName };
 }
 
-const capitalizeIt = (word) => capitalizeFirstLetter(word);
+/* const capitalizeIt = (word) => capitalizeFirstLetter(word);
 
 const uploadRequired = computed({
     get() {
@@ -312,5 +406,5 @@ const uploadRequired = computed({
         const s = findSetting('upload.required');
         if (s) s.value = newVal;
     }
-});
+}); */
 </script>
