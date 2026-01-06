@@ -2,6 +2,7 @@
 import { defineStore } from "pinia";
 import api from "@/services/api";
 import router from "../router";
+import { useAclStore } from '@/stores/aclStore';
 import defaultAvatar from "@/assets/images/profile.png";
 
 export const useAuthStore = defineStore({
@@ -19,6 +20,33 @@ export const useAuthStore = defineStore({
   
   getters: {
     avatar: (state) => state.avatarUrl || defaultAvatar,
+    // Retorna true se o usuário tiver a role
+    hasRole: (state) => (roleName) => {
+      return state.user?.roles?.includes(roleName) || false;
+    },
+
+    // Atalho para Administrator
+    isAdmin: (state) => {
+      return state.user?.roles?.includes('Administrator') || false;
+    },
+
+    // NOVO: Verifica permissão na aclStore
+    // No authStore.js -> getters
+    can: (state) => (permissionName) => {
+      // 1. Super-admin sempre pode tudo
+      if (state.user?.roles?.includes('Administrator')) return true;
+      
+      const aclStore = useAclStore();
+      
+      // LOG PARA DEBUG: Delete após funcionar
+      console.log("Checando permissão:", permissionName, "Total carregado:", aclStore.userPermissions.length);
+
+      // 2. Verifica se a permissão bate com Name ou Slug (independente de maiúsculas/minúsculas)
+      return aclStore.userPermissions.some(p => 
+        p.slug?.toLowerCase() === permissionName.toLowerCase() || 
+        p.name?.toLowerCase() === permissionName.toLowerCase()
+      );
+    }
   }, 	
 
   actions: {
@@ -131,6 +159,8 @@ export const useAuthStore = defineStore({
     },
 
     async logout() {
+
+      const aclStore = useAclStore();
       try {
         await api.post(
           "api/v1/public/auth/logout",
@@ -139,6 +169,7 @@ export const useAuthStore = defineStore({
             withCredentials: true,
           }
         );
+        aclStore.clearAclData();
         this.authChecked = false;
       } catch (error) {
         console.error("Logout error:", error);
@@ -222,7 +253,10 @@ export const useAuthStore = defineStore({
         await this.checkSession();
     
         if (this.isAuthenticated) {
-          await this.checkAuth();
+          //await this.checkAuth();
+          const aclStore = useAclStore();
+          // Carrega as permissões do usuário logado assim que a sessão é confirmada
+          await aclStore.fetchUserPermissions(this.user.id);
         }
       } finally {
         this.isLoading = false;

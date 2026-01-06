@@ -2,6 +2,7 @@
 import { defineStore } from 'pinia';
 import { useRoleStore } from '@/stores/roleStore';
 import { usePermissionStore } from '@/stores/permissionStore';
+import { useAuthStore } from './authStore';
 
 export const useAclStore = defineStore('acl', {
     state: () => ({
@@ -122,13 +123,14 @@ export const useAclStore = defineStore('acl', {
             this.isLoading = true;
             
             try {
+                const authStore = useAuthStore();
                 const roleStore = useRoleStore();
                 const permissionStore = usePermissionStore();
                 
                 // Garante que temos os dados mais recentes
                 await this.fetchAclData(forceRefresh);
                 
-                // Busca as roles do usuário
+                /* // Busca as roles do usuário
                 await roleStore.getUsersRoles();
                 
                 // Normaliza usersRoles
@@ -154,6 +156,29 @@ export const useAclStore = defineStore('acl', {
                             p => p.id === rp.permissionId
                         );
                         
+                        if (permission && !this.userPermissions.some(up => up.id === permission.id)) {
+                            this.userPermissions.push(permission);
+                        }
+                    });
+                }); */
+
+                // Em vez de buscar no usersRoles (que pode ser pesado), 
+                // vamos pegar as roles que já vieram no login do usuário
+                const userRoleNames = authStore.user?.roles || []; // Ex: ["Editor"]
+
+                // Encontrar os objetos de role completos para pegar os IDs
+                const rolesObjects = roleStore.roles.filter(r => userRoleNames.includes(r.name));
+                const roleIds = rolesObjects.map(r => r.id); // Ex: [3]
+
+                const normalizedRolesPermissions = this.normalizeRolesPermissions(permissionStore.rolesPermissions);
+
+                this.userPermissions = [];
+                
+                // Pegar permissões associadas a esses IDs
+                roleIds.forEach(id => {
+                    const rps = normalizedRolesPermissions.filter(rp => rp.roleId === id);
+                    rps.forEach(rp => {
+                        const permission = permissionStore.permissions.find(p => p.id === rp.permissionId);
                         if (permission && !this.userPermissions.some(up => up.id === permission.id)) {
                             this.userPermissions.push(permission);
                         }

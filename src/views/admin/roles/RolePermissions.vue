@@ -144,7 +144,7 @@ const loadRolePermissions = async () => {
         const rolePermissions = permissionStore.rolesPermissions.data.filter(rp => rp.roleId === parseInt(id))
         selectedPermissions.value = rolePermissions.map(rp => rp.permissionId)
         
-        console.log('Permissões carregadas para o role:', selectedPermissions.value)
+        //console.log('Permissões carregadas para o role:', selectedPermissions.value)
         
     } catch (error) {
         console.error('Erro ao carregar permissões do role:', error)

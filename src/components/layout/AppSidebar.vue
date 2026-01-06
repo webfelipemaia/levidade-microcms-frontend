@@ -7,6 +7,7 @@
             <button @click="updateValue" type="button" class="btn-close" aria-label="Close"></button>
         </div>
         <div class="offcanvas-body flex-shrink-0 p-3 mt-5">
+        
         <ul class="nav offcanvas-nav nav-pills flex-column mb-auto">
             <li class="nav-item">
                 <router-link to="/home" class="nav-link" active-class="active" exact-active-class="active">
@@ -56,7 +57,7 @@
                             </router-link>
                         </li>
                         <li class="nav-item">
-                            <router-link to="/admin/acl" class="nav-link" active-class="active">
+                            <router-link v-if="authStore.hasRole('Administrator')" to="/admin/acl" class="nav-link" active-class="active">
                                 <span class="menu-text">Controle de Acesso (ACL)</span>
                             </router-link>
                         </li>
@@ -65,13 +66,13 @@
             </li>
 
             <li class="nav-item">
-                <router-link to="/relatorios" class="nav-link" active-class="active">
+                <router-link v-if="authStore.can('users:read')" to="/relatorios" class="nav-link" active-class="active">
                     <i class="bi bi-table me-2"></i>
                     <span class="menu-text">Relatórios</span>
                 </router-link>
             </li>
             <li class="nav-item">
-                <router-link to="/admin/settings" class="nav-link" active-class="active">
+                <router-link v-if="authStore.isAdmin" to="/admin/settings" class="nav-link" active-class="active">
                     <i class="bi bi-gear me-2"></i>
                     <span class="menu-text">Configurações</span>
                 </router-link>
@@ -84,6 +85,7 @@
 <script setup>
 import { ref, watch, computed } from 'vue';
 import { useRoute } from 'vue-router';
+import { useAuthStore } from '@/stores/authStore';
 
 const props = defineProps({
     isActive: {
@@ -91,8 +93,11 @@ const props = defineProps({
         default: false
     }
 });
+
 const route = useRoute();
 const emit = defineEmits(['closeSidebar']);
+
+const authStore = useAuthStore();
 
 const activeValue = ref(Boolean(props.isActive));
 watch(() => props.isActive, (newVal) => {

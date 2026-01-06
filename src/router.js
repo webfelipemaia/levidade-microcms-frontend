@@ -1,5 +1,6 @@
 import { createWebHistory, createRouter } from "vue-router";
 import { useAuthStore } from '@/stores/authStore';
+import { useAclStore } from "./stores/aclStore";
 
 const routes =  [
     {
@@ -58,11 +59,19 @@ const routes =  [
       path: '/',
       redirect: '/home'
     },
-    
+
+    {
+      path: '/error/:code',
+      name: 'error',
+      component: () => import('@/views/public/ErrorView.vue'),
+      props: true
+    },
+
     {
       path: '/:pathMatch(.*)*',
       name: 'not-found',
-      component: () => import('@/views/public/NotFoundView.vue')
+      component: () => import('@/views/public/ErrorView.vue'),
+      meta: { defaultCode: '404' }
     },
 
     // Users
@@ -197,32 +206,55 @@ const routes =  [
   });
 
 
-router.beforeEach(async (to, from, next) => {
-  const authStore = useAuthStore()
-  const publicPages = ['login', 'register', 'password-recover', 'password-reset']
-  const authRequired = !publicPages.includes(to.name)
-
-  if (!authRequired) {
-    next()
-    return
-  }
-
-  if (!authStore.authChecked) {
-    try {
-      await authStore.checkAuth()
-    } catch (error) {
-      console.error('Error during auth check:', error)
-      next('/login')
-      return
+  router.beforeEach(async (to, from, next) => {
+    const authStore = useAuthStore()
+    const aclStore = useAclStore()
+    
+    const publicPages = ['login', 'register', 'password-recover', 'password-reset', 'error']
+    const isPublicPage = publicPages.includes(to.name)
+  
+    // 1. Se for pública (incluindo a página de erro), libera direto
+    if (isPublicPage) {
+      return next()
     }
-  }
-
-  if (!authStore.isAuthenticated) {
-    next('/login')
-  } else {
+  
+    // 2. Garante que o estado de autenticação foi checado
+    if (!authStore.authChecked) {
+      try {
+        await authStore.checkAuth()
+      } catch (error) {
+        return next({ name: 'login' })
+      }
+    }
+  
+    // 3. Se não estiver autenticado, vai para login
+    if (!authStore.isAuthenticated) {
+      return next({ name: 'login' })
+    }
+  
+    // 4. Carrega permissões se necessário (apenas se logado e array vazio)
+    if (authStore.isAuthenticated && aclStore.userPermissions.length === 0) {
+      try {
+        await aclStore.fetchUserPermissions(authStore.user.id)
+      } catch (error) {
+        console.error("Erro ao carregar permissões:", error)
+        // Opcional: redirecionar para erro 500 se falhar drasticamente
+      }
+    }
+  
+    // 5. Verifica permissão específica da rota
+    const requiredPermission = to.meta.permission
+    if (requiredPermission) {
+      if (!authStore.can(requiredPermission)) {
+        console.warn(`Acesso negado para a permissão: ${requiredPermission}`)
+        // Redireciona diretamente para a página de erro 403
+        return next({ name: 'error', params: { code: '403' } })
+      }
+    }
+  
+    // 6. Se passou por tudo, autoriza o acesso
     next()
-  }
-})
+  })
   
   
 
