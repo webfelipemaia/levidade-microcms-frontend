@@ -6,7 +6,10 @@
     "dev": "vite",
     "watch": "vite --watch",
     "build": "vite build",
-    "serve": "vite preview"
+    "serve": "vite preview",
+    "docs:dev": "vitepress dev docs",
+    "docs:build": "vitepress build docs",
+    "docs:preview": "vitepress preview docs"
   },
   "dependencies": {
     "@popperjs/core": "^2.11.8",
@@ -31,6 +34,7 @@
     "sass": "^1.81.0",
     "sass-loader": "^16.0.3",
     "vite": "^7.1.9",
+    "vitepress": "^1.6.4",
     "webpack": "^5.96.1"
   },
   "eslintConfig": {
