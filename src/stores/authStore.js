@@ -20,28 +20,19 @@ export const useAuthStore = defineStore({
   
   getters: {
     avatar: (state) => state.avatarUrl || defaultAvatar,
-    // Retorna true se o usuário tiver a role
     hasRole: (state) => (roleName) => {
       return state.user?.roles?.includes(roleName) || false;
     },
 
-    // Atalho para Administrator
     isAdmin: (state) => {
       return state.user?.roles?.includes('Administrator') || false;
     },
 
-    // NOVO: Verifica permissão na aclStore
-    // No authStore.js -> getters
     can: (state) => (permissionName) => {
-      // 1. Super-admin sempre pode tudo
-      if (state.user?.roles?.includes('Administrator')) return true;
+       if (state.user?.roles?.includes('Administrator')) return true;
       
       const aclStore = useAclStore();
       
-      // LOG PARA DEBUG: Delete após funcionar
-      console.log("Checando permissão:", permissionName, "Total carregado:", aclStore.userPermissions.length);
-
-      // 2. Verifica se a permissão bate com Name ou Slug (independente de maiúsculas/minúsculas)
       return aclStore.userPermissions.some(p => 
         p.slug?.toLowerCase() === permissionName.toLowerCase() || 
         p.name?.toLowerCase() === permissionName.toLowerCase()
@@ -121,7 +112,7 @@ export const useAuthStore = defineStore({
       } catch (logoutError) {
         this.clearClientSideAuthData();
         this.error = { 
-          message: "Problema de autenticação. Por favor, faça login novamente." 
+          message: "Problema na autenticação. Por favor, faça login novamente." 
         };
       }
     },
@@ -253,9 +244,7 @@ export const useAuthStore = defineStore({
         await this.checkSession();
     
         if (this.isAuthenticated) {
-          //await this.checkAuth();
           const aclStore = useAclStore();
-          // Carrega as permissões do usuário logado assim que a sessão é confirmada
           await aclStore.fetchUserPermissions(this.user.id);
         }
       } finally {

@@ -26,7 +26,6 @@ import { useRoute } from 'vue-router';
 
 const route = useRoute();
 
-// Pega o código da prop ou da query string ou do meta
 const errorCode = computed(() => route.params.code || route.meta.defaultCode || '404');
 
 const errorConfig = computed(() => {

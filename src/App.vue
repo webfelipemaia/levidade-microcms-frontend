@@ -3,7 +3,7 @@
 
   <div class="d-flex align-items-stretch">
     <AppSidebar
-      v-if="authStore.isAuthenticated"
+      v-if="authStore.isAuthenticated && !$route.meta.hideSidebar"
       :is-active="sidebarOpen"
       @close-sidebar="toggleSidebar"
     />

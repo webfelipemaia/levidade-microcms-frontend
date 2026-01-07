@@ -28,7 +28,11 @@ const routes =  [
       path: '/logout',
       name: 'logout', 
       component: () => import("@/views/public/LogoutView.vue"),
-      meta: { requiresAuth: true }
+      meta: { 
+        requiresAuth: true,
+        hideNavbar: true, 
+        hideSidebar: true 
+      }
     },
     { 
       path: '/register',
@@ -64,14 +68,22 @@ const routes =  [
       path: '/error/:code',
       name: 'error',
       component: () => import('@/views/public/ErrorView.vue'),
-      props: true
+      props: true,
+      meta: { 
+        hideNavbar: true, 
+        hideSidebar: true 
+      }
     },
 
     {
       path: '/:pathMatch(.*)*',
       name: 'not-found',
       component: () => import('@/views/public/ErrorView.vue'),
-      meta: { defaultCode: '404' }
+      meta: { 
+        defaultCode: '404',
+        hideNavbar: true, 
+        hideSidebar: true 
+      }
     },
 
     // Users
@@ -213,12 +225,10 @@ const routes =  [
     const publicPages = ['login', 'register', 'password-recover', 'password-reset', 'error']
     const isPublicPage = publicPages.includes(to.name)
   
-    // 1. Se for pública (incluindo a página de erro), libera direto
     if (isPublicPage) {
       return next()
     }
   
-    // 2. Garante que o estado de autenticação foi checado
     if (!authStore.authChecked) {
       try {
         await authStore.checkAuth()
@@ -227,32 +237,26 @@ const routes =  [
       }
     }
   
-    // 3. Se não estiver autenticado, vai para login
     if (!authStore.isAuthenticated) {
       return next({ name: 'login' })
     }
   
-    // 4. Carrega permissões se necessário (apenas se logado e array vazio)
     if (authStore.isAuthenticated && aclStore.userPermissions.length === 0) {
       try {
         await aclStore.fetchUserPermissions(authStore.user.id)
       } catch (error) {
         console.error("Erro ao carregar permissões:", error)
-        // Opcional: redirecionar para erro 500 se falhar drasticamente
       }
     }
   
-    // 5. Verifica permissão específica da rota
     const requiredPermission = to.meta.permission
     if (requiredPermission) {
       if (!authStore.can(requiredPermission)) {
         console.warn(`Acesso negado para a permissão: ${requiredPermission}`)
-        // Redireciona diretamente para a página de erro 403
         return next({ name: 'error', params: { code: '403' } })
       }
     }
   
-    // 6. Se passou por tudo, autoriza o acesso
     next()
   })
   

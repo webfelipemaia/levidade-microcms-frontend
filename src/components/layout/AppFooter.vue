@@ -128,7 +128,7 @@
         </div>
         <div class="col-md-9 col-lg-6">
           <div class="small mb-3 mb-lg-0 text-lg-center">
-            Copyright © 2024
+            Copyright © 2026
 
             <span class="text-primary"><a href="#">Levidade Bootstrap Theme</a></span>
             | Designed by

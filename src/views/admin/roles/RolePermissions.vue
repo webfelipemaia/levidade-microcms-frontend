@@ -140,7 +140,7 @@ const loadRolePermissions = async () => {
             await permissionStore.getRolesPermissions()
         }
 
-        // Acessa o array correto: permissionStore.rolesPermissions.data
+        // Acessa o array permissionStore.rolesPermissions.data
         const rolePermissions = permissionStore.rolesPermissions.data.filter(rp => rp.roleId === parseInt(id))
         selectedPermissions.value = rolePermissions.map(rp => rp.permissionId)
         

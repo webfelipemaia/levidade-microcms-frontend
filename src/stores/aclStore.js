@@ -162,8 +162,7 @@ export const useAclStore = defineStore('acl', {
                     });
                 }); */
 
-                // Em vez de buscar no usersRoles (que pode ser pesado), 
-                // vamos pegar as roles que já vieram no login do usuário
+                // Pega roles no login do usuário
                 const userRoleNames = authStore.user?.roles || []; // Ex: ["Editor"]
 
                 // Encontrar os objetos de role completos para pegar os IDs

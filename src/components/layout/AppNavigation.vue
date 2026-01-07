@@ -7,7 +7,11 @@
 
 
                 <div class="profile-container d-flex align-items-center">
-                    <nav-profile v-if="isAuthenticated" :user="authStore.user" :avatarUrl="authStore.avatar"></nav-profile>
+                    <nav-profile 
+                        v-if="isAuthenticated && !$route.meta.hideSidebar" 
+                        :user="authStore.user" 
+                        :avatarUrl="authStore.avatar">
+                    </nav-profile>
                     <button
                         @click="notifyParent"
                         class="btn sidebar-offcanvas-btn navbar-toggler ms-2 me-2 d-lg-none"
@@ -30,7 +34,7 @@
 import { computed } from 'vue';
 import { useAuthStore } from '@/stores/authStore';
 import NavProfile from '@/components/layout/ui/nav/NavProfile.vue';
-import NavbarBrand from '@/components/layout/ui/nav/NavbarBrand.vue'
+import NavbarBrand from '@/components/layout/ui/nav/NavbarBrand.vue';
 
 const authStore = useAuthStore();
 const isAuthenticated = computed(() => authStore.isAuthenticated);
@@ -73,7 +77,6 @@ function notifyParent() {
     box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
 }
 
-/* Garante que o profile fique alinhado à direita */
 .d-flex.justify-content-between {
     width: 100%;
 }
