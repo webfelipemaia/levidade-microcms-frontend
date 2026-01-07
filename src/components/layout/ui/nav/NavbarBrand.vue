@@ -12,6 +12,7 @@
         :alt="altText" 
         :style="getImgStyle"
         class="navbar-brand-img"
+        :class="linkClasses"
       >
       
       <span v-else-if="brandText" :style="getTextStyle">
