@@ -66,7 +66,7 @@ $link-hover-decoration: underline;
 // ============================================
 
 $navbar-bg:         #ffffff;
-
+$app-border-radius: 8px;
 
 // ============================================
 // Theme tokens (CSS Variables)
@@ -75,7 +75,7 @@ $navbar-bg:         #ffffff;
 :root {
     --app-bg: #{$body-bg};
     --app-text: #{$body-color};
-  
+    --app-link-color: #{$link-color};
     --app-primary: #{$primary};
     --app-secondary: #{$secondary};
     --app-info: #{$info};
@@ -83,7 +83,7 @@ $navbar-bg:         #ffffff;
     --app-danger: #{$danger};  
     --app-light: #{$light};
     --app-dark: #{$dark};
-    --app-whitte: #{$white};
+    --app-white: #{$white};
   
     // Primary
     --app-btn-primary-bg: $primary;
@@ -136,6 +136,7 @@ $navbar-bg:         #ffffff;
   --app-secondary-700: #40484d;
   --app-secondary-800: #2b3033;
   
+  --app-border-radius: $app-border-radius
   }
   
   [data-bs-theme="dark"] {
@@ -150,7 +151,7 @@ $navbar-bg:         #ffffff;
     --app-danger: #ff6b6b;  
     --app-light: #2a2f3c;
     --app-dark: #0f172a;
-    --app-whitte: #252629;
+    --app-white: #252629;
   }
   
 
@@ -223,16 +224,16 @@ $navbar-bg:         #ffffff;
 
 
 .navbar {
-    background-color: #ffffff;
-    color: #222222;
+    background-color: var(--app-whitte);
+    color: var(--app-text);
     border-bottom: 1px solid rgba(76,103,118,.15);
 
     a,
     .nav-link {
-        color: $link-color;
+        color: var(--link-color);
 
         &:hover {
-            color: $link-color;
+            color: var(--link-color);
             text-decoration: none;
         }
     }
@@ -242,7 +243,7 @@ $navbar-bg:         #ffffff;
             content: '';
             display: block;
             transform: scaleX(0);
-            border-bottom: 2px solid $link-color;
+            border-bottom: 2px solid var(--link-color);
             background: #2d5972;
             transition: transform 0.5s ease;
             transform-origin: left;
@@ -256,7 +257,7 @@ $navbar-bg:         #ffffff;
 
 .sidebar {
     transition: all .2s;
-    background: #fff;
+    background: var(--app-white);
     border-right: 1px solid rgba(76,103,118,.15);
     z-index: 2;
   
@@ -264,7 +265,7 @@ $navbar-bg:         #ffffff;
       .nav-item {
 
         .nav-link {
-          color: $link-color;
+          color: var(--link-color);
           font-weight: bold;
 
           &.active {
@@ -288,9 +289,9 @@ $navbar-bg:         #ffffff;
               &:active,
               &:focus {
                 background-color: rgba(118,106,247,0.10);
-                border-radius: 8px;
+                border-radius: var(--app-border-radius);
                 border: none;
-                color: $link-color;
+                color: var(--link-color);
               }
             }
         }
@@ -299,6 +300,94 @@ $navbar-bg:         #ffffff;
     a:focus-visible {
       box-shadow: none;
     }
+}
+
+.offcanvas-body {
+    padding: 0;
+}
+
+.offcanvas-nav{
+
+    .nav-item {
+        width: 100%;
+
+        .nav-link {
+            font-weight: 500;
+            color: var(--link-color);
+            padding: 0.75rem 1rem;
+            display: flex;
+            align-items: center;
+            /* border-radius: 0; */
+            border-left: 3px solid transparent;
+
+
+            .menu-text {
+                flex-grow: 1;
+            }
+
+            .menu-arrow {
+                margin-left: auto;
+                transition: transform 0.2s ease-in-out;
+            }
+
+            &:not(.collapsed) {
+                .menu-arrow {
+                    -webkit-transform: rotate(180deg);
+                    transform: rotate(180deg);
+                }
+            }
+
+            i,
+            .menu-text {
+                color: var(--link-color);
+            }
+
+
+            &:hover {
+                background-color: rgba(0, 0, 0, 0.05);
+                color: var(--app-secondary-700);
+            }
+
+            &:active {
+                background-color: var(--app-light);
+                color: var(--app-primary);
+                border-left-color: transparent /* var(--app-primary-600) */;
+            }
+        }
+
+        .nav-link[data-bs-toggle=collapse][aria-expanded=true].active {
+            background-color: rgba(0, 0, 0, 0.15);
+            color: var(--app-secondary-800);
+        }
+
+
+        .submenu {
+            background-color: rgba(0, 0, 0, 0.02);
+
+            .nav-link {
+                padding-left: 2.5rem;
+                font-size: 0.9rem;
+                border-left: none;
+
+                &.active {
+                    background-color: var(--app-primary);
+                    color: var(--app-white);
+                    font-weight: 600;
+                }
+            }
+
+        
+        }
+
+    }
+
+}
+
+a[data-bs-toggle=collapse][aria-expanded=true] {
+	.menu-arrow {
+		-webkit-transform: rotate(180deg);
+		transform: rotate(180deg);
+	}
 }
 
 

@@ -20,7 +20,7 @@ import { ref } from 'vue';
 import { useAuthStore } from '@/stores/authStore';
 import AppNavigation from '@/components/layout/AppNavigation.vue';
 import AppFooter from '@/components/layout/AppFooter.vue';
-import AppSidebar from '@/components/layout/AppSidebar.vue';
+import AppSidebar from '@/components/layout/ui/sidebar/AppSidebar.vue';
 
 const sidebarOpen = ref(false);
 const authStore = useAuthStore();
