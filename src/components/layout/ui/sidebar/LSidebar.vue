@@ -1,6 +1,6 @@
 <script setup>
     import { computed } from 'vue'
-    import SidebarMenu from './SidebarMenu.vue'
+    import SidebarMenu from './LSidebarMenu.vue'
     import { sidebarMenu } from '@/components/data/sidebarMenu'
     
     const props = defineProps({

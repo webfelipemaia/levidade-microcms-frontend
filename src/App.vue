@@ -23,10 +23,10 @@
 <script setup>
 import { ref } from 'vue';
 import { useAuthStore } from '@/stores/authStore';
-import AppNavigation from '@/components/layout/ui/nav/AppNavigation.vue';
-import AppFooter from '@/components/layout/AppFooter.vue';
-import AppSidebar from '@/components/layout/ui/sidebar/AppSidebar.vue';
-import OffcanvasButton from '@/components/layout/ui/sidebar/OffcanvasButton.vue';
+import AppNavigation from '@/components/layout/ui/nav/LNavigation.vue';
+import AppFooter from '@/components/layout/LFooter.vue';
+import AppSidebar from '@/components/layout/ui/sidebar/LSidebar.vue';
+import OffcanvasButton from '@/components/layout/ui/sidebar/LOffcanvasButton.vue';
 
 const sidebarOpen = ref(false);
 const authStore = useAuthStore();

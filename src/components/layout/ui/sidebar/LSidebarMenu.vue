@@ -1,6 +1,6 @@
 <script setup>
-    import SidebarItem from './SidebarItem.vue'
-    import SidebarGroup from './SidebarGroup.vue'
+    import SidebarItem from './LSidebarItem.vue'
+    import SidebarGroup from './LSidebarGroup.vue'
     
     defineProps({
         items: {

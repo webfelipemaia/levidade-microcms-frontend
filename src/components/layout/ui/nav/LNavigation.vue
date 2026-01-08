@@ -24,8 +24,8 @@
     <script setup>
     import { computed } from 'vue';
     import { useAuthStore } from '@/stores/authStore';
-    import NavProfile from '@/components/layout/ui/nav/NavProfile.vue';
-    import NavbarBrand from '@/components/layout/ui/nav/NavbarBrand.vue';
+    import NavProfile from '@/components/layout/ui/nav/LNavbarProfile.vue';
+    import NavbarBrand from '@/components/layout/ui/nav/LNavbarBrand.vue';
 
     const authStore = useAuthStore();
     const isAuthenticated = computed(() => authStore.isAuthenticated);

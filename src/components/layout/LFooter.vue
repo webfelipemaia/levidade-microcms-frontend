@@ -177,7 +177,7 @@
 </template>
 
 <script setup>
-import NavbarBrand from '@/components/layout/ui/nav/NavbarBrand.vue';
+import NavbarBrand from '@/components/layout/ui/nav/LNavbarBrand.vue';
 
 </script>
 <style lang="scss">
