@@ -10,6 +10,9 @@ module.exports = {
     ],
     parserOptions: {
       ecmaVersion: 2020,
+      babelOptions: {
+        presets: ['@babel/preset-typescript'],
+      },
     },
     rules: {
       // Adicione ou ajuste regras conforme necessário
