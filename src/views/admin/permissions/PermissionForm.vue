@@ -58,7 +58,7 @@
 <script setup>
 import { ref, watch, onMounted } from 'vue'
 import { usePermissionStore } from '@/stores/permissionStore'
-import { useAddBackDrop, useRemoveBackDrop } from  '@/components/layout/composables/HandleBackdrop';
+import { useAddBackDrop, useRemoveBackDrop } from  '@/composables/useBackdrop';
 
 const permissionStore = usePermissionStore()
 const isEditModalOpen = ref(false)

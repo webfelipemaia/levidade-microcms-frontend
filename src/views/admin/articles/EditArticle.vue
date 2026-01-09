@@ -171,7 +171,7 @@ import AppCardHeader from '@/components/layout/ui/card/AppCardHeader.vue'
 import { useArticleStore } from '@/stores/articleStore'
 import { useCategoryStore } from '@/stores/categoryStore'
 import { useStatusStore } from '@/stores/statusStore'
-import { useSanitizeWords } from '@/components/layout/composables/HandleStrings'
+import { useSanitizeWords } from '@/composables/useStrings'
 import { useUploadStore } from '@/stores/uploadStore'
 
 const articleId = ref(null);

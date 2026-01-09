@@ -8,17 +8,25 @@ export default defineConfig({
   themeConfig: {
     nav: [
       { text: 'Home', link: '/' },
-      { text: 'Componentes', link: '/components/app-sidebar' }
+      { text: 'Componentes', link: '/components/l-sidebar' }
     ],
 
     sidebar: [
       {
+        text: 'Início',
+        collapsed: false,
+        items: [
+          { text: 'Index', link: 'index' },
+          { text: 'Guide', link: 'guide' },
+        ]
+      },
+      {
         text: 'Layout Principal',
         collapsed: false,
         items: [
-          { text: 'AppSidebar (Menu)', link: '/components/app-sidebar' },
-          { text: 'AppNavigation (Topo)', link: '/components/app-navigation' },
-          { text: 'AppFooter (Rodapé)', link: '/components/app-footer' }
+          { text: 'LOffcanvas', link: '/components/layout/l-offcanvas' },
+          { text: 'LNavigation', link: '/components/layout/l-navigation' },
+          { text: 'LFooter', link: '/components/layout/l-footer' }
         ]
       },
       {

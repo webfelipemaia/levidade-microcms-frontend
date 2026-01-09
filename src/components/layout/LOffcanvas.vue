@@ -1,7 +1,7 @@
 <script setup>
     import { computed } from 'vue'
     import SidebarMenu from './LSidebarMenu.vue'
-    import { sidebarMenu } from '@/components/data/sidebarMenu'
+    import { sidebarMenu } from '@/data/sidebarMenu'
     
     const props = defineProps({
       isActive: Boolean
