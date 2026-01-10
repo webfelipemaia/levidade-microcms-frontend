@@ -5,10 +5,10 @@
         <div class="row">
           <div class="col">
             <div class="text-center">
-              <NavbarBrand
+              <LNavbarBrand
                 linkClasses="justify-content-center"
                 :imgStyle="{ height: '90px' }"
-              ></NavbarBrand>
+              ></LNavbarBrand>
               <h1 class="mb-1">Welcome Back</h1>
               <p class="mb-2">
                 Already registered?
@@ -140,6 +140,7 @@
 <script setup>
 import { ref } from "vue";
 import { useAuthStore } from "@/stores/authStore";
+import LNavbarBrand from "@/components/navigation/LNavbarBrand.vue";
 
 const authStore = useAuthStore();
 

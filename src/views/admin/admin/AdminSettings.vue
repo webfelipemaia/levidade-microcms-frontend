@@ -31,13 +31,13 @@
             </div>
                     
             
-            <app-card class="mt-4">
+            <l-card class="mt-4">
                 <template #header>
-                    <app-card-header>
+                    <l-card-header>
                         <div class="d-flex justify-content-between">
                             <h5 class="setting-title">Identidade do Projeto</h5>
                         </div>
-                    </app-card-header>
+                    </l-card-header>
                 </template>
                 <template #body>
                     <div class="row g-3 mb-5">
@@ -66,15 +66,15 @@
                         </div>
                     </div>
                 </template>
-            </app-card>
+            </l-card>
 
-            <app-card class="mt-4">
+            <l-card class="mt-4">
                 <template #header>
-                    <app-card-header>
+                    <l-card-header>
                         <div class="d-flex justify-content-between">
                             <h5 class="setting-title">Canais de Contato</h5>
                         </div>
-                    </app-card-header>
+                    </l-card-header>
                 </template>
                 <template #body>
                     <div class="row g-3 mb-5">
@@ -111,18 +111,18 @@
                         </div>
                     </div>
                 </template>
-            </app-card>
+            </l-card>
 
-            <app-card class="mt-4">
+            <l-card class="mt-4">
                 <template #header>
-                    <app-card-header>
+                    <l-card-header>
                         <div class="d-flex justify-content-between">
                             <h5 class="setting-title">Ordenação Padrão</h5>
                             <button type="button" class="btn btn-outline-primary btn-sm" @click="saveSetting('pagination.order')">
                                 Salvar Ordenação
                             </button>
                         </div>
-                    </app-card-header>
+                    </l-card-header>
                 </template>
                 <template #body>
                     <div class="row">
@@ -154,18 +154,18 @@
                         </div>
                     </div>
                 </template>
-            </app-card>
+            </l-card>
 
-            <app-card class="mt-4">
+            <l-card class="mt-4">
                 <template #header>
-                    <app-card-header>
+                    <l-card-header>
                         <div class="d-flex justify-content-between">
                             <h5 class="setting-title">Densidade da Listagem</h5>
                             <button type="button" class="btn btn-outline-primary btn-sm" @click="saveSetting('pagination.page_size')">
                                 Salvar Tamanho
                             </button>
                         </div>
-                    </app-card-header>
+                    </l-card-header>
                 </template>
                 <template #body>
                     <div class="row">
@@ -190,18 +190,18 @@
                         </div>
                     </div>
                 </template>
-            </app-card>
+            </l-card>
 
-            <app-card class="mt-4">
+            <l-card class="mt-4">
                 <template #header>
-                    <app-card-header>
+                    <l-card-header>
                         <div class="d-flex justify-content-between">
                             <h5 class="setting-title">Infraestrutura de Armazenamento</h5>
                             <button type="button" class="btn btn-outline-primary btn-sm" @click="saveSetting('upload_path.root')">
                                 Salvar Caminho Raiz
                             </button>
                         </div>
-                    </app-card-header>
+                    </l-card-header>
                 </template>
                 <template #body>
                     <div class="row">
@@ -221,18 +221,18 @@
                         </div>
                     </div>
                 </template>
-            </app-card>
+            </l-card>
 
-            <app-card class="mt-4">
+            <l-card class="mt-4">
                 <template #header>
-                    <app-card-header>
+                    <l-card-header>
                         <div class="d-flex justify-content-between">
                             <h5 class="setting-title">Armazenamento de Conteúdo</h5>
                             <button type="button" class="btn btn-outline-primary btn-sm" @click="saveSetting('upload_path.content')">
                                 Salvar Pasta de Conteúdo
                             </button>
                         </div>
-                    </app-card-header>
+                    </l-card-header>
                 </template>
                 <template #body>
                     <div class="row">
@@ -243,18 +243,18 @@
                         </div>
                     </div>
                 </template>
-            </app-card>
+            </l-card>
 
-            <app-card class="mt-4">
+            <l-card class="mt-4">
                 <template #header>
-                    <app-card-header>
+                    <l-card-header>
                         <div class="d-flex justify-content-between">
                             <h5 class="setting-title">Armazenamento de Avatar de Perfil</h5>
                             <button type="button" class="btn btn-outline-primary btn-sm" @click="saveSetting('upload_path.profile')">
                                 Salvar Pasta de Avatar de Perfil
                             </button>
                         </div>
-                    </app-card-header>
+                    </l-card-header>
                 </template>
                 <template #body>
                     <div class="row">
@@ -265,15 +265,15 @@
                         </div>
                     </div>
                 </template>
-            </app-card>
+            </l-card>
         </div>
     </div>
 </template>
 
 <script setup>
 import { onMounted, reactive, ref, computed } from 'vue';
-import AppCard from '@/components/layout/ui/card/AppCard.vue';
-import AppCardHeader from '@/components/layout/ui/card/AppCardHeader.vue';
+import LCard from '@/components/surfaces/card/LCard.vue';
+import LCardHeader from '@/components/surfaces/card/LCardHeader.vue';
 import { useSettingStore } from '@/stores/settingStore';
 //import { capitalizeFirstLetter } from '@/components/layout/composables/HandleStrings'
 

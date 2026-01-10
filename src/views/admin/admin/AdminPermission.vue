@@ -1,8 +1,8 @@
 <template>
     <div class="container-fluid">
-        <app-card>
+        <l-card>
             <template #header>
-                <app-card-header>
+                <l-card-header>
                     <div class="d-flex justify-content-between align-items-center flex-wrap">
                         <span>Manage permissions</span>
                         <div class="d-flex flex-wrap gap-2 align-items-center">
@@ -11,7 +11,7 @@
                             </button>
                         </div>
                     </div>
-                </app-card-header>
+                </l-card-header>
             </template>
     
             <template #body>
@@ -80,7 +80,7 @@
                             <tr>
                                 <td colspan="5">
                                     <div class="d-flex justify-content-end">
-                                        <app-pagination
+                                        <l-pagination
                                             :total-pages="totalPages"
                                             :current-page="currentPage"
                                             @pagechanged="onPageChange"
@@ -92,9 +92,9 @@
                     </table>
                 </div>       
             </template>
-        </app-card>
+        </l-card>
 
-        <app-modal 
+        <l-modal 
             :id="'app-modal-01'" 
             :data="selectedPermission" 
             :show="activeModal" 
@@ -103,7 +103,7 @@
             :show-header="false" 
             @close="activeModal=false" 
             @process-data="processData($event)">
-        </app-modal>
+        </l-modal>
         
         <permission-form 
             :id="'app-modal-02'" 
@@ -119,10 +119,10 @@
 import { ref, computed, watch, onMounted } from 'vue'
 //import { storeToRefs } from 'pinia'
 import { usePermissionStore } from '@/stores/permissionStore'
-import AppCard from '@/components/layout/ui/card/AppCard.vue'
-import AppCardHeader from '@/components/layout/ui/card/AppCardHeader.vue'
-import AppModal from '@/components/layout/ui/modal/AppModal.vue'
-import AppPagination from '@/components/layout/ui/AppPagination.vue'
+import LCardHeader from '@/components/surfaces/card/LCardHeader.vue'
+import LCard from '@/components/surfaces/card/LCard.vue'
+import LModal from '@/components/feedback/modal/LModal.vue'
+import LPagination from '@/components/data/LPagination.vue'
 import PermissionForm from '@/views/admin/permissions/PermissionForm.vue'
 
 const permissionStore = usePermissionStore()

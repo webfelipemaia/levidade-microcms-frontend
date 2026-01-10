@@ -7,7 +7,7 @@ const routes =  [
       path: "/",
       alias: "/home",
       name: "home",
-      component: () => import("@/components/layout/AppHome.vue"),
+      component: () => import("@/views/HomeView.vue"),
       meta: { requiresAuth: true }
     },
 
@@ -167,9 +167,9 @@ const routes =  [
       meta: { requiresAuth: true }
     },
 
-    { 
+    {
       path: '/admin/categories',
-      name: 'admin.categories', 
+      name: 'admin.categories',
       component: () => import("@/views/admin/admin/AdminCategory.vue"),
       meta: { requiresAuth: true }
     },

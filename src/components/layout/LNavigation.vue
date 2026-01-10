@@ -2,13 +2,13 @@
     <header class="p-3 mb-3 border-bottom">
       <div class="container-fluid">
         <div class="d-flex flex-wrap align-items-center justify-content-between">
-          <NavbarBrand
+          <LNavbarBrand
             linkClasses="justify-content-center"
             :imgStyle="{ height: '90px' }"
           />
   
           <div class="profile-container d-flex align-items-center">
-            <NavProfile
+            <LNavProfile
               v-if="isAuthenticated"
               :user="authStore.user"
               :avatarUrl="authStore.avatar"
@@ -24,8 +24,8 @@
     <script setup>
     import { computed } from 'vue';
     import { useAuthStore } from '@/stores/authStore';
-    import NavProfile from '@/components/layout/ui/nav/LNavbarProfile.vue';
-    import NavbarBrand from '@/components/layout/ui/nav/LNavbarBrand.vue';
+    import LNavProfile from '@/components/navigation/LNavbarProfile.vue';
+    import LNavbarBrand from '@/components/navigation/LNavbarBrand.vue';
 
     const authStore = useAuthStore();
     const isAuthenticated = computed(() => authStore.isAuthenticated);

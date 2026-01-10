@@ -8,7 +8,7 @@
     
 </template>
 <script setup>
-import UserProfile from "@/components/layout/ui/UserProfile.vue"
+import UserProfile from "@/views/UserProfileView.vue"
 import { useAuthStore } from "@/stores/authStore"
 import { useUserStore } from "@/stores/userStore"
 

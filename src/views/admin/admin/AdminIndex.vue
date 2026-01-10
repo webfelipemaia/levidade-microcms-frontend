@@ -1,17 +1,17 @@
 <template>
     <div class="container-fluid">
-        <app-card>
+        <l-card>
             <template #header>
-                <app-card-header>
+                <l-card-header>
                     <div class="d-flex justify-content-between align-items-center flex-wrap">
                         <span>All users</span>
                         <div class="d-flex flex-wrap gap-2 align-items-center">
-                            <button @click="[showModal=true, selectedUser={}]" type="button" class="btn btn-primary ms-5">
+                            <button @click="openCreateModal(); selectedUser={}" type="button" class="btn btn-primary ms-5">
                                 <i class="bi bi-plus"></i> New
                             </button>
                         </div>
                     </div>
-                </app-card-header>
+                </l-card-header>
             </template>
     
             <template #body>
@@ -63,10 +63,10 @@
                                     <td class="align-middle">{{ formatDate(user.updatedAt) }}</td>
                                     <td>
                                         <div class="d-flex">
-                                            <button @click="[showModal=true, selectedUser=user]" type="button" class="btn">
+                                            <button @click="openCreateModal(); selectedUser=user;" type="button" class="btn">
                                                 <i class="bi bi-pencil"></i>
                                             </button>
-                                            <button @click="[activeModal=true, selectedUser=user]" type="button" class="btn">
+                                            <button @click="openCreateModal(); selectedUser=user" type="button" class="btn">
                                                 <i class="bi bi-trash3"></i>
                                             </button>
                                         </div>
@@ -83,7 +83,7 @@
                             <tr>
                                 <td colspan="5">
                                     <div class="d-flex justify-content-end">
-                                        <app-pagination
+                                        <l-pagination
                                             :total-pages="totalPages"
                                             :current-page="currentPage"
                                             @pagechanged="onPageChange"
@@ -95,9 +95,9 @@
                     </table>
                 </div>
             </template>
-        </app-card>
+        </l-card>
 
-        <app-modal 
+        <l-modal 
             :id="'app-modal-01'" 
             :data="selectedUser" 
             :show="activeModal" 
@@ -106,7 +106,7 @@
             :show-header="false" 
             @close="activeModal = false" 
             @process-data="processData">
-        </app-modal>
+        </l-modal>
         
         <user-form 
             :id="'app-modal-02'" 
@@ -121,10 +121,11 @@
 <script setup>
 import { ref, computed, watch, onMounted } from 'vue'
 import UserForm from '@/views/admin/user/UserForm.vue'
-import AppCard from '@/components/layout/ui/card/AppCard.vue'
-import AppModal from '@/components/layout/ui/modal/AppModal.vue'
-import AppCardHeader from '@/components/layout/ui/card/AppCardHeader.vue'
-import AppPagination from '@/components/layout/ui/AppPagination.vue'
+import LModal from '@/components/feedback/modal/LModal.vue'
+import LCard from '@/components/surfaces/card/LCard.vue'
+import LCardHeader from '@/components/surfaces/card/LCardHeader.vue'
+import LPagination from '@/components/data/LPagination.vue'
+
 import { storeToRefs } from 'pinia'
 import { useUserStore } from '@/stores/userStore'
 import { useRoleStore } from '@/stores/roleStore'
@@ -205,6 +206,11 @@ const createData = async (data) => {
 
 const updateData = async (data) => {
     await userStore.updateUser(data.id, data);
+}
+
+const openCreateModal = () => {
+  showModal.value = true
+  selectedUser.value = {}
 }
 
 const closeUserForm = () => {

@@ -5,7 +5,7 @@
             <div class="row">
                <div class="col-xl-4 offset-xl-4 col-md-12 col-12">
                   <div class="text-center">
-                     <NavbarBrand linkClasses="justify-content-center" :imgStyle="{ height: '90px' }"></NavbarBrand>
+                     <LNavbarBrand linkClasses="justify-content-center" :imgStyle="{ height: '90px' }"></LNavbarBrand>
                      <h1 class="mb-1">Welcome Back</h1>
                      <p class="mb-0">
                         Don't have an account yet?
@@ -25,7 +25,7 @@
                      <div class="card-body">
                         <form @submit.prevent="handleLogin" class="needs-validation mb-6" novalidate="">
 
-                           <app-alert 
+                           <l-alert 
                              v-if="authStore.error && showAlert" 
                              :type="'danger'" 
                              :class="{ 'rate-limited': isRateLimited }"
@@ -34,7 +34,7 @@
                              <span v-if="remainingTime > 0">
                                <br>Tente novamente em {{ formatTime(remainingTime) }}
                              </span>
-                           </app-alert>                         
+                           </l-alert>                         
                            
                            <div class="mb-3">
                               <label for="signinEmailInput" class="form-label">
@@ -104,8 +104,8 @@
 import { onUnmounted, computed, ref, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { useAuthStore } from '@/stores/authStore'
-import AppAlert from '@/components/layout/ui/AppAlert.vue';
-import NavbarBrand from '@/components/layout/ui/nav/NavbarBrand.vue'
+import LAlert from '@/components/feedback/LAlert.vue'
+import LNavbarBrand from '@/components/navigation/LNavbarBrand.vue'
 
 const authStore = useAuthStore()
 const route = useRoute()

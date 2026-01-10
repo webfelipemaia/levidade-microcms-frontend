@@ -5,7 +5,7 @@
         <div class="row">
           <div class="col-xl-4 offset-xl-4 col-md-12 col-12">
             <div class="text-center">
-              <NavbarBrand linkClasses="justify-content-center" :imgStyle="{ height: '90px' }"></NavbarBrand>
+              <LNavbarBrand linkClasses="justify-content-center" :imgStyle="{ height: '90px' }"></LNavbarBrand>
               <h1 class="mb-1">Recuperar Senha</h1>
               <p class="mb-0">
                 Lembrou sua senha?
@@ -25,19 +25,19 @@
               <div class="card-body">
                 <form @submit.prevent="handleRecover" class="needs-validation mb-6" novalidate>
                   
-                  <app-alert 
+                  <l-alert 
                     v-if="successMessage" 
                     type="success" 
                     @close="successMessage = ''">
                     {{ successMessage }}
-                  </app-alert>
+                  </l-alert>
 
-                  <app-alert 
+                  <l-alert 
                     v-if="errorMessage" 
                     type="danger" 
                     @close="errorMessage = ''">
                     {{ errorMessage }}
-                  </app-alert>
+                  </l-alert>
                   
                   <div class="mb-4">
                     <label for="recoverEmail" class="form-label">
@@ -90,8 +90,8 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import api from '@/services/api'
-import AppAlert from '@/components/layout/ui/AppAlert.vue'
-import NavbarBrand from '@/components/layout/ui/nav/NavbarBrand.vue'
+import LAlert from '@/components/feedback/LAlert.vue'
+import LNavbarBrand from '@/components//navigation/LNavbarBrand.vue'
 
 const router = useRouter()
 const email = ref('')

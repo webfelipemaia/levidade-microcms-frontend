@@ -11,10 +11,10 @@
         <div class="row">
           <div class="col-xl-4 offset-xl-4 col-md-12 col-12">
             <div class="text-center">
-              <NavbarBrand
+              <LNavbarBrand
                 linkClasses="justify-content-center"
                 :imgStyle="{ height: '90px' }"
-              ></NavbarBrand>
+              ></LNavbarBrand>
               <h1 class="mb-1">Do you want to leave?</h1>
               <p class="mb-0">
                 Continue browsing.
@@ -48,7 +48,7 @@
 <script setup>
 import { ref } from 'vue';
 import { useAuthStore } from "@/stores/authStore";
-import NavbarBrand from '@/components/layout/ui/nav/NavbarBrand.vue'
+import LNavbarBrand from '@/components/navigation/LNavbarBrand.vue'
 
 const authStore = useAuthStore();
 const isLoading = ref(false);

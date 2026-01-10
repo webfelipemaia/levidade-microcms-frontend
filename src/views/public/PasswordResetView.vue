@@ -5,7 +5,7 @@
         <div class="row">
           <div class="col-xl-4 offset-xl-4 col-md-12 col-12">
             <div class="text-center">
-              <NavbarBrand linkClasses="justify-content-center" :imgStyle="{ height: '90px' }"></NavbarBrand>
+              <LNavbarBrand linkClasses="justify-content-center" :imgStyle="{ height: '90px' }"></LNavbarBrand>
               <h1 class="mb-1">Redefinir Senha</h1>
               <p class="mb-0">Digite o código recebido por email</p>
             </div>
@@ -23,9 +23,9 @@
                 
                 <div v-if="step === 1">
                   <form @submit.prevent="verifyCode" class="needs-validation mb-6">
-                    <app-alert v-if="error" :type="(error === 'Código reenviado com sucesso!') ? 'success': 'danger'" @close="error = ''">
+                    <l-alert v-if="error" :type="(error === 'Código reenviado com sucesso!') ? 'success': 'danger'" @close="error = ''">
                       {{ error }}
-                    </app-alert>
+                    </l-alert>
 
                     <div class="mb-3">
                       <label class="form-label">
@@ -79,9 +79,9 @@
                 
                 <div v-if="step === 2">
                   <form @submit.prevent="resetPassword" class="needs-validation mb-6">
-                    <app-alert v-if="error" type="danger" @close="error = ''">
+                    <l-alert v-if="error" type="danger" @close="error = ''">
                       {{ error }}
-                    </app-alert>
+                    </l-alert>
 
                     <div class="mb-3">
                       <label class="form-label">
@@ -154,8 +154,8 @@
 import { ref, computed, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import api from '@/services/api'
-import AppAlert from '@/components/layout/ui/AppAlert.vue'
-import NavbarBrand from '@/components/layout/ui/nav/NavbarBrand.vue'
+import LAlert from '@/components/feedback/LAlert.vue'
+import LNavbarBrand from '@/components/navigation/LNavbarBrand.vue'
 
 const route = useRoute()
 const router = useRouter()

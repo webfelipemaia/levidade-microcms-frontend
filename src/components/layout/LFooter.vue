@@ -124,7 +124,7 @@
     <div class="container secondary-footer">
       <div class="row align-items-center">
         <div class="col-md-3">
-          <NavbarBrand linkClasses="d-block text-inverse" :imgStyle="{ height: '90px' }"></NavbarBrand>
+          <LNavbarBrand linkClasses="d-block text-inverse" :imgStyle="{ height: '90px' }"></LNavbarBrand>
         </div>
         <div class="col-md-9 col-lg-6">
           <div class="small mb-3 mb-lg-0 text-lg-center">
@@ -177,7 +177,7 @@
 </template>
 
 <script setup>
-import NavbarBrand from '@/components/layout/ui/nav/LNavbarBrand.vue';
+import LNavbarBrand from '@/components/navigation/LNavbarBrand.vue';
 
 </script>
 <style lang="scss">

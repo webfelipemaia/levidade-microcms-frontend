@@ -1,14 +1,14 @@
 <template>
   <div class="container-fluid">
-      <app-card>
+      <l-card>
           <template #header>
-              <app-card-header>
+              <l-card-header>
                   <div class="d-flex justify-content-between">
                       <span v-if="!showSuccessMessage">Edit articles</span>
                       <span v-else>Operation Completed</span>
                       <!-- <router-link :to="{name: 'admin.articles'}" class="btn btn-primary"> Back</router-link> -->
                   </div>
-              </app-card-header>
+              </l-card-header>
           </template>
           <template #body>
               <!-- Card de sucesso -->
@@ -158,7 +158,7 @@
                   </div>
               </form>
           </template>
-      </app-card>
+      </l-card>
   </div>
       
 </template>
@@ -166,8 +166,8 @@
 <script setup>
 import { ref, onMounted, computed } from 'vue'
 import { useRoute } from 'vue-router';
-import AppCard from '@/components/layout/ui/card/AppCard.vue'
-import AppCardHeader from '@/components/layout/ui/card/AppCardHeader.vue'
+import LCard from '@/components/surfaces/card/LCard.vue'
+import LCardHeader from '@/components/surfaces/card/LCardHeader.vue'
 import { useArticleStore } from '@/stores/articleStore'
 import { useCategoryStore } from '@/stores/categoryStore'
 import { useStatusStore } from '@/stores/statusStore'

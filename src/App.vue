@@ -1,13 +1,13 @@
 <template>
-  <AppNavigation @open-sidebar="toggleSidebar">
+  <LNavigation @open-sidebar="toggleSidebar">
     <template #actions="{ openSidebar }">
-      <OffcanvasButton @click="openSidebar" />
+      <LOffcanvasButton @click="openSidebar" />
     </template>
-  </AppNavigation>
+  </LNavigation>
 
 
   <div class="d-flex align-items-stretch">
-    <AppSidebar
+    <LSidebar
       v-if="authStore.isAuthenticated && !$route.meta.hideSidebar"
       :is-active="sidebarOpen"
       @close-sidebar="toggleSidebar"
@@ -17,16 +17,16 @@
     </div>
   </div>
 
-  <AppFooter />
+  <LFooter />
 </template>
 
 <script setup>
 import { ref } from 'vue';
 import { useAuthStore } from '@/stores/authStore';
-import AppNavigation from '@/components/layout/ui/nav/LNavigation.vue';
-import AppFooter from '@/components/layout/LFooter.vue';
-import AppSidebar from '@/components/layout/ui/sidebar/LSidebar.vue';
-import OffcanvasButton from '@/components/layout/ui/sidebar/LOffcanvasButton.vue';
+import LNavigation from '@/components/layout/LNavigation.vue';
+import LFooter from '@/components/layout/LFooter.vue';
+import LSidebar from '@/components/layout/LOffcanvas.vue';
+import LOffcanvasButton from '@/components/navigation/LOffcanvasButton.vue';
 
 const sidebarOpen = ref(false);
 const authStore = useAuthStore();

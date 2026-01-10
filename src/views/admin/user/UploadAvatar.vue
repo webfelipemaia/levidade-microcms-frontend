@@ -1,13 +1,13 @@
 <template>
     <div class="container-fluid">
-        <app-card>
+        <l-card>
             <template #header>
-                <app-card-header>
+                <l-card-header>
                     <div class="d-flex justify-content-between">
                         <span>Avatar</span>
                         <router-link :to="{name: 'admin.profile'}" class="btn btn-primary"> Back</router-link>
                     </div>
-                </app-card-header>
+                </l-card-header>
             </template>
             <template #body>
                     <form @submit.prevent="" enctype="multipart/form-data">
@@ -91,7 +91,7 @@
                         </div>
                     </form>
                 </template>
-        </app-card>
+        </l-card>
     </div>
             
 </template>
@@ -99,8 +99,8 @@
 <script setup>
 import { ref, onMounted, /* computed  */} from 'vue'
 //import { useRouter } from 'vue-router'
-import AppCard from '@/components/layout/ui/card/AppCard.vue'
-import AppCardHeader from '@/components/layout/ui/card/AppCardHeader.vue'
+import LCard from '@/components/surfaces/card/LCard.vue'
+import LCardHeader from '@/components/surfaces/card/LCardHeader.vue'
 import { useUploadStore } from '@/stores/uploadStore'
 import { useSettingStore } from '@/stores/settingStore'
 import { useAuthStore } from '@/stores/authStore'

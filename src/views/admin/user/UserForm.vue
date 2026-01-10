@@ -125,25 +125,31 @@ const isSaving = ref(false)
     const emit = defineEmits(['close', 'saveData'])
 
     watch(() => props.show, async (newVal) => {
-    if (newVal && props.data && props.data.id) {
-        editedItem.value = { ...props.data };
-        isEditModalOpen.value = true;
-        useAddBackDrop(props.id);
+  if (newVal) {
+    editedItem.value = props.data ? { ...props.data } : {}
+    isEditModalOpen.value = true
+    useAddBackDrop(props.id)
 
-        await fetchUsersRoles(); 
-        const userWithRoles = usersRoles.value.find(u => u.id === props.data.id);
-        if (userWithRoles && userWithRoles.roles) {
-            selectedRoles.value = userWithRoles.roles.map(r => r.id);
-        } else if (props.data.roles) {
-            selectedRoles.value = props.data.roles.map(r => r.id);
-        } else {
-            selectedRoles.value = [];
-        }
+    if (props.data?.id) {
+      await fetchUsersRoles()
+
+      const userWithRoles = usersRoles.value.find(u => u.id === props.data.id)
+
+      if (userWithRoles?.roles) {
+        selectedRoles.value = userWithRoles.roles.map(r => r.id)
+      } else if (props.data.roles) {
+        selectedRoles.value = props.data.roles.map(r => r.id)
+      } else {
+        selectedRoles.value = []
+      }
     } else {
-        closeEditModal();
-        selectedRoles.value = [];
+      selectedRoles.value = []
     }
+  } else {
+    closeEditModal()
+  }
 });
+
     
 /*     const openEditModal = (item) => {
         fetchUsersRoles()
